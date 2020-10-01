@@ -26,3 +26,5 @@ out/
 
 # VScode
 .vscode/
+
+*.pem
