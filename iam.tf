@@ -13,22 +13,6 @@ data "aws_iam_policy_document" "lambda_application_assume_role_statement" {
   }
 }
 
-// data "aws_iam_policy_document" "lambda_application_execution_policy_statement" {
-//   statement {
-//     sid = "CloudWatchLogGroupPolicyStatement"
-
-//     actions = [
-//       "logs:CreateLogStream",
-//       "logs:PutLogEvents"
-//     ]
-
-//     resources = [
-//       aws_cloudwatch_log_group.lambda_application_log_group.arn
-//     ]
-//   }
-// }
-
-
 resource "aws_iam_role" "lambda_application_execution_role" {
   name = format("%s-Execution-Role", var.application_name)
 
@@ -37,16 +21,19 @@ resource "aws_iam_role" "lambda_application_execution_role" {
   tags = merge(map("Name", format("%s-Execution-Role", var.application_name)), map("Lambda Application", var.application_name), var.tags)
 }
 
-// resource "aws_iam_policy" "lambda_application_cloudwatch_logs" {
-//   name        = "${var.application_name}-lambda-cloudwtach-logs-policy"
-//   path        = "/"
-//   description = "IAM policy for logging ${var.application_name} functions to CloudWatch Log Groups"
-
-//   policy = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-// }
-
-
 resource "aws_iam_role_policy_attachment" "lambda_application_logs" {
   role       = aws_iam_role.lambda_application_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy_attachment" "datastore_s3_access_policy" {
+  count      = var.enable_datastore_module && var.create_s3_bucket ? 1 : 0
+  role       = aws_iam_role.lambda_application_execution_role.name
+  policy_arn = module.lambda_datastore.s3_bucket_policy_arn
+}
+
+resource "aws_iam_role_policy_attachment" "datastore_dynamodb_access_policy" {
+  count      = var.enable_datastore_module && var.create_dynamodb_table ? 1 : 0
+  role       = aws_iam_role.lambda_application_execution_role.name
+  policy_arn = module.lambda_datastore.dynamodb_table_policy_arn
 }
