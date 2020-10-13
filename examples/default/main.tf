@@ -11,6 +11,9 @@ module "example_lambda_applcation" {
   application_memory  = 256
   application_timeout = 20
   layer_artifact_key  = "python.zip"
+  application_env_vars = {
+    name = "foo"
+  }
 
   enable_datastore_module               = true
   create_dynamodb_table                 = true
