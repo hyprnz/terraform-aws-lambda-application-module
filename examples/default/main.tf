@@ -11,6 +11,29 @@ module "example_lambda_applcation" {
   application_memory  = 256
   application_timeout = 20
   layer_artifact_key  = "python.zip"
+
+  lambda_functions_config = {
+    event_consumer = {
+      name        = "event_consumer"
+      description = "event_consumer description"
+      handler     = "event_consumer.handler.license_event_handler"
+    },
+    event_aggregator = {
+      name        = "event_aggregator"
+      description = "event_aggregator description"
+      handler     = "event_aggregator.handler.license_aggregator_handler"
+    }
+  }
+
+  internal_entrypoint_config = {
+    event_aggregator = {
+      name               = "EventAggregatorRule"
+      description        = "Event Aggregator Rule description"
+      event_pattern_json = jsonencode({ "source" : ["market-data-license-usage.created"] })
+    }
+  }
+
+
   application_env_vars = {
     name = "foo"
   }

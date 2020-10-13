@@ -8,6 +8,16 @@ variable "application_runtime" {
   type        = string
 }
 
+variable "lambda_functions_config" {
+  type        = map(any)
+  description = ""
+}
+
+variable "internal_entrypoint_config" {
+  type        = map(any)
+  description = ""
+}
+
 variable "artifact_bucket" {
   description = ""
   type        = string
