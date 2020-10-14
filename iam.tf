@@ -14,7 +14,7 @@ data "aws_iam_policy_document" "lambda_application_assume_role_statement" {
 }
 
 resource "aws_iam_role" "lambda_application_execution_role" {
-  name = format("%s-Execution-Role", var.application_name)
+  name = format("ExecutionRole-Lambda-%s", var.application_name)
 
   assume_role_policy = data.aws_iam_policy_document.lambda_application_assume_role_statement.json
 

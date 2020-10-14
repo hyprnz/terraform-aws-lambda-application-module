@@ -44,15 +44,15 @@ resource "aws_lambda_function" "lambda_application" {
   tags = merge(map("Name", format("%s-%s", var.application_name, each.value.name)), map("Lambda Application", var.application_name), var.tags)
 }
 
-# resource "aws_lambda_permission" "internal_entrypoints" {
-#   for_each = var.internal_entrypoint_config
+resource "aws_lambda_permission" "internal_entrypoints" {
+  for_each = var.internal_entrypoint_config
 
-#   statement_id  = replace(title(each.value.name), "/-| |_/", "")
-#   action        = "lambda:InvokeFunction"
-#   function_name = aws_lambda_function.lambda_application[each.key].function_name
-#   principal     = "events.amazonaws.com"
-#   source_arn    = aws_cloudwatch_event_rule.internal_entrypoint[each.key].arn
-# }
+  statement_id  = replace(title(each.value.name), "/-| |_/", "")
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda_application[each.key].function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.internal_entrypoint[each.key].arn
+}
 
 # resource "aws_lambda_permission" "external_entrypoints" {
 #   for_each = local.external_entrypoint_config

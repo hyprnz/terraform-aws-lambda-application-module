@@ -1,79 +1,79 @@
 variable "application_name" {
-  description = ""
   type        = string
+  description = "Repo name of the lambda application."
 }
 
 variable "application_runtime" {
-  description = ""
   type        = string
+  description = "Lambda runtime for the application."
 }
 
 variable "lambda_functions_config" {
   type        = map(any)
-  description = ""
+  description = "Map of functions and associated configurations."
 }
 
 variable "internal_entrypoint_config" {
   type        = map(any)
-  description = ""
+  description = "Map of configuations of internal entrypoints."
 }
 
 variable "artifact_bucket" {
-  description = ""
   type        = string
+  description = "Bucket that stores function artifacts. Includes layer dependencies."
 }
 
 variable "artifact_bucket_key" {
-  description = ""
   type        = string
+  description = "File name key of the artifact to load."
 }
 
 variable "application_env_vars" {
-  description = ""
   type        = map(any)
+  description = "Map of environment variables required by any function in the application."
   default     = {}
 }
 
 variable "application_memory" {
-  description = ""
   type        = number
+  description = "Memory allocated to all functions in the application. Defaults to `128`."
   default     = 128
 }
 
 variable "application_timeout" {
-  description = ""
   type        = number
+  description = "Timeout in seconds for all functions in the application. Defaults to `3`."
   default     = 3
 }
 
 variable "layer_artifact_key" {
-  description = ""
   type        = string
+  description = "File name key of the layer artifact to load."
   default     = ""
 }
 
 variable "aws_cloudwatch_log_group_retention_in_days" {
-  description = ""
   type        = number
+  description = "The retention period in days of all log group created for each function. Defaults to `30`."
   default     = 30
 }
 
 variable "tags" {
-  description = ""
   type        = map
+  description = "Additional tags that are added to all resources in this module."
   default     = {}
 }
 
 variable "enable_datastore_module" {
+  type        = bool
   description = "Enables the data store module that can provision data storage resources"
   default     = false
-  type        = bool
 }
 
 variable "create_rds_instance" {
+  type        = bool
   description = "Controls if an RDS instance should be provisioned and integrated with the Kubernetes deployment."
   default     = false
-  type        = bool
 }
 
 variable "rds_database_name" {
@@ -117,8 +117,8 @@ variable "rds_monitoring_role_arn" {
 }
 
 variable "rds_enable_performance_insights" {
-  description = "Controls the enabling of RDS Performance insights. Default to `true`"
   type        = bool
+  description = "Controls the enabling of RDS Performance insights. Default to `true`"
   default     = true
 }
 
@@ -128,8 +128,8 @@ variable "rds_subnet_group" {
 }
 
 variable "rds_security_group_ids" {
+type        = list(string)
   description = "A List of security groups to bind to the rds instance"
-  type        = list(string)
   default     = []
 }
 
@@ -179,8 +179,8 @@ variable "s3_enable_versioning" {
 }
 
 variable "dynamodb_tags" {
-  description = "Additional tags (e.g map(`BusinessUnit`,`XYX`)"
   type        = map
+  description = "Additional tags (e.g map(`BusinessUnit`,`XYX`)"
   default     = {}
 }
 
@@ -190,39 +190,39 @@ variable "create_dynamodb_table" {
 }
 
 variable "dynamodb_table_name" {
-  description = "DynamoDB table name. Must be supplied if creating a dynamodb table"
   type        = string
+  description = "DynamoDB table name. Must be supplied if creating a dynamodb table"
   default     = ""
 }
 
 variable "dynamodb_billing_mode" {
-  description = "DynamoDB Billing mode. Can be PROVISIONED or PAY_PER_REQUEST"
   type        = string
+  description = "DynamoDB Billing mode. Can be PROVISIONED or PAY_PER_REQUEST"
   default     = "PROVISIONED"
 }
 
 variable "dynamodb_enable_streams" {
-  description = "Enable DynamoDB streams"
   type        = bool
+  description = "Enable DynamoDB streams"
   default     = false
 }
 
 variable "dynamodb_stream_view_type" {
-  description = "When an item in a table is modified, what information is written to the stream"
   type        = string
+  description = "When an item in a table is modified, what information is written to the stream"
   # Valid values are `KEYS_ONLY`, `NEW_IMAGE`, `OLD_IMAGE` or `NEW_AND_OLD_IMAGES`
   default = ""
 }
 
 variable "dynamodb_enable_encryption" {
-  description = "Enable DynamoDB server-side encryption"
   type        = bool
+  description = "Enable DynamoDB server-side encryption"
   default     = true
 }
 
 variable "dynamodb_enable_point_in_time_recovery" {
-  description = "Enable DynamoDB point in time recovery"
   type        = bool
+  description = "Enable DynamoDB point in time recovery"
   default     = true
 }
 
@@ -257,26 +257,26 @@ variable "dynamodb_autoscale_max_write_capacity" {
 }
 
 variable "dynamodb_hash_key" {
-  description = "DynamoDB table Hash Key"
   type        = string
+  description = "DynamoDB table Hash Key"
   default     = ""
 }
 
 variable "dynamodb_hash_key_type" {
-  description = "Hash Key type, which must be a scalar type: `S`, `N`, or `B` for (S)tring, (N)umber or (B)inary data"
   type        = string
+  description = "Hash Key type, which must be a scalar type: `S`, `N`, or `B` for (S)tring, (N)umber or (B)inary data"
   default     = "S"
 }
 
 variable "dynamodb_range_key" {
-  description = "DynamoDB table Range Key"
   type        = string
+  description = "DynamoDB table Range Key"
   default     = ""
 }
 
 variable "dynamodb_range_key_type" {
-  description = "Range Key type, which must be a scalar type: `S`, `N` or `B` for (S)tring, (N)umber or (B)inary data"
   type        = string
+  description = "Range Key type, which must be a scalar type: `S`, `N` or `B` for (S)tring, (N)umber or (B)inary data"
   default     = "S"
 }
 
@@ -286,44 +286,44 @@ variable "dynamodb_ttl_enabled" {
 }
 
 variable "dynamodb_ttl_attribute" {
-  description = "DynamoDB table ttl attribute"
   type        = string
+  description = "DynamoDB table ttl attribute"
   default     = "Expires"
 }
 
 variable "dynamodb_attributes" {
-  description = "Additional DynamoDB attributes in the form of a list of mapped values"
   type        = list
+  description = "Additional DynamoDB attributes in the form of a list of mapped values"
   default     = []
 }
 
 variable "dynamodb_global_secondary_index_map" {
-  description = "Additional global secondary indexes in the form of a list of mapped values"
   type        = any
+  description = "Additional global secondary indexes in the form of a list of mapped values"
   default     = []
 }
 
 variable "dynamodb_local_secondary_index_map" {
-  description = "Additional local secondary indexes in the form of a list of mapped values"
   type        = list
+  description = "Additional local secondary indexes in the form of a list of mapped values"
   default     = []
 }
 
 variable "dynamodb_enable_autoscaler" {
-  description = "Whether or not to enable DynamoDB autoscaling"
   type        = bool
+  description = "Whether or not to enable DynamoDB autoscaling"
   default     = false
 }
 
 variable "datastore_tags" {
-  description = "Additional tags to add to all datastore resources"
   type        = map(string)
+  description = "Additional tags to add to all datastore resources"
   default     = {}
 }
 
 variable "rds_tags" {
-  description = "Additional tags for the RDS instance"
   type        = map(string)
+  description = "Additional tags for the RDS instance"
   default     = {}
 }
 
@@ -331,3 +331,5 @@ variable "s3_tags" {
   description = "Additional tags to be added to the s3 resources"
   default     = {}
 }
+
+
