@@ -9,7 +9,7 @@ resource "aws_s3_bucket" "artifactory" {
 
   force_destroy = var.force_destroy
 
-  tags = merge({ Name = var.artifactory_bucket_name }, { "Lambda Application Name" = var.lambda_application_name }, var.tags)
+  tags = merge({ Name = var.artifactory_bucket_name }, { "Lambda Application Name" = var.application_name }, var.tags)
 }
 
 data "aws_iam_policy_document" "cross_account_access_document" {
@@ -30,7 +30,9 @@ data "aws_iam_policy_document" "cross_account_access_document" {
   }
 }
 
-resource "aws_s3_bucket_policy" "artifactory" {
+resource "aws_s3_bucket_policy" "cross_account_policy" {
+  count = length(var.cross_account_numbers) > 0 ? 1 : 0
+
   bucket = aws_s3_bucket.artifactory.id
   policy = data.aws_iam_policy_document.cross_account_access_document.json
 }

@@ -18,7 +18,7 @@ resource "aws_iam_role" "lambda_application_execution_role" {
 
   assume_role_policy = data.aws_iam_policy_document.lambda_application_assume_role_statement.json
 
-  tags = merge(map("Name", format("%s-Execution-Role", var.application_name)), map("Lambda Application", var.application_name), var.tags)
+  tags = merge({ Name = format("%s-Execution-Role", var.application_name) }, { "Lambda Application" = var.application_name }, var.tags)
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_application_logs" {

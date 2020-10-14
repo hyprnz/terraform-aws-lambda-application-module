@@ -128,7 +128,7 @@ variable "rds_subnet_group" {
 }
 
 variable "rds_security_group_ids" {
-type        = list(string)
+  type        = list(string)
   description = "A List of security groups to bind to the rds instance"
   default     = []
 }

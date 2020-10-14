@@ -38,10 +38,10 @@ resource "aws_lambda_function" "lambda_application" {
   layers = [aws_lambda_layer_version.runtime_dependencies.arn]
 
   environment {
-    variables = merge(map("APP_NAME", var.application_name), local.datastore_env_vars, var.application_env_vars)
+    variables = merge({ APP_NAME = var.application_name }, local.datastore_env_vars, var.application_env_vars)
   }
 
-  tags = merge(map("Name", format("%s-%s", var.application_name, each.value.name)), map("Lambda Application", var.application_name), var.tags)
+  tags = merge({ Name = format("%s-%s", var.application_name, each.value.name) }, { "Lambda Application" = var.application_name }, var.tags)
 }
 
 resource "aws_lambda_permission" "internal_entrypoints" {
