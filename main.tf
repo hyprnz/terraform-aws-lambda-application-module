@@ -1,9 +1,9 @@
 locals {
   rds_env_vars = {
-    RDS_DBNAME = module.lambda_datastore.rds_db_name
+    RDS_DBNAME   = module.lambda_datastore.rds_db_name
     RDS_ENDPOINT = module.lambda_datastore.rds_instance_endpoint
     RDS_PASSWORD = var.rds_password
-    RDS_URL = module.lambda_datastore.rds_db_url
+    RDS_URL      = module.lambda_datastore.rds_db_url
   }
 
   dynamodb_env_vars = {
@@ -11,12 +11,12 @@ locals {
   }
 
   s3_env_vars = {
-    S3_BUCKET_NAME =  module.lambda_datastore.s3_bucket
+    S3_BUCKET_NAME = module.lambda_datastore.s3_bucket
   }
 
-  rds_env_vars_used = var.enable_datastore_module && var.create_rds_instance ? local.rds_env_vars : {}
+  rds_env_vars_used      = var.enable_datastore_module && var.create_rds_instance ? local.rds_env_vars : {}
   dynamodb_env_vars_used = var.enable_datastore_module && var.create_dynamodb_table ? local.dynamodb_env_vars : {}
-  s3_env_vars_used = var.enable_datastore_module && var.create_s3_bucket ? local.s3_env_vars : {}
+  s3_env_vars_used       = var.enable_datastore_module && var.create_s3_bucket ? local.s3_env_vars : {}
 
   datastore_env_vars = merge(local.rds_env_vars_used, local.dynamodb_env_vars_used, local.s3_env_vars_used)
 }

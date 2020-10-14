@@ -9,11 +9,11 @@ resource "aws_s3_bucket" "artifactory" {
 
   force_destroy = var.force_destroy
 
-  tags = merge({ Name = var.artifactory_bucket_name}, { "Lambda Application Name"  = var.lambda_application_name}, var.tags)
+  tags = merge({ Name = var.artifactory_bucket_name }, { "Lambda Application Name" = var.lambda_application_name }, var.tags)
 }
 
 data "aws_iam_policy_document" "cross_account_access_document" {
-    statement {
+  statement {
     sid = "LambdaApplicationArtifactoryCrossAccountPermission"
 
     effect = "Allow"
@@ -21,7 +21,7 @@ data "aws_iam_policy_document" "cross_account_access_document" {
       "s3:GetObject"
     ]
 
-    resources = [ format("%s/*", aws_s3_bucket.artifactory.arn)]
+    resources = [format("%s/*", aws_s3_bucket.artifactory.arn)]
 
     principals {
       type        = "AWS"
@@ -31,6 +31,6 @@ data "aws_iam_policy_document" "cross_account_access_document" {
 }
 
 resource "aws_s3_bucket_policy" "artifactory" {
-   bucket = aws_s3_bucket.artifactory.id
-   policy = data.aws_iam_policy_document.cross_account_access_document.json
+  bucket = aws_s3_bucket.artifactory.id
+  policy = data.aws_iam_policy_document.cross_account_access_document.json
 }

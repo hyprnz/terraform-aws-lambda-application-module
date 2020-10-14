@@ -1,13 +1,12 @@
 module "lambda_datastore" {
-  # source = "git::git@github.com:hyprnz/terraform-aws-data-storage-module?ref=1.1.0"
-  source = "../terraform-aws-data-storage-module"
+  source = "git::git@github.com:hyprnz/terraform-aws-data-storage-module?ref=2.0.0"
   providers = {
     aws = aws
   }
 
-  enable_datastore       = var.enable_datastore_module
-  create_rds_instance    = var.create_rds_instance
-  create_s3_bucket       = var.create_s3_bucket
+  enable_datastore      = var.enable_datastore_module
+  create_rds_instance   = var.create_rds_instance
+  create_s3_bucket      = var.create_s3_bucket
   create_dynamodb_table = var.create_dynamodb_table
 
   rds_database_name  = var.rds_database_name
