@@ -5,16 +5,16 @@ module "lamnda_applciation_artifactory_example" {
     aws = aws
   }
 
-  artifactory_bucket_name = "test-lambda-app.prod.jarden.io"
+  artifactory_bucket_name = "test-lambda-app.stage.example.com"
   lambda_application_name = "test-lambda-app"
-  cross_account_numbers   = [980409501370, 854489628483]
+  cross_account_numbers   = [12345678901]
   force_destroy           = true
 }
 
 provider "aws" {
   region = var.aws_region
 }
-
+  
 variable "aws_region" {
   default = "ap-southeast-2"
 }
