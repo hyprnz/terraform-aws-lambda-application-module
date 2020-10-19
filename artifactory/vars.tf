@@ -9,7 +9,7 @@ variable "application_name" {
 
 variable "cross_account_numbers" {
   type        = list(number)
-  description = "Addtional AWS accounts to provide access from. If no account ID's are supplied no policy is created for the bucket."
+  description = "Additional AWS accounts to provide access from. If no account ID's are supplied no policy is created for the bucket."
   default     = []
 }
 

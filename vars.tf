@@ -15,7 +15,7 @@ variable "lambda_functions_config" {
 
 variable "internal_entrypoint_config" {
   type        = map(any)
-  description = "Map of configuations of internal entrypoints."
+  description = "Map of configurations of internal entrypoints."
 }
 
 variable "artifact_bucket" {

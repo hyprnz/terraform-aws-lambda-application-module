@@ -6,30 +6,30 @@ module "example_lambda_applcation" {
 
   application_name    = "test_lambda_app"
   application_runtime = "python3.8"
-  artifact_bucket     = "reuben.test.jarden.io"
-  artifact_bucket_key = "market-data-usage.0.1.1.zip"
+  artifact_bucket     = "labda-app.stage.example.com"
+  artifact_bucket_key = "0.0.1/app.zip"
   application_memory  = 256
   application_timeout = 20
-  layer_artifact_key  = "python.zip"
+  layer_artifact_key  = "0.0.1/layers.zip"
 
   lambda_functions_config = {
-    event_consumer = {
-      name        = "event_consumer"
-      description = "event_consumer description"
-      handler     = "event_consumer.handler.license_event_handler"
+    external_endpoint_function = {
+      name        = "external_endpoint_function"
+      description = "external_endpoint_function description"
+      handler     = "external_endpoint_function.handler.handle"
     },
-    event_aggregator = {
-      name        = "event_aggregator"
-      description = "event_aggregator description"
-      handler     = "event_aggregator.handler.license_aggregator_handler"
+    internal_endpoint_function = {
+      name        = "internal_endpoint_function"
+      description = "internal_endpoint_function description"
+      handler     = "internal_endpoint_function.handler.handle"
     }
   }
 
   internal_entrypoint_config = {
-    event_aggregator = {
-      name               = "EventAggregatorRule"
-      description        = "Event Aggregator Rule description"
-      event_pattern_json = jsonencode({ "source" : ["market-data-license-usage.created"] })
+    internal_endpoint_function = {
+      name               = "internal_endpoint_functionRule"
+      description        = "internal_endpoint_function Rule description"
+      event_pattern_json = { "source" : ["internal_endpoint_event.created"] }
     }
   }
 
@@ -50,9 +50,9 @@ module "example_lambda_applcation" {
 
   dynamodb_global_secondary_index_map = [
     {
-      name            = "Inverted-Index"
-      hash_key        = "SK"
-      range_key       = "PK"
+      name            = "Test-Index"
+      hash_key        = "HK"
+      range_key       = "RK"
       write_capacity  = 1
       read_capacity   = 1
       projection_type = "KEYS_ONLY"
@@ -60,8 +60,8 @@ module "example_lambda_applcation" {
   ]
 
   tags = {
-    Environment = "test"
-    env         = "test"
+    Environment = "stage"
+    env         = "stage"
   }
 
 }
