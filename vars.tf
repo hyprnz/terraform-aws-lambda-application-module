@@ -3,7 +3,7 @@ variable "aws_region" {
   description = "aws-region: e.g ap-southeast-2"
 }
 
-variable "aws_account_id" {
+variable "aws_account_number" {
   type        = string
   description = "aws account number: e.g 1234567890"
 }
