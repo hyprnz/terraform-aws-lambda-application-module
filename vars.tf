@@ -332,4 +332,9 @@ variable "s3_tags" {
   default     = {}
 }
 
+variable "enable_api_gateway" {
+  type        = bool
+  description = "allow to create api-gateway"
+  default     = false
+}
 
