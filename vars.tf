@@ -1,3 +1,13 @@
+variable "aws_region" {
+  type        = string
+  description = "aws-region: e.g ap-southeast-2"
+}
+
+variable "aws_account_id" {
+  type        = string
+  description = "aws account number: e.g 1234567890"
+}
+
 variable "application_name" {
   type        = string
   description = "Repo name of the lambda application."
@@ -332,4 +342,14 @@ variable "s3_tags" {
   default     = {}
 }
 
+variable "enable_api_gateway" {
+  type        = bool
+  description = "allow to create api-gateway"
+  default     = false
+}
+
+variable "api_gateway_name" {
+  description = "Name of api-gateway"
+  default     = "lambda-api-gateway"
+}
 
