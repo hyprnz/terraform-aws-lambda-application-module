@@ -2,7 +2,7 @@ resource "aws_apigatewayv2_api" "api-gateway" {
   name          = var.api_gateway_name
   protocol_type = "HTTP"
   route_key     = "$default"
-  target        = aws_lambda_function.lambda_application.arn
+  target        = aws_lambda_function.lambda_application[0].arn
   count         = var.enable_api_gateway ? 1 : 0
 }
 
