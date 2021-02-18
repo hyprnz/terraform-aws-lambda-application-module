@@ -12,7 +12,7 @@ resource "aws_lambda_permission" "allow_apigateway" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda_application["service"].function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = aws_apigatewayv2_api.api_gateway.0.arn
+  source_arn    = "${aws_apigatewayv2_api.api_gateway.0.execution_arn}/*"
   count         = var.enable_api_gateway ? 1 : 0
 }
 
