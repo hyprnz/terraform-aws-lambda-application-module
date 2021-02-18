@@ -1,3 +1,4 @@
+// to use the api-gateway, a service lambda must in lambda_application
 resource "aws_apigatewayv2_api" "api-gateway" {
   name          = var.api_gateway_name
   protocol_type = "HTTP"
