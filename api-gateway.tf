@@ -1,6 +1,6 @@
 // to use the api-gateway, a service lambda must in lambda_application
 resource "aws_apigatewayv2_api" "api-gateway" {
-  name          = var.api_gateway_name
+  name          = var.application_name
   protocol_type = "HTTP"
   route_key     = "$default"
   target        = aws_lambda_function.lambda_application["service"].arn
@@ -12,7 +12,7 @@ resource "aws_lambda_permission" "allow_apigateway" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda_application["service"].function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "arn:aws:execute-api:${var.aws_region}:${var.aws_account_number}:${aws_apigatewayv2_api.api-gateway[0].id}/*"
+  source_arn    = aws_apigatewayv2_api.api-gateway[0].arn
   count         = var.enable_api_gateway ? 1 : 0
 }
 
