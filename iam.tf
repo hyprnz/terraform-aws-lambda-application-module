@@ -30,6 +30,26 @@ data "aws_iam_policy_document" "event_bridge_internal_entrypoint" {
   }
 }
 
+data "aws_iam_policy_document" "lambda_vpc_document" {
+  statement {
+    sid = "LambdaVPC"
+
+    effect = "Allow"
+
+    actions = [
+      "ec2:CreateNetworkInterface",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DeleteNetworkInterface"
+    ]
+
+    resources = [
+      "*"
+    ]
+
+  }
+}
+
+
 resource "aws_iam_role" "lambda_application_execution_role" {
   name = format("ExecutionRole-Lambda-%s", var.application_name)
 
@@ -69,4 +89,15 @@ resource "aws_iam_role_policy_attachment" "datastore_dynamodb_access_policy" {
   count      = var.enable_datastore_module && var.create_dynamodb_table ? 1 : 0
   role       = aws_iam_role.lambda_application_execution_role.name
   policy_arn = module.lambda_datastore.dynamodb_table_policy_arn
+}
+
+resource "aws_iam_policy" "lambda_vpc" {
+  name        = "lambda_vpc"
+  description = "Grants permissions to access VPC"
+  policy = data.aws_iam_policy_document.lambda_vpc_document.json
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_vpc" {
+  role       = aws_iam_role.lambda_application_execution_role.name
+  policy_arn = aws_iam_policy.lambda_vpc.arn
 }
