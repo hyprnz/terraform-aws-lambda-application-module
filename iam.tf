@@ -92,7 +92,7 @@ resource "aws_iam_role_policy_attachment" "datastore_dynamodb_access_policy" {
 }
 
 resource "aws_iam_policy" "lambda_vpc" {
-  name        = "lambda_vpc"
+  name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-LambdaVPC"
   description = "Grants permissions to access VPC"
   policy = data.aws_iam_policy_document.lambda_vpc_document.json
 }
