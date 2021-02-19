@@ -46,6 +46,25 @@ variable "application_timeout" {
   default     = 3
 }
 
+variable "enable_vpc" {
+  type        = string
+  description = "Put lambda into the private VPC and default eks security group"
+  default     = false
+}
+
+
+variable "vpc_subnet_ids" {
+  type        = list(string)
+  description = "List of subnet IDs associated with the Lambda function"
+  default     = []
+}
+
+variable "vpc_security_group_ids" {
+  type        = list(string)
+  description = "List of security group IDs associated with the Lambda function"
+  default     = []
+}
+
 variable "layer_artifact_key" {
   type        = string
   description = "File name key of the layer artifact to load."
@@ -338,3 +357,10 @@ variable "enable_api_gateway" {
   default     = false
 }
 
+variable "zone_id" {
+  description = "Route 53 zone id"
+}
+
+variable "domain_name" {
+  description = "The name of the domain"
+}
