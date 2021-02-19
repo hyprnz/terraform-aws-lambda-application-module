@@ -46,6 +46,18 @@ variable "application_timeout" {
   default     = 3
 }
 
+variable "vpc_subnet_ids" {
+  type        = list(string)
+  description = "List of subnet IDs associated with the Lambda function"
+  default     = []
+}
+
+variable "vpc_security_group_ids" {
+  type        = list(string)
+  description = "List of security group IDs associated with the Lambda function"
+  default     = []
+}
+
 variable "layer_artifact_key" {
   type        = string
   description = "File name key of the layer artifact to load."
