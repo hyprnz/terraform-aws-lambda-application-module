@@ -46,6 +46,12 @@ variable "application_timeout" {
   default     = 3
 }
 
+variable "enable_vpc" {
+  type        = string
+  description = "Put lambda into the private VPC and default eks security group"
+  default     = false
+}
+
 variable "vpc_subnet_ids" {
   type        = list(string)
   description = "List of subnet IDs associated with the Lambda function"
