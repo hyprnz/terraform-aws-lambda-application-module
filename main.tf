@@ -42,8 +42,6 @@ resource "aws_lambda_function" "lambda_application" {
   }
 
   vpc_config {
-    count = var.enable_vpc ? 1 : 0
-
     subnet_ids         = var.vpc_subnet_ids
     security_group_ids = var.vpc_security_group_ids
   }
