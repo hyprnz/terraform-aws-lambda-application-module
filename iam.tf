@@ -49,7 +49,6 @@ data "aws_iam_policy_document" "lambda_vpc_document" {
   }
 }
 
-
 resource "aws_iam_role" "lambda_application_execution_role" {
   name = format("ExecutionRole-Lambda-%s", var.application_name)
 
@@ -102,4 +101,10 @@ resource "aws_iam_role_policy_attachment" "lambda_vpc" {
   count       = var.enable_vpc ? 1 : 0
   role       = aws_iam_role.lambda_application_execution_role.name
   policy_arn = aws_iam_policy.lambda_vpc[0].arn
+}
+
+resource "aws_iam_role_policy_attachment" "msk_access_policy" {
+  count      = length(keys(var.msk_event_source_config)) > 0 ? 1 : 0
+  role       = aws_iam_role.lambda_application_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaMSKExecutionRole"
 }
