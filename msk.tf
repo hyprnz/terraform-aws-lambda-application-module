@@ -5,4 +5,5 @@ resource "aws_lambda_event_source_mapping" "msk_event_source" {
   function_name     = aws_lambda_function.lambda_application[each.key].arn
   topics            = each.value.topics
   starting_position = each.value.starting_position
+  batch_size        = each.value.batch_size
 }
