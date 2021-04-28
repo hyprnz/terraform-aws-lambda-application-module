@@ -127,7 +127,7 @@ resource "aws_iam_policy" "lambda_msk" {
 }
 
 resource "aws_iam_role_policy_attachment" "msk_access_policy" {
-  count      = length(var.msk_event_source_config) > 0 ? 0 : 1
+  count      = length(keys(var.msk_event_source_config)) > 0 ? 0 : 1
   role       = aws_iam_role.lambda_application_execution_role.name
   policy_arn = aws_iam_policy.lambda_msk.arn
 }
