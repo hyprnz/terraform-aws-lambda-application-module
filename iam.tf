@@ -49,6 +49,24 @@ data "aws_iam_policy_document" "lambda_vpc_document" {
   }
 }
 
+data "aws_iam_policy_document" "lambda_msk_document" {
+  statement {
+    sid = "LambdaMSK"
+
+    effect = "Allow"
+
+    actions = [
+      "kafka:DescribeCluster",
+      "kafka:GetBootstrapBrokers"
+    ]
+
+    resources = [
+      "*"
+    ]
+
+  }
+}
+
 
 resource "aws_iam_role" "lambda_application_execution_role" {
   name = format("ExecutionRole-Lambda-%s", var.application_name)
@@ -100,4 +118,16 @@ resource "aws_iam_policy" "lambda_vpc" {
 resource "aws_iam_role_policy_attachment" "lambda_vpc" {
   role       = aws_iam_role.lambda_application_execution_role.name
   policy_arn = aws_iam_policy.lambda_vpc.arn
+}
+
+resource "aws_iam_policy" "lambda_msk" {
+  name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-LambdaMSK"
+  description = "Grants permissions to access MSK"
+  policy = data.aws_iam_policy_document.lambda_msk_document.json
+}
+
+resource "aws_iam_role_policy_attachment" "msk_access_policy" {
+  count      = length(var.msk_source_config) > 0 ? 0 : 1
+  role       = aws_iam_role.lambda_application_execution_role.name
+  policy_arn = aws_iam_policy.lambda_msk.arn
 }
