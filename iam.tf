@@ -57,7 +57,8 @@ data "aws_iam_policy_document" "lambda_msk_document" {
 
     actions = [
       "kafka:DescribeCluster",
-      "kafka:GetBootstrapBrokers"
+      "kafka:GetBootstrapBrokers",
+      "ec2:DescribeSecurityGroups"
     ]
 
     resources = [
