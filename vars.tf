@@ -18,9 +18,14 @@ variable "internal_entrypoint_config" {
   description = "Map of configurations of internal entrypoints."
 }
 
+variable "msk_arn" {
+  type        = string
+  description = "the MSK source arn for all lambda requires MSK"
+}
+
 variable "msk_event_source_config" {
   type        = map(any)
-  description = "Map of configurations of msk event source."
+  description = "Map of configurations of MSK event source for each lambda"
 }
 
 variable "artifact_bucket" {
