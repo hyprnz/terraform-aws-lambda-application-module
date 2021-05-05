@@ -92,12 +92,14 @@ resource "aws_iam_role_policy_attachment" "datastore_dynamodb_access_policy" {
 }
 
 resource "aws_iam_policy" "lambda_vpc" {
+  count       = var.enable_vpc ? 1 : 0
   name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-LambdaVPC"
   description = "Grants permissions to access VPC"
   policy = data.aws_iam_policy_document.lambda_vpc_document.json
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_vpc" {
+  count       = var.enable_vpc ? 1 : 0
   role       = aws_iam_role.lambda_application_execution_role.name
-  policy_arn = aws_iam_policy.lambda_vpc.arn
+  policy_arn = aws_iam_policy.lambda_vpc[0].arn
 }
