@@ -29,6 +29,6 @@ resource "aws_apigatewayv2_api_mapping" "api_gateway_mapping" {
 
 resource "aws_apigatewayv2_stage" "api_gateway_stage" {
   api_id = aws_apigatewayv2_api.api_gateway[0].id
-  name   = "test"
+  name   = var.stage_name
   auto_deploy = true
 }

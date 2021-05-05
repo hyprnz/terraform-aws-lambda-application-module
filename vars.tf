@@ -376,3 +376,8 @@ variable "zone_id" {
 variable "domain_name" {
   description = "The name of the domain"
 }
+
+variable "stage_name" {
+  description = "stage name for the api gateway deployment"
+  default = "test"
+}
