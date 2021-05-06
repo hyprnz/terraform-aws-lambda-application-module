@@ -379,5 +379,5 @@ variable "domain_name" {
 
 variable "stage_name" {
   description = "stage name for the api gateway deployment"
-  default = "test"
+  default     = "test"
 }
