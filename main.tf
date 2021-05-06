@@ -36,13 +36,13 @@ resource "aws_lambda_function" "lambda_application" {
   timeout     = var.application_timeout
 
   layers = [aws_lambda_layer_version.runtime_dependencies.arn]
-
+  
   environment {
     variables = merge({ APP_NAME = var.application_name }, local.datastore_env_vars, var.application_env_vars)
   }
 
   dynamic "vpc_config" {
-    for_each = var.enable_vpc ? [true] : []
+    for_each = each.value.enable_vpc ? [true] : []
     content {
       subnet_ids         = var.vpc_subnet_ids
       security_group_ids = var.vpc_security_group_ids
