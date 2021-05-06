@@ -5,7 +5,7 @@ resource "aws_apigatewayv2_api" "api_gateway" {
   protocol_type = "HTTP"
   route_key     = "$default"
   target        = aws_lambda_function.lambda_application["service"].arn
-  tags          = merge({ Name = format("%s-%s", var.application_name, "api_gateway")}, { "Lambda Application" = var.application_name }, var.tags)
+  tags          = merge({ Name = format("%s-%s", var.application_name, "api_gateway") }, { "Lambda Application" = var.application_name }, var.tags)
 }
 
 resource "aws_lambda_permission" "allow_apigateway" {

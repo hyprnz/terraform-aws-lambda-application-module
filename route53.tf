@@ -1,5 +1,5 @@
 resource "aws_apigatewayv2_domain_name" "api_gateway_domain" {
-  depends_on = [aws_acm_certificate_validation.cert]  
+  depends_on  = [aws_acm_certificate_validation.cert]
   domain_name = var.domain_name
 
   domain_name_configuration {
@@ -28,7 +28,7 @@ resource "aws_apigatewayv2_api_mapping" "api_gateway_mapping" {
 }
 
 resource "aws_apigatewayv2_stage" "api_gateway_stage" {
-  api_id = aws_apigatewayv2_api.api_gateway[0].id
-  name   = var.stage_name
+  api_id      = aws_apigatewayv2_api.api_gateway[0].id
+  name        = var.stage_name
   auto_deploy = true
 }
