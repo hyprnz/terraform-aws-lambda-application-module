@@ -365,19 +365,22 @@ variable "s3_tags" {
 
 variable "enable_api_gateway" {
   type        = bool
-  description = "allow to create api-gateway"
+  description = "Allow to create api-gateway"
   default     = false
 }
 
 variable "zone_id" {
-  description = "Route 53 zone id"
+   type        = string
+  description = "Route 53 hosted zone id"
 }
 
 variable "domain_name" {
-  description = "The name of the domain"
+  type        = string
+  description = "The custom domain name for api gateway that points to lambda application"
 }
 
-variable "stage_name" {
-  description = "stage name for the api gateway deployment"
+variable "api_gateway_stage_name" {
+  type        = string
+  description = "Stage name for the api gateway deployment"
   default     = "test"
 }
