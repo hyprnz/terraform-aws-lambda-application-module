@@ -73,6 +73,7 @@ A stand alone artifactory module has been provided as a stand alone module to ca
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_api_gateway_stage_name"></a> [api\_gateway\_stage\_name](#input\_api\_gateway\_stage\_name) | Stage name for the api gateway deployment | `string` | `"test"` | no |
 | <a name="input_application_env_vars"></a> [application\_env\_vars](#input\_application\_env\_vars) | Map of environment variables required by any function in the application. | `map(any)` | `{}` | no |
 | <a name="input_application_memory"></a> [application\_memory](#input\_application\_memory) | Memory allocated to all functions in the application. Defaults to `128`. | `number` | `128` | no |
 | <a name="input_application_name"></a> [application\_name](#input\_application\_name) | Repo name of the lambda application. | `string` | n/a | yes |
@@ -85,7 +86,7 @@ A stand alone artifactory module has been provided as a stand alone module to ca
 | <a name="input_create_rds_instance"></a> [create\_rds\_instance](#input\_create\_rds\_instance) | Controls if an RDS instance should be provisioned and integrated with the Kubernetes deployment. | `bool` | `false` | no |
 | <a name="input_create_s3_bucket"></a> [create\_s3\_bucket](#input\_create\_s3\_bucket) | Controls if an S3 bucket should be provisioned | `bool` | `false` | no |
 | <a name="input_datastore_tags"></a> [datastore\_tags](#input\_datastore\_tags) | Additional tags to add to all datastore resources | `map(string)` | `{}` | no |
-| <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | The name of the domain | `any` | n/a | yes |
+| <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | The custom domain name for api gateway that points to lambda application | `string` | n/a | yes |
 | <a name="input_dynamodb_attributes"></a> [dynamodb\_attributes](#input\_dynamodb\_attributes) | Additional DynamoDB attributes in the form of a list of mapped values | `list` | `[]` | no |
 | <a name="input_dynamodb_autoscale_max_read_capacity"></a> [dynamodb\_autoscale\_max\_read\_capacity](#input\_dynamodb\_autoscale\_max\_read\_capacity) | DynamoDB autoscaling max read capacity | `number` | `20` | no |
 | <a name="input_dynamodb_autoscale_max_write_capacity"></a> [dynamodb\_autoscale\_max\_write\_capacity](#input\_dynamodb\_autoscale\_max\_write\_capacity) | DynamoDB autoscaling max write capacity | `number` | `20` | no |
@@ -109,7 +110,7 @@ A stand alone artifactory module has been provided as a stand alone module to ca
 | <a name="input_dynamodb_tags"></a> [dynamodb\_tags](#input\_dynamodb\_tags) | Additional tags (e.g map(`BusinessUnit`,`XYX`) | `map` | `{}` | no |
 | <a name="input_dynamodb_ttl_attribute"></a> [dynamodb\_ttl\_attribute](#input\_dynamodb\_ttl\_attribute) | DynamoDB table ttl attribute | `string` | `"Expires"` | no |
 | <a name="input_dynamodb_ttl_enabled"></a> [dynamodb\_ttl\_enabled](#input\_dynamodb\_ttl\_enabled) | Whether ttl is enabled or disabled | `bool` | `true` | no |
-| <a name="input_enable_api_gateway"></a> [enable\_api\_gateway](#input\_enable\_api\_gateway) | allow to create api-gateway | `bool` | `false` | no |
+| <a name="input_enable_api_gateway"></a> [enable\_api\_gateway](#input\_enable\_api\_gateway) | Allow to create api-gateway | `bool` | `false` | no |
 | <a name="input_enable_datastore_module"></a> [enable\_datastore\_module](#input\_enable\_datastore\_module) | Enables the data store module that can provision data storage resources | `bool` | `false` | no |
 | <a name="input_enable_vpc"></a> [enable\_vpc](#input\_enable\_vpc) | Put lambda into the private VPC and default eks security group | `string` | `false` | no |
 | <a name="input_internal_entrypoint_config"></a> [internal\_entrypoint\_config](#input\_internal\_entrypoint\_config) | Map of configurations of internal entrypoints. | `map(any)` | n/a | yes |
@@ -138,11 +139,10 @@ A stand alone artifactory module has been provided as a stand alone module to ca
 | <a name="input_s3_bucket_namespace"></a> [s3\_bucket\_namespace](#input\_s3\_bucket\_namespace) | The namespace of the bucket - intention is to help avoid naming collisions | `string` | `""` | no |
 | <a name="input_s3_enable_versioning"></a> [s3\_enable\_versioning](#input\_s3\_enable\_versioning) | If versioning should be configured on the bucket | `bool` | `true` | no |
 | <a name="input_s3_tags"></a> [s3\_tags](#input\_s3\_tags) | Additional tags to be added to the s3 resources | `map` | `{}` | no |
-| <a name="input_stage_name"></a> [stage\_name](#input\_stage\_name) | stage name for the api gateway deployment | `string` | `"test"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags that are added to all resources in this module. | `map` | `{}` | no |
 | <a name="input_vpc_security_group_ids"></a> [vpc\_security\_group\_ids](#input\_vpc\_security\_group\_ids) | List of security group IDs associated with the Lambda function | `list(string)` | `[]` | no |
 | <a name="input_vpc_subnet_ids"></a> [vpc\_subnet\_ids](#input\_vpc\_subnet\_ids) | List of subnet IDs associated with the Lambda function | `list(string)` | `[]` | no |
-| <a name="input_zone_id"></a> [zone\_id](#input\_zone\_id) | Route 53 zone id | `any` | n/a | yes |
+| <a name="input_zone_id"></a> [zone\_id](#input\_zone\_id) | Route 53 hosted zone id | `string` | n/a | yes |
 
 ## Outputs
 
