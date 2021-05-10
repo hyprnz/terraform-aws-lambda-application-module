@@ -370,7 +370,7 @@ variable "enable_api_gateway" {
 }
 
 variable "zone_id" {
-   type        = string
+  type        = string
   description = "Route 53 hosted zone id"
 }
 
