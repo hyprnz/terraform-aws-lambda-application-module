@@ -378,9 +378,3 @@ variable "domain_name" {
   type        = string
   description = "The custom domain name for api gateway that points to lambda application"
 }
-
-variable "api_gateway_stage_name" {
-  type        = string
-  description = "Stage name for the api gateway deployment"
-  default     = "test"
-}

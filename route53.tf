@@ -25,18 +25,3 @@ resource "aws_route53_record" "api_gateway_live" {
     evaluate_target_health = false
   }
 }
-
-resource "aws_apigatewayv2_api_mapping" "api_gateway_mapping" {
-  count       = var.enable_api_gateway ? 1 : 0
-  api_id      = aws_apigatewayv2_api.api_gateway[0].id
-  domain_name = aws_apigatewayv2_domain_name.api_gateway_domain[0].id
-  stage       = aws_apigatewayv2_stage.api_gateway_stage[0].id
-}
-
-resource "aws_apigatewayv2_stage" "api_gateway_stage" {
-  count       = var.enable_api_gateway ? 1 : 0
-  api_id      = aws_apigatewayv2_api.api_gateway[0].id
-  name        = var.api_gateway_stage_name
-  auto_deploy = true
-  tags        = merge({ Name = format("%s-%s", var.application_name, "api_gateway_stage") }, { "Lambda Application" = var.application_name }, var.tags)
-}
