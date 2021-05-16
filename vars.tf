@@ -18,6 +18,18 @@ variable "internal_entrypoint_config" {
   description = "Map of configurations of internal entrypoints."
 }
 
+variable "msk_arn" {
+  type        = string
+  description = "the MSK source arn for all lambda requires MSK"
+  default     = ""
+}
+
+variable "msk_event_source_config" {
+  type        = map(any)
+  description = "Map of configurations of MSK event source for each lambda"
+  default     = {}
+}
+
 variable "artifact_bucket" {
   type        = string
   description = "Bucket that stores function artifacts. Includes layer dependencies."
@@ -44,6 +56,25 @@ variable "application_timeout" {
   type        = number
   description = "Timeout in seconds for all functions in the application. Defaults to `3`."
   default     = 3
+}
+
+variable "enable_vpc" {
+  type        = string
+  description = "Put lambda into the private VPC and default eks security group"
+  default     = false
+}
+
+
+variable "vpc_subnet_ids" {
+  type        = list(string)
+  description = "List of subnet IDs associated with the Lambda function"
+  default     = []
+}
+
+variable "vpc_security_group_ids" {
+  type        = list(string)
+  description = "List of security group IDs associated with the Lambda function"
+  default     = []
 }
 
 variable "layer_artifact_key" {
@@ -332,4 +363,18 @@ variable "s3_tags" {
   default     = {}
 }
 
+variable "enable_api_gateway" {
+  type        = bool
+  description = "Allow to create api-gateway"
+  default     = false
+}
 
+variable "zone_id" {
+  type        = string
+  description = "Route 53 hosted zone id"
+}
+
+variable "domain_name" {
+  type        = string
+  description = "The custom domain name for api gateway that points to lambda application"
+}
