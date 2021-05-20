@@ -59,7 +59,7 @@ variable "application_timeout" {
 }
 
 variable "enable_vpc" {
-  type        = string
+  type        = bool
   description = "Put lambda into the private VPC and default eks security group"
   default     = false
 }
