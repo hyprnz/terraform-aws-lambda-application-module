@@ -371,3 +371,13 @@ variable "domain_name" {
   type        = string
   description = "The custom domain name for api gateway that points to lambda application"
 }
+
+variable "parameter_store_path" {
+  type        = string
+  description = "SSM parameter path"
+}
+
+variable "ssm_kms_key_arn" {
+  type        = string
+  description = "KMS key arn"
+}
