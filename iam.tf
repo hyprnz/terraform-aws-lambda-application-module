@@ -50,6 +50,36 @@ data "aws_iam_policy_document" "lambda_vpc_document" {
 
   }
 }
+data "aws_iam_policy_document" "ssm_parameters_access" {
+  statement {
+    sid = "SSMAccess"
+
+    effect = "Allow"
+
+    actions = [
+      "ssm:GetParametersByPath",
+      "ssm:GetParameter"
+    ]
+
+    resources = [
+      "*"
+    ]
+  }
+
+  statement {
+    sid = "KMSAcess"
+    effect = "Allow"
+
+    actions = [
+      "kms:Decrypt"
+    ]
+
+    resources = [
+      "${var.ssm_kms_key_arn}"
+    ]
+  }
+}
+
 
 resource "aws_iam_role" "lambda_application_execution_role" {
   name = format("ExecutionRole-Lambda-%s", var.application_name)
@@ -109,4 +139,15 @@ resource "aws_iam_role_policy_attachment" "msk_access_policy" {
   count      = length(keys(var.msk_event_source_config)) > 0 ? 1 : 0
   role       = aws_iam_role.lambda_application_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaMSKExecutionRole"
+}
+
+resource "aws_iam_policy" "ssm_access_policy" {
+  name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-SSMAccess"
+  policy      = data.aws_iam_policy_document.ssm_parameters_access.json
+  description = "Grants permissions to access parameters from SSM"
+}
+
+resource "aws_iam_role_policy_attachment" "ssm_access" {
+  role       = aws_iam_role.lambda_application_execution_role.name
+  policy_arn = aws_iam_policy.ssm_access_policy.arn
 }
