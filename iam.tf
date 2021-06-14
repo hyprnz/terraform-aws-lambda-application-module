@@ -52,7 +52,7 @@ data "aws_iam_policy_document" "lambda_vpc_document" {
 }
 data "aws_iam_policy_document" "ssm_parameters_access" {
   statement {
-    sid = "SSMAccess"
+    sid = "SSMGetAccess"
 
     effect = "Allow"
 
@@ -62,16 +62,29 @@ data "aws_iam_policy_document" "ssm_parameters_access" {
     ]
 
     resources = [
-      "*"
+     "arn:aws:ssm:*:*:parameter${var.parameter_store_path}*"
     ]
   }
+  statement {
+    sid = "SSMPutAccess"
+
+    effect = "Allow"
+
+    actions = [
+      "ssm:PutParameter"
+    ]
+
+    resources = [
+     "arn:aws:ssm:*:*:parameter${var.parameter_store_path}write/*"
+    ]
+  }  
 
   statement {
     sid = "KMSAcess"
     effect = "Allow"
 
     actions = [
-      "kms:Decrypt"
+        "kms:Decrypt"
     ]
 
     resources = [
