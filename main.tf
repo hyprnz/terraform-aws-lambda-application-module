@@ -40,7 +40,7 @@ resource "aws_lambda_function" "lambda_application" {
   layers = [aws_lambda_layer_version.runtime_dependencies.arn]
 
   environment {
-    variables = merge({ APP_NAME = var.application_name }, { PARAMETER_STORE_PATH = "${var.parameter_store_path}/${each.key}"}, local.datastore_env_vars, var.application_env_vars)
+    variables = merge({ APP_NAME = var.application_name }, { PARAMETER_STORE_PATH = "${var.parameter_store_path}"}, local.datastore_env_vars, var.application_env_vars)
   }
 
   dynamic "vpc_config" {
