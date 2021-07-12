@@ -32,10 +32,14 @@ resource "aws_lambda_function" "lambda_application" {
   description   = each.value.description
   role          = aws_iam_role.lambda_application_execution_role.arn
   handler       = each.value.handler
-
+  
+  
+  publish     = var.publish 
   runtime     = var.application_runtime
   memory_size = var.application_memory
   timeout     = var.application_timeout
+
+
 
   layers = [aws_lambda_layer_version.runtime_dependencies.arn]
 
@@ -51,7 +55,16 @@ resource "aws_lambda_function" "lambda_application" {
     }
   }
 
-  tags = merge({ Name = format("%s-%s", var.application_name, each.value.name) }, { "Lambda Application" = var.application_name }, var.tags)
+  tags = merge({ Name = format("%s-%s", var.application_name, each.value.name) }, { "Lambda Application" = var.application_name}, { "version" = var.application_version }, var.tags)
+}
+
+resource "aws_lambda_alias" "lambda_application_alias" {
+  for_each = var.lambda_functions_config
+  
+  name             = var.alias_name
+  description      = "Alias that points to current lambda application version"
+  function_name    = aws_lambda_function.lambda_application[each.key].arn
+  function_version = aws_lambda_function.lambda_application[each.key].version
 }
 
 resource "aws_lambda_permission" "internal_entrypoints" {
@@ -59,7 +72,7 @@ resource "aws_lambda_permission" "internal_entrypoints" {
 
   statement_id  = replace(title(each.value.name), "/-| |_/", "")
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.lambda_application[each.key].function_name
+  function_name = "${aws_lambda_function.lambda_application[each.key].function_name}:${var.alias_name}"
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.internal_entrypoint[each.key].arn
 }

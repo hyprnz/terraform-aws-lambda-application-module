@@ -8,6 +8,11 @@ variable "application_runtime" {
   description = "Lambda runtime for the application."
 }
 
+variable "application_version" {
+  type        = string
+  description = "Version of the function(s) deployed for the application."
+}
+
 variable "lambda_functions_config" {
   type        = map(any)
   description = "Map of functions and associated configurations."
@@ -380,4 +385,15 @@ variable "parameter_store_path" {
 variable "ssm_kms_key_arn" {
   type        = string
   description = "KMS key arn"
+}
+
+variable "publish" {
+  type        = bool
+  description = "Whether to publish creation/change as new Lambda Function Version. Defaults to false."
+  default     = false
+}
+
+variable "alias_name" {
+  type        = string
+  description = "Name for the alias being create"
 }

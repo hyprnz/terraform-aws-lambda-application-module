@@ -6,12 +6,12 @@ resource "aws_cloudwatch_event_rule" "internal_entrypoint" {
 
   event_pattern = jsonencode(each.value.event_pattern_json)
 
-  tags = merge({ Name = format("%s-%s", var.application_name, each.value.name) }, { "Lambda Application" = var.application_name }, var.tags)
+  tags = merge({ Name = format("%s-%s", var.application_name, each.value.name) }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
 }
 
 resource "aws_cloudwatch_event_target" "lambda_internal_entrypoint" {
   for_each  = var.internal_entrypoint_config
   rule      = aws_cloudwatch_event_rule.internal_entrypoint[each.key].name
   target_id = each.value.name
-  arn       = aws_lambda_function.lambda_application[each.key].arn
+  arn       = aws_lambda_alias.lambda_application_alias[each.key].arn
 }
