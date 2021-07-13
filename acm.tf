@@ -22,7 +22,7 @@ resource "aws_route53_record" "cert_validation" {
       record = dvo.resource_record_value
       type   = dvo.resource_record_type
     }
-  } :  {}
+  } : {}
 
   allow_overwrite = true
   name            = each.value.name

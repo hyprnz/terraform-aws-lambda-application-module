@@ -21,7 +21,7 @@ resource "aws_apigatewayv2_api_mapping" "api_gateway_mapping" {
   count       = var.enable_api_gateway ? 1 : 0
   api_id      = aws_apigatewayv2_api.api_gateway[0].id
   domain_name = aws_apigatewayv2_domain_name.api_gateway_domain[0].id
-  stage       = "$default" 
+  stage       = "$default"
 }
 
 # todo aws_apigatewayv2_authorizer: will be helpful to reduce duplicated work

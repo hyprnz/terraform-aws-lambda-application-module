@@ -19,8 +19,8 @@ locals {
   s3_env_vars_used       = var.enable_datastore_module && var.create_s3_bucket ? local.s3_env_vars : {}
 
   datastore_env_vars = merge(local.rds_env_vars_used, local.dynamodb_env_vars_used, local.s3_env_vars_used)
-  
-  vpc_policy_required = contains(values(var.lambda_functions_config)[*].enable_vpc, true) ? true: false
+
+  vpc_policy_required = contains(values(var.lambda_functions_config)[*].enable_vpc, true) ? true : false
 }
 
 resource "aws_lambda_function" "lambda_application" {
@@ -32,9 +32,9 @@ resource "aws_lambda_function" "lambda_application" {
   description   = each.value.description
   role          = aws_iam_role.lambda_application_execution_role.arn
   handler       = each.value.handler
-  
-  
-  publish     = var.publish 
+
+
+  publish     = var.publish
   runtime     = var.application_runtime
   memory_size = var.application_memory
   timeout     = var.application_timeout
@@ -44,7 +44,7 @@ resource "aws_lambda_function" "lambda_application" {
   layers = [aws_lambda_layer_version.runtime_dependencies.arn]
 
   environment {
-    variables = merge({ APP_NAME = var.application_name }, { PARAMETER_STORE_PATH = "${var.parameter_store_path}"}, local.datastore_env_vars, var.application_env_vars)
+    variables = merge({ APP_NAME = var.application_name }, { PARAMETER_STORE_PATH = "${var.parameter_store_path}" }, local.datastore_env_vars, var.application_env_vars)
   }
 
   dynamic "vpc_config" {
@@ -55,12 +55,12 @@ resource "aws_lambda_function" "lambda_application" {
     }
   }
 
-  tags = merge({ Name = format("%s-%s", var.application_name, each.value.name) }, { "Lambda Application" = var.application_name}, { "version" = var.application_version }, var.tags)
+  tags = merge({ Name = format("%s-%s", var.application_name, each.value.name) }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
 }
 
 resource "aws_lambda_alias" "lambda_application_alias" {
   for_each = var.lambda_functions_config
-  
+
   name             = var.alias_name
   description      = "Alias that points to current lambda application version"
   function_name    = aws_lambda_function.lambda_application[each.key].arn

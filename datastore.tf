@@ -65,5 +65,5 @@ module "lambda_datastore" {
   rds_tags      = var.rds_tags
   s3_tags       = var.s3_tags
   dynamodb_tags = var.dynamodb_tags
-  tags          = merge({ "Lambda Application" = var.application_name }, var.datastore_tags, { "version" = var.application_version },var.tags)
+  tags          = merge({ "Lambda Application" = var.application_name }, var.datastore_tags, { "version" = var.application_version }, var.tags)
 }
