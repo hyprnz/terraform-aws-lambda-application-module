@@ -4,7 +4,7 @@ resource "aws_apigatewayv2_api" "api_gateway" {
   name          = var.application_name
   protocol_type = "HTTP"
   route_key     = "$default"
-  target        = aws_lambda_alias.lambda_application_alias["service"].invoke_arn
+  target        = aws_lambda_alias.lambda_application_alias["service"].arn
   tags          = merge({ Name = format("%s-%s", var.application_name, "api_gateway") }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
 }
 
