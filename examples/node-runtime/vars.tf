@@ -1,3 +1,7 @@
+variable "aws_region" {
+  type    = string
+  default = "ap-southeast-2"
+}
 variable "application_name" {
   type        = string
   description = "Repo name of the lambda application."
