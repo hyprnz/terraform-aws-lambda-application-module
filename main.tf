@@ -33,8 +33,7 @@ resource "aws_lambda_function" "lambda_application" {
   role          = aws_iam_role.lambda_application_execution_role.arn
   handler       = each.value.handler
 
-
-  publish     = var.publish
+  publish     = true
   runtime     = var.application_runtime
   memory_size = var.application_memory
   timeout     = var.application_timeout
@@ -62,7 +61,7 @@ resource "aws_lambda_alias" "lambda_application_alias" {
   for_each = var.lambda_functions_config
 
   name             = var.alias_name
-  description      = "Alias that points to current lambda application version"
+  description      = var.alias_description
   function_name    = aws_lambda_function.lambda_application[each.key].arn
   function_version = aws_lambda_function.lambda_application[each.key].version
 }
