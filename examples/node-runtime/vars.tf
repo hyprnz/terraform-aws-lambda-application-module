@@ -1,3 +1,7 @@
+variable "aws_region" {
+  type    = string
+  default = "ap-southeast-2"
+}
 variable "application_name" {
   type        = string
   description = "Repo name of the lambda application."
@@ -387,13 +391,13 @@ variable "ssm_kms_key_arn" {
   description = "KMS key arn"
 }
 
+variable "publish" {
+  type        = bool
+  description = "Whether to publish creation/change as new Lambda Function Version. Defaults to false."
+  default     = false
+}
+
 variable "alias_name" {
   type        = string
   description = "Name for the alias being create"
-}
-
-variable "alias_description" {
-  type        = string
-  description = "Name for the alias being create"
-  default     = "Alias that points to the current lambda application version"
 }

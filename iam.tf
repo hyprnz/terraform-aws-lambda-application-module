@@ -62,7 +62,7 @@ data "aws_iam_policy_document" "ssm_parameters_access" {
     ]
 
     resources = [
-     "arn:aws:ssm:*:*:parameter${var.parameter_store_path}*"
+      "arn:aws:ssm:*:*:parameter${var.parameter_store_path}*"
     ]
   }
   statement {
@@ -75,16 +75,16 @@ data "aws_iam_policy_document" "ssm_parameters_access" {
     ]
 
     resources = [
-     "arn:aws:ssm:*:*:parameter${var.parameter_store_path}write/*"
+      "arn:aws:ssm:*:*:parameter${var.parameter_store_path}write/*"
     ]
-  }  
+  }
 
   statement {
-    sid = "KMSAcess"
+    sid    = "KMSAcess"
     effect = "Allow"
 
     actions = [
-        "kms:Decrypt"
+      "kms:Decrypt"
     ]
 
     resources = [
@@ -99,7 +99,7 @@ resource "aws_iam_role" "lambda_application_execution_role" {
 
   assume_role_policy = data.aws_iam_policy_document.lambda_application_assume_role_statement.json
 
-  tags = merge({ Name = format("%s-Execution-Role", var.application_name) }, { "Lambda Application" = var.application_name }, var.tags)
+  tags = merge({ Name = format("%s-Execution-Role", var.application_name) }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
 }
 
 resource "aws_iam_policy" "event_bridge_internal_entrypoint" {
@@ -136,14 +136,14 @@ resource "aws_iam_role_policy_attachment" "datastore_dynamodb_access_policy" {
 }
 
 resource "aws_iam_policy" "lambda_vpc" {
-  count       = local.vpc_policy_required ? 1: 0
+  count       = local.vpc_policy_required ? 1 : 0
   name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-LambdaVPC"
   description = "Grants permissions to access VPC"
   policy      = data.aws_iam_policy_document.lambda_vpc_document.json
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_vpc" {
-  count      = local.vpc_policy_required ? 1: 0
+  count      = local.vpc_policy_required ? 1 : 0
   role       = aws_iam_role.lambda_application_execution_role.name
   policy_arn = aws_iam_policy.lambda_vpc[0].arn
 }
