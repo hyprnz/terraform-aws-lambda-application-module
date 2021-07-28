@@ -32,6 +32,7 @@ resource "aws_lambda_function" "lambda_application" {
   description   = each.value.description
   role          = aws_iam_role.lambda_application_execution_role.arn
   handler       = each.value.handler
+  reserved_concurrent_executions = try(each.value.lambda_functions_config.reserved_concurrent_executions, 0) 
 
   publish     = true
   runtime     = var.application_runtime
