@@ -21,6 +21,8 @@ locals {
   datastore_env_vars = merge(local.rds_env_vars_used, local.dynamodb_env_vars_used, local.s3_env_vars_used)
 
   vpc_policy_required = contains(values(var.lambda_functions_config)[*].enable_vpc, true) ? true : false
+
+  custom_policy_required = length(var.custom_policy_document) > 0 ? true : false
 }
 
 resource "aws_lambda_function" "lambda_application" {

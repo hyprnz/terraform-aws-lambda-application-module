@@ -397,3 +397,9 @@ variable "alias_description" {
   description = "Name for the alias being create"
   default     = "Alias that points to the current lambda application version"
 }
+
+variable "custom_policy_document" {
+  type        = string
+  description = "custom_policy_document"
+  default     = ""
+}
