@@ -403,3 +403,9 @@ variable "custom_policy_document" {
   description = "A valid policy json string that defines additional actions required by the execution role of the Lambda function"
   default     = ""
 }
+
+variable "custom_policy_description" {
+  type        = string
+  description = "Allows to override the custom Lambda policy's description"
+  default     = "The custom policy for the Lambda application module execution role"
+}

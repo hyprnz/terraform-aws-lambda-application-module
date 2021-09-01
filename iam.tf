@@ -168,7 +168,7 @@ resource "aws_iam_role_policy_attachment" "ssm_access" {
 resource "aws_iam_policy" "custom_lambda_policy" {
   count       = local.custom_policy_required ? 1 : 0
   name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-CustomLambdaPolicy"
-  description = "A custom policy for the Lambda application module execution role"
+  description = var.custom_policy_description
   policy      = var.custom_policy_document
 }
 
