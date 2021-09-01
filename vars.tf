@@ -400,6 +400,6 @@ variable "alias_description" {
 
 variable "custom_policy_document" {
   type        = string
-  description = "custom_policy_document"
+  description = "A valid policy json string that defines additional actions required by the execution role of the Lambda function"
   default     = ""
 }
