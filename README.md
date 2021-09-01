@@ -33,7 +33,7 @@ A stand alone artifactory module has been provided as a stand alone module to ca
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_lambda_datastore"></a> [lambda\_datastore](#module\_lambda\_datastore) | git::git@github.com:hyprnz/terraform-aws-data-storage-module?ref=2.0.1 |  |
+| <a name="module_lambda_datastore"></a> [lambda\_datastore](#module\_lambda\_datastore) | git::git@github.com:hyprnz/terraform-aws-data-storage-module?ref=2.0.2 |  |
 
 ## Resources
 
@@ -44,13 +44,15 @@ A stand alone artifactory module has been provided as a stand alone module to ca
 | [aws_apigatewayv2_api.api_gateway](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_api) | resource |
 | [aws_apigatewayv2_api_mapping.api_gateway_mapping](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_api_mapping) | resource |
 | [aws_apigatewayv2_domain_name.api_gateway_domain](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_domain_name) | resource |
-| [aws_apigatewayv2_stage.api_gateway_stage](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apigatewayv2_stage) | resource |
 | [aws_cloudwatch_event_rule.internal_entrypoint](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_rule) | resource |
 | [aws_cloudwatch_event_target.lambda_internal_entrypoint](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target) | resource |
 | [aws_cloudwatch_log_group.lambda_application_log_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
+| [aws_iam_policy.custom_lambda_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_policy.event_bridge_internal_entrypoint](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_policy.lambda_vpc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
+| [aws_iam_policy.ssm_access_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_role.lambda_application_execution_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [aws_iam_role_policy_attachment.custom_lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_iam_role_policy_attachment.datastore_dynamodb_access_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_iam_role_policy_attachment.datastore_s3_access_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_iam_role_policy_attachment.event_bridge_internal_entrypoint_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
@@ -58,6 +60,8 @@ A stand alone artifactory module has been provided as a stand alone module to ca
 | [aws_iam_role_policy_attachment.lambda_vpc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_iam_role_policy_attachment.msk_access_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_iam_role_policy_attachment.s3_default_read_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
+| [aws_iam_role_policy_attachment.ssm_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
+| [aws_lambda_alias.lambda_application_alias](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_alias) | resource |
 | [aws_lambda_event_source_mapping.msk_event_source](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_event_source_mapping) | resource |
 | [aws_lambda_function.lambda_application](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function) | resource |
 | [aws_lambda_layer_version.runtime_dependencies](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_layer_version) | resource |
@@ -68,23 +72,28 @@ A stand alone artifactory module has been provided as a stand alone module to ca
 | [aws_iam_policy_document.event_bridge_internal_entrypoint](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.lambda_application_assume_role_statement](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.lambda_vpc_document](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.ssm_parameters_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_api_gateway_stage_name"></a> [api\_gateway\_stage\_name](#input\_api\_gateway\_stage\_name) | Stage name for the api gateway deployment | `string` | `"test"` | no |
+| <a name="input_alias_description"></a> [alias\_description](#input\_alias\_description) | Name for the alias being create | `string` | `"Alias that points to the current lambda application version"` | no |
+| <a name="input_alias_name"></a> [alias\_name](#input\_alias\_name) | Name for the alias being create | `string` | n/a | yes |
 | <a name="input_application_env_vars"></a> [application\_env\_vars](#input\_application\_env\_vars) | Map of environment variables required by any function in the application. | `map(any)` | `{}` | no |
 | <a name="input_application_memory"></a> [application\_memory](#input\_application\_memory) | Memory allocated to all functions in the application. Defaults to `128`. | `number` | `128` | no |
 | <a name="input_application_name"></a> [application\_name](#input\_application\_name) | Repo name of the lambda application. | `string` | n/a | yes |
 | <a name="input_application_runtime"></a> [application\_runtime](#input\_application\_runtime) | Lambda runtime for the application. | `string` | n/a | yes |
 | <a name="input_application_timeout"></a> [application\_timeout](#input\_application\_timeout) | Timeout in seconds for all functions in the application. Defaults to `3`. | `number` | `3` | no |
+| <a name="input_application_version"></a> [application\_version](#input\_application\_version) | Version of the function(s) deployed for the application. | `string` | n/a | yes |
 | <a name="input_artifact_bucket"></a> [artifact\_bucket](#input\_artifact\_bucket) | Bucket that stores function artifacts. Includes layer dependencies. | `string` | n/a | yes |
 | <a name="input_artifact_bucket_key"></a> [artifact\_bucket\_key](#input\_artifact\_bucket\_key) | File name key of the artifact to load. | `string` | n/a | yes |
 | <a name="input_aws_cloudwatch_log_group_retention_in_days"></a> [aws\_cloudwatch\_log\_group\_retention\_in\_days](#input\_aws\_cloudwatch\_log\_group\_retention\_in\_days) | The retention period in days of all log group created for each function. Defaults to `30`. | `number` | `30` | no |
 | <a name="input_create_dynamodb_table"></a> [create\_dynamodb\_table](#input\_create\_dynamodb\_table) | Whether or not to enable DynamoDB resources | `bool` | `false` | no |
 | <a name="input_create_rds_instance"></a> [create\_rds\_instance](#input\_create\_rds\_instance) | Controls if an RDS instance should be provisioned and integrated with the Kubernetes deployment. | `bool` | `false` | no |
 | <a name="input_create_s3_bucket"></a> [create\_s3\_bucket](#input\_create\_s3\_bucket) | Controls if an S3 bucket should be provisioned | `bool` | `false` | no |
+| <a name="input_custom_policy_description"></a> [custom\_policy\_description](#input\_custom\_policy\_description) | Allows to override the custom Lambda policy's description | `string` | `"The custom policy for the Lambda application module execution role"` | no |
+| <a name="input_custom_policy_document"></a> [custom\_policy\_document](#input\_custom\_policy\_document) | A valid policy json string that defines additional actions required by the execution role of the Lambda function | `string` | `""` | no |
 | <a name="input_datastore_tags"></a> [datastore\_tags](#input\_datastore\_tags) | Additional tags to add to all datastore resources | `map(string)` | `{}` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | The custom domain name for api gateway that points to lambda application | `string` | n/a | yes |
 | <a name="input_dynamodb_attributes"></a> [dynamodb\_attributes](#input\_dynamodb\_attributes) | Additional DynamoDB attributes in the form of a list of mapped values | `list` | `[]` | no |
@@ -112,12 +121,12 @@ A stand alone artifactory module has been provided as a stand alone module to ca
 | <a name="input_dynamodb_ttl_enabled"></a> [dynamodb\_ttl\_enabled](#input\_dynamodb\_ttl\_enabled) | Whether ttl is enabled or disabled | `bool` | `true` | no |
 | <a name="input_enable_api_gateway"></a> [enable\_api\_gateway](#input\_enable\_api\_gateway) | Allow to create api-gateway | `bool` | `false` | no |
 | <a name="input_enable_datastore_module"></a> [enable\_datastore\_module](#input\_enable\_datastore\_module) | Enables the data store module that can provision data storage resources | `bool` | `false` | no |
-| <a name="input_enable_vpc"></a> [enable\_vpc](#input\_enable\_vpc) | Put lambda into the private VPC and default eks security group | `string` | `false` | no |
 | <a name="input_internal_entrypoint_config"></a> [internal\_entrypoint\_config](#input\_internal\_entrypoint\_config) | Map of configurations of internal entrypoints. | `map(any)` | n/a | yes |
 | <a name="input_lambda_functions_config"></a> [lambda\_functions\_config](#input\_lambda\_functions\_config) | Map of functions and associated configurations. | `map(any)` | n/a | yes |
 | <a name="input_layer_artifact_key"></a> [layer\_artifact\_key](#input\_layer\_artifact\_key) | File name key of the layer artifact to load. | `string` | `""` | no |
 | <a name="input_msk_arn"></a> [msk\_arn](#input\_msk\_arn) | the MSK source arn for all lambda requires MSK | `string` | `""` | no |
 | <a name="input_msk_event_source_config"></a> [msk\_event\_source\_config](#input\_msk\_event\_source\_config) | Map of configurations of MSK event source for each lambda | `map(any)` | `{}` | no |
+| <a name="input_parameter_store_path"></a> [parameter\_store\_path](#input\_parameter\_store\_path) | SSM parameter path | `string` | n/a | yes |
 | <a name="input_rds_allocated_storage"></a> [rds\_allocated\_storage](#input\_rds\_allocated\_storage) | Amount of storage allocated to RDS instance | `number` | `10` | no |
 | <a name="input_rds_database_name"></a> [rds\_database\_name](#input\_rds\_database\_name) | The database name. Can only contain alphanumeric characters and cannot be a database reserved word | `string` | `""` | no |
 | <a name="input_rds_enable_performance_insights"></a> [rds\_enable\_performance\_insights](#input\_rds\_enable\_performance\_insights) | Controls the enabling of RDS Performance insights. Default to `true` | `bool` | `true` | no |
@@ -139,6 +148,7 @@ A stand alone artifactory module has been provided as a stand alone module to ca
 | <a name="input_s3_bucket_namespace"></a> [s3\_bucket\_namespace](#input\_s3\_bucket\_namespace) | The namespace of the bucket - intention is to help avoid naming collisions | `string` | `""` | no |
 | <a name="input_s3_enable_versioning"></a> [s3\_enable\_versioning](#input\_s3\_enable\_versioning) | If versioning should be configured on the bucket | `bool` | `true` | no |
 | <a name="input_s3_tags"></a> [s3\_tags](#input\_s3\_tags) | Additional tags to be added to the s3 resources | `map` | `{}` | no |
+| <a name="input_ssm_kms_key_arn"></a> [ssm\_kms\_key\_arn](#input\_ssm\_kms\_key\_arn) | KMS key arn | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags that are added to all resources in this module. | `map` | `{}` | no |
 | <a name="input_vpc_security_group_ids"></a> [vpc\_security\_group\_ids](#input\_vpc\_security\_group\_ids) | List of security group IDs associated with the Lambda function | `list(string)` | `[]` | no |
 | <a name="input_vpc_subnet_ids"></a> [vpc\_subnet\_ids](#input\_vpc\_subnet\_ids) | List of subnet IDs associated with the Lambda function | `list(string)` | `[]` | no |

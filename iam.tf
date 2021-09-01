@@ -164,3 +164,16 @@ resource "aws_iam_role_policy_attachment" "ssm_access" {
   role       = aws_iam_role.lambda_application_execution_role.name
   policy_arn = aws_iam_policy.ssm_access_policy.arn
 }
+
+resource "aws_iam_policy" "custom_lambda_policy" {
+  count       = local.custom_policy_required ? 1 : 0
+  name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-CustomLambdaPolicy"
+  description = var.custom_policy_description
+  policy      = var.custom_policy_document
+}
+
+resource "aws_iam_role_policy_attachment" "custom_lambda" {
+  count      = local.custom_policy_required ? 1 : 0
+  role       = aws_iam_role.lambda_application_execution_role.name
+  policy_arn = aws_iam_policy.custom_lambda_policy[0].arn
+}

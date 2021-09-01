@@ -397,3 +397,15 @@ variable "alias_description" {
   description = "Name for the alias being create"
   default     = "Alias that points to the current lambda application version"
 }
+
+variable "custom_policy_document" {
+  type        = string
+  description = "A valid policy json string that defines additional actions required by the execution role of the Lambda function"
+  default     = ""
+}
+
+variable "custom_policy_description" {
+  type        = string
+  description = "Allows to override the custom Lambda policy's description"
+  default     = "The custom policy for the Lambda application module execution role"
+}
