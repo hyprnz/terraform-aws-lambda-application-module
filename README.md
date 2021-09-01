@@ -92,6 +92,7 @@ A stand alone artifactory module has been provided as a stand alone module to ca
 | <a name="input_create_dynamodb_table"></a> [create\_dynamodb\_table](#input\_create\_dynamodb\_table) | Whether or not to enable DynamoDB resources | `bool` | `false` | no |
 | <a name="input_create_rds_instance"></a> [create\_rds\_instance](#input\_create\_rds\_instance) | Controls if an RDS instance should be provisioned and integrated with the Kubernetes deployment. | `bool` | `false` | no |
 | <a name="input_create_s3_bucket"></a> [create\_s3\_bucket](#input\_create\_s3\_bucket) | Controls if an S3 bucket should be provisioned | `bool` | `false` | no |
+| <a name="input_custom_policy_description"></a> [custom\_policy\_description](#input\_custom\_policy\_description) | Allows to override the custom Lambda policy's description | `string` | `"The custom policy for the Lambda application module execution role"` | no |
 | <a name="input_custom_policy_document"></a> [custom\_policy\_document](#input\_custom\_policy\_document) | A valid policy json string that defines additional actions required by the execution role of the Lambda function | `string` | `""` | no |
 | <a name="input_datastore_tags"></a> [datastore\_tags](#input\_datastore\_tags) | Additional tags to add to all datastore resources | `map(string)` | `{}` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | The custom domain name for api gateway that points to lambda application | `string` | n/a | yes |
