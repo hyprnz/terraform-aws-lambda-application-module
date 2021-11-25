@@ -409,3 +409,9 @@ variable "custom_policy_description" {
   description = "Allows to override the custom Lambda policy's description"
   default     = "The custom policy for the Lambda application module execution role"
 }
+
+variable "additional_layers" {
+  type        = list(string)
+  description = "A List of additional layers to be added to the function"
+  default     = []
+}
