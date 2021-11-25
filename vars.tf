@@ -389,12 +389,12 @@ variable "ssm_kms_key_arn" {
 
 variable "alias_name" {
   type        = string
-  description = "Name for the alias being create"
+  description = "Name of the alias being created"
 }
 
 variable "alias_description" {
   type        = string
-  description = "Name for the alias being create"
+  description = "Name of the alias being created"
   default     = "Alias that points to the current lambda application version"
 }
 

@@ -78,8 +78,9 @@ A stand alone artifactory module has been provided as a stand alone module to ca
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_alias_description"></a> [alias\_description](#input\_alias\_description) | Name for the alias being create | `string` | `"Alias that points to the current lambda application version"` | no |
-| <a name="input_alias_name"></a> [alias\_name](#input\_alias\_name) | Name for the alias being create | `string` | n/a | yes |
+| <a name="input_additional_layers"></a> [additional\_layers](#input\_additional\_layers) | A List of additional layers to be added to the function | `list(string)` | `[]` | no |
+| <a name="input_alias_description"></a> [alias\_description](#input\_alias\_description) | Name of the alias being created | `string` | `"Alias that points to the current lambda application version"` | no |
+| <a name="input_alias_name"></a> [alias\_name](#input\_alias\_name) | Name of the alias being created | `string` | n/a | yes |
 | <a name="input_application_env_vars"></a> [application\_env\_vars](#input\_application\_env\_vars) | Map of environment variables required by any function in the application. | `map(any)` | `{}` | no |
 | <a name="input_application_memory"></a> [application\_memory](#input\_application\_memory) | Memory allocated to all functions in the application. Defaults to `128`. | `number` | `128` | no |
 | <a name="input_application_name"></a> [application\_name](#input\_application\_name) | Repo name of the lambda application. | `string` | n/a | yes |
