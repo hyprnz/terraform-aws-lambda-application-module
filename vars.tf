@@ -412,6 +412,6 @@ variable "custom_policy_description" {
 
 variable "additional_layers" {
   type        = list(string)
-  description = "A List of additional layers to be added to the function"
+  description = "A list of layer ARN's (with or without aliases) to add to all functions within the Lambda application. Provides the ability to add dependencies for additional functionality such as monitoring and observability."
   default     = []
 }
