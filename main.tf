@@ -37,12 +37,10 @@ resource "aws_lambda_function" "lambda_application" {
 
   publish     = true
   runtime     = var.application_runtime
-  memory_size = var.application_memory
-  timeout     = var.application_timeout
+  memory_size = try(each.value.function_memory, var.application_memory)
+  timeout     = try(each.value.function_timeout, var.application_timeout)
 
-
-
-  layers = [aws_lambda_layer_version.runtime_dependencies.arn]
+  layers = concat([aws_lambda_layer_version.runtime_dependencies.arn], var.additional_layers)
 
   environment {
     variables = merge({ APP_NAME = var.application_name }, { PARAMETER_STORE_PATH = "${var.parameter_store_path}" }, local.datastore_env_vars, var.application_env_vars)

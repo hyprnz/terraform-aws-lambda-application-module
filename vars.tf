@@ -389,12 +389,12 @@ variable "ssm_kms_key_arn" {
 
 variable "alias_name" {
   type        = string
-  description = "Name for the alias being create"
+  description = "Name of the alias being created"
 }
 
 variable "alias_description" {
   type        = string
-  description = "Name for the alias being create"
+  description = "Name of the alias being created"
   default     = "Alias that points to the current lambda application version"
 }
 
@@ -408,4 +408,10 @@ variable "custom_policy_description" {
   type        = string
   description = "Allows to override the custom Lambda policy's description"
   default     = "The custom policy for the Lambda application module execution role"
+}
+
+variable "additional_layers" {
+  type        = list(string)
+  description = "A list of layer ARN's (with or without aliases) to add to all functions within the Lambda application. Provides the ability to add dependencies for additional functionality such as monitoring and observability."
+  default     = []
 }
