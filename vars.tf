@@ -187,6 +187,72 @@ variable "rds_storage_encryption_kms_key_arn" {
   default     = ""
 }
 
+variable "use_rds_snapshot" {
+  type        = bool
+  description = "Controls if an RDS snapshot should be used when creating the rds instance. Will use the latest snapshot of the `rds_identifier` variable."
+  default     = false
+}
+
+variable "rds_apply_immediately" {
+  type        = bool
+  description = "Specifies whether any database modifications are applied immediately, or during the next maintenance window. Defaults to `false`."
+  default     = false
+}
+
+variable "rds_auto_minor_version_upgrade" {
+  type        = bool
+  description = "Indicates that minor engine upgrades will be applied automatically to the DB instance during the maintenance window. Defaults to `true`."
+  default     = true
+}
+
+variable "backup_retention_period" {
+  type        = number
+  description = "The backup retention period in days"
+  default     = 7
+}
+
+variable "rds_option_group_name" {
+  type        = string
+  description = "Name of the DB option group to associate"
+  default     = null
+}
+
+variable "rds_multi_az" {
+  type        = bool
+  description = "Specifies if the RDS instance is multi-AZ."
+  default     = false
+}
+
+variable "rds_backup_window" {
+  type        = string
+  description = "The daily time range (in UTC) during which automated backups are created if they are enabled. Example: '09:46-10:16'. Must not overlap with maintenance_window"
+  default     = "16:19-16:49"
+}
+
+variable "rds_skip_final_snapshot" {
+  type        = bool
+  description = "Determines whether a final DB snapshot is created before the DB instance is deleted. If true is specified, no DBSnapshot is created. If false is specified, a DB snapshot is created before the DB instance is deleted, using the value from final_snapshot_identifier"
+  default     = true
+}
+
+variable "rds_final_snapshot_identifier" {
+  type        = string
+  description = "The name of your final DB snapshot when this DB instance is deleted. Must be provided if `rds_skip_final_snapshot` is set to false. The value must begin with a letter, only contain alphanumeric characters and hyphens, and not end with a hyphen or contain two consecutive hyphens."
+  default     = null
+}
+
+variable "rds_username" {
+  type        = string
+  description = "RDS database user name"
+  default     = ""
+}
+
+variable "rds_enable_deletion_protection" {
+  type        = bool
+  description = " If the DB instance should have deletion protection enabled. The database can't be deleted when this value is set to `true`. The default is `false`."
+  default     = false
+}
+
 variable "create_s3_bucket" {
   description = "Controls if an S3 bucket should be provisioned"
   default     = false

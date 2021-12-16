@@ -11,7 +11,7 @@ locals {
   }
 
   s3_env_vars = {
-    S3_BUCKET_NAME = module.lambda_datastore.s3_bucket
+    S3_BUCKET_NAME = module.lambda_datastore.s3_bucket_name
   }
 
   rds_env_vars_used      = var.enable_datastore_module && var.create_rds_instance ? local.rds_env_vars : {}
