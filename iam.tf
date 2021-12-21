@@ -80,7 +80,7 @@ data "aws_iam_policy_document" "ssm_parameters_access" {
   }
 
   statement {
-    sid    = "KMSAcess"
+    sid    = "KMSAccess"
     effect = "Allow"
 
     actions = [
@@ -105,7 +105,7 @@ resource "aws_iam_role" "lambda_application_execution_role" {
 resource "aws_iam_policy" "event_bridge_internal_entrypoint" {
   name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-EventBridgeInternalEntrypointPolicy"
   policy      = data.aws_iam_policy_document.event_bridge_internal_entrypoint.json
-  description = "Grants permissions to write inernal entrypoint events to EventBridge"
+  description = "Grants permissions to write internal entrypoint events to EventBridge"
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_application_logs" {
