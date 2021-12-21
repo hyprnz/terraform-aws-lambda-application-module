@@ -1,0 +1,50 @@
+# # see: https://terraform-docs.io/user-guide/configuration/#version
+# version: ">= 0.13.0, < 1.0.0"
+
+# see: https://terraform-docs.io/user-guide/configuration/#formatters
+formatter: markdown table
+
+# header-from: doc.txt
+footer-from: docs/readme-footer.md
+
+# see: https://terraform-docs.io/user-guide/configuration/#sections
+sections:
+  show:
+    - header
+    - requirements
+    - inputs
+    - providers
+    - modules
+    - outputs
+    - footer
+
+# # see: https://terraform-docs.io/user-guide/configuration/#content
+
+
+# # see: https://terraform-docs.io/user-guide/configuration/#output
+output:
+  file: README.md
+  mode: inject
+#   template: |-
+#     <!-- BEGIN_TF_DOCS -->
+#     The template can be customized with arbitrary markdown content.
+#     For example this can be shown before the actual content generated
+#     by formatters.
+#
+#     {{ .Content }}
+#
+#     You can also show something after it!
+#     <!-- END_TF_DOCS -->
+
+# see: https://terraform-docs.io/user-guide/configuration/#sort
+sort:
+  enabled: true
+  by: required
+
+settings:
+  indent: 2
+  anchor: false
+  escape: false
+  default: true
+  required: true
+  type: true
