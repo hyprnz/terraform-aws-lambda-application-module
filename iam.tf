@@ -88,7 +88,7 @@ data "aws_iam_policy_document" "ssm_parameters_access" {
     ]
 
     resources = [
-      "${var.ssm_kms_key_arn}"
+      var.ssm_kms_key_arn
     ]
   }
 }
