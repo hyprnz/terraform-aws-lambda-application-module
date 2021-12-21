@@ -11,7 +11,7 @@ locals {
   }
 
   s3_env_vars = {
-    S3_BUCKET_NAME = module.lambda_datastore.s3_bucket
+    S3_BUCKET_NAME = module.lambda_datastore.s3_bucket_name
   }
 
   rds_env_vars_used      = var.enable_datastore_module && var.create_rds_instance ? local.rds_env_vars : {}
@@ -43,7 +43,7 @@ resource "aws_lambda_function" "lambda_application" {
   layers = concat([aws_lambda_layer_version.runtime_dependencies.arn], var.additional_layers)
 
   environment {
-    variables = merge({ APP_NAME = var.application_name }, { PARAMETER_STORE_PATH = "${var.parameter_store_path}" }, local.datastore_env_vars, var.application_env_vars)
+    variables = merge({ APP_NAME = var.application_name }, { PARAMETER_STORE_PATH = var.parameter_store_path }, local.datastore_env_vars, var.application_env_vars)
   }
 
   dynamic "vpc_config" {

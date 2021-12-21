@@ -1,0 +1,1 @@
+ terraform-docs -c .tf-docs.yaml .
