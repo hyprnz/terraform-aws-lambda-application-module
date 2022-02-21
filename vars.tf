@@ -18,9 +18,20 @@ variable "lambda_functions_config" {
   description = "Map of functions and associated configurations."
 }
 
+variable "lambda_alb_config" {
+  type        = map(any)
+  description = "Contains entry point lambda function key"
+  default     = ""
+}
+
 variable "internal_entrypoint_config" {
   type        = map(any)
   description = "Map of configurations of internal entrypoints."
+}
+variable "alb_lambda_listener_arn" {
+  type        = string
+  description = "Listener ARN of ALB"
+  default     = ""
 }
 
 variable "msk_arn" {
@@ -146,6 +157,11 @@ variable "tags" {
   type        = map(any)
   description = "Additional tags that are added to all resources in this module."
   default     = {}
+}
+
+variable "service_target_group_name" {
+  type        = string
+  description = "The service target group attached to application load balancer listener"
 }
 
 # datastore variables ==========================
