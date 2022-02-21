@@ -1,8 +1,10 @@
 variable "application_loadbalancer_name" {
+  type        = string
   description = "The name of the application load balancer for lambdas"
 }
 
 variable "vpc_id" {
+  type        = string
   description = "The vpc_id that the application load balancer will bind to"
 }
 
@@ -26,25 +28,9 @@ variable "domain_name" {
   description = "The custom domain name for application load balancer"
 }
 
-variable "default_target_group_name" {
-  type        = string
-  description = "The default target group attached to application load balancer listener"
-}
-
-variable "default_target_group_function_arn" {
-  type        = string
-  description = "The default target lambda function for application load balancer listener"
-}
-
 variable "logs_bucket_name" {
   type        = string
   description = "The S3 bucket name to store the logs in."
-  default     = ""
-}
-
-variable "bucket_arn" {
-  type        = string
-  description = "The S3 bucket arn to store the logs in."
   default     = ""
 }
 
