@@ -16,6 +16,9 @@ Given the stage of this module it is advised this not be used until further reso
 ## Artifactory Module
 A stand alone artifactory module has been provided as a stand alone module to cater for the creation of an artifactory bucket in a different AWS account. The [README](artifactory/README.md) contains more info.
 
+## Alb Module
+A stand alone alb module has been provided as a stand alone module to cater for the creation of an Application load balancer that supports Lambda target type. The [README](alb/README.md) contains more info.
+
 ---
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -35,7 +38,7 @@ A stand alone artifactory module has been provided as a stand alone module to ca
 
 | Name | Source | Version |
 |------|--------|---------|
-| lambda_datastore | git::git@github.com:hyprnz/terraform-aws-data-storage-module?ref=3.0.0 |  |
+| lambda_datastore | git::git@github.com:hyprnz/terraform-aws-data-storage-module | 3.0.0 |
 
 ## Inputs
 
@@ -51,9 +54,12 @@ A stand alone artifactory module has been provided as a stand alone module to ca
 | internal_entrypoint_config | Map of configurations of internal entrypoints. | `map(any)` | n/a | yes |
 | lambda_functions_config | Map of functions and associated configurations. | `map(any)` | n/a | yes |
 | parameter_store_path | SSM parameter path | `string` | n/a | yes |
+| service_target_group_name | The service target group attached to application load balancer listener | `string` | n/a | yes |
+| service_target_group_path | The target path attached to the service target group | `string` | n/a | yes |
 | ssm_kms_key_arn | KMS key arn | `string` | n/a | yes |
 | zone_id | Route 53 hosted zone id | `string` | n/a | yes |
 | additional_layers | A list of layer ARN's (with or without aliases) to add to all functions within the Lambda application. Provides the ability to add dependencies for additional functionality such as monitoring and observability. | `list(string)` | `[]` | no |
+| alb_lambda_listener_arn | Listener ARN of ALB | `string` | `""` | no |
 | alias_description | Name of the alias being created | `string` | `"Alias that points to the current lambda application version"` | no |
 | application_env_vars | Map of environment variables required by any function in the application. | `map(any)` | `{}` | no |
 | application_memory | Memory allocated to all functions in the application. Defaults to `128`. | `number` | `128` | no |
@@ -91,6 +97,7 @@ A stand alone artifactory module has been provided as a stand alone module to ca
 | dynamodb_ttl_enabled | Whether ttl is enabled or disabled | `bool` | `true` | no |
 | enable_api_gateway | Allow to create api-gateway | `bool` | `false` | no |
 | enable_datastore_module | Enables the data store module that will provision data storage resources | `bool` | `true` | no |
+| lambda_alb_config | Contains entry point lambda function key | `map(any)` | `{}` | no |
 | layer_artifact_key | File name key of the layer artifact to load. | `string` | `""` | no |
 | msk_arn | the MSK source arn for all lambda requires MSK | `string` | `""` | no |
 | msk_event_source_config | Map of configurations of MSK event source for each lambda | `map(any)` | `{}` | no |
