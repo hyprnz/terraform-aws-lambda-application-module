@@ -21,7 +21,7 @@ variable "lambda_functions_config" {
 variable "lambda_alb_config" {
   type        = map(any)
   description = "Contains entry point lambda function key"
-  default     = ""
+  default     = {}
 }
 
 variable "internal_entrypoint_config" {
@@ -162,6 +162,11 @@ variable "tags" {
 variable "service_target_group_name" {
   type        = string
   description = "The service target group attached to application load balancer listener"
+}
+
+variable "service_target_group_path" {
+  type        = string
+  description = "The target path attached to the service target group"
 }
 
 # datastore variables ==========================

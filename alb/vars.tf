@@ -28,13 +28,13 @@ variable "domain_name" {
   description = "The custom domain name for application load balancer"
 }
 
-variable "logs_bucket_name" {
+variable "access_logs_bucket_name" {
   type        = string
-  description = "The S3 bucket name to store the logs in."
+  description = "The S3 bucket name to store the logs in. Must be provided if enable_access_logs is true."
   default     = ""
 }
 
-variable "logs_bucket_prefix" {
+variable "access_logs_bucket_prefix" {
   type        = string
   description = "The S3 bucket prefix. Logs are stored in the root if not configured."
   default =    ""
@@ -45,7 +45,3 @@ variable "enable_access_logs" {
   description = "Boolean to enable / disable access_logs. Defaults to false, even when bucket is specified."
   default     = false
 }
-
-
-
-

@@ -12,10 +12,6 @@
 |------|---------|
 | aws | >= 3.38.0 |
 
-## Modules
-
-No modules.
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -25,9 +21,9 @@ No modules.
 | subnet_ids | The subnet ids for application load balancer | `any` | n/a | yes |
 | vpc_id | The vpc_id that the application load balancer will bind to | `string` | n/a | yes |
 | zone_id | Route 53 hosted zone id | `string` | n/a | yes |
+| access_logs_bucket_name | The S3 bucket name to store the logs in. Must be provided if enable_access_logs is true. | `string` | `""` | no |
+| access_logs_bucket_prefix | The S3 bucket prefix. Logs are stored in the root if not configured. | `string` | `""` | no |
 | enable_access_logs | Boolean to enable / disable access_logs. Defaults to false, even when bucket is specified. | `bool` | `false` | no |
-| logs_bucket_name | The S3 bucket name to store the logs in. | `string` | `""` | no |
-| logs_bucket_prefix | The S3 bucket prefix. Logs are stored in the root if not configured. | `string` | `""` | no |
 | tags | A map of additional tags to add to the artifactory resource. | `map(any)` | `{}` | no |
 
 ## Outputs

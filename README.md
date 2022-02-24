@@ -55,6 +55,7 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | lambda_functions_config | Map of functions and associated configurations. | `map(any)` | n/a | yes |
 | parameter_store_path | SSM parameter path | `string` | n/a | yes |
 | service_target_group_name | The service target group attached to application load balancer listener | `string` | n/a | yes |
+| service_target_group_path | The target path attached to the service target group | `string` | n/a | yes |
 | ssm_kms_key_arn | KMS key arn | `string` | n/a | yes |
 | zone_id | Route 53 hosted zone id | `string` | n/a | yes |
 | additional_layers | A list of layer ARN's (with or without aliases) to add to all functions within the Lambda application. Provides the ability to add dependencies for additional functionality such as monitoring and observability. | `list(string)` | `[]` | no |
@@ -96,7 +97,7 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | dynamodb_ttl_enabled | Whether ttl is enabled or disabled | `bool` | `true` | no |
 | enable_api_gateway | Allow to create api-gateway | `bool` | `false` | no |
 | enable_datastore_module | Enables the data store module that will provision data storage resources | `bool` | `true` | no |
-| lambda_alb_config | Contains entry point lambda function key | `map(any)` | `""` | no |
+| lambda_alb_config | Contains entry point lambda function key | `map(any)` | `{}` | no |
 | layer_artifact_key | File name key of the layer artifact to load. | `string` | `""` | no |
 | msk_arn | the MSK source arn for all lambda requires MSK | `string` | `""` | no |
 | msk_event_source_config | Map of configurations of MSK event source for each lambda | `map(any)` | `{}` | no |
