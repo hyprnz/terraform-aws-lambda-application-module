@@ -19,7 +19,7 @@ variable "lambda_functions_config" {
 }
 
 variable "lambda_alb_config" {
-  type        = map(any)
+  type        = map(string)
   description = "Contains entry point lambda function key"
   default     = {}
 }
