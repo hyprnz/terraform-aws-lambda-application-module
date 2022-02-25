@@ -8,8 +8,8 @@ resource "aws_alb" "alb_lambda" {
   enable_deletion_protection = true
 
   access_logs {
-    bucket  = var.logs_bucket_name
-    prefix  = var.logs_bucket_prefix
+    bucket  = var.access_logs_bucket_name
+    prefix  = var.access_logs_bucket_prefix
     enabled = var.enable_access_logs
   }
 
