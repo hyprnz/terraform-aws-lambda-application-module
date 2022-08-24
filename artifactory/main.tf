@@ -5,7 +5,6 @@ locals {
 
 resource "aws_s3_bucket" "artifactory" {
   bucket = var.artifactory_bucket_name
-  aws_s3_bucket_acl = "private"
 
   force_destroy = var.force_destroy
 
