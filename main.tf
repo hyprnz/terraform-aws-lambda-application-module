@@ -1,3 +1,4 @@
+
 locals {
   rds_env_vars = {
     RDS_DBNAME   = module.lambda_datastore.rds_db_name
@@ -23,7 +24,9 @@ locals {
   vpc_policy_required = contains(values(var.lambda_functions_config)[*].enable_vpc, true) ? true : false
 
   custom_policy_required = length(var.custom_policy_document) > 0 ? true : false
+  tracing_config         = var.tracking_config
 }
+
 
 resource "aws_lambda_function" "lambda_application" {
   for_each = var.lambda_functions_config
@@ -41,6 +44,9 @@ resource "aws_lambda_function" "lambda_application" {
   timeout     = try(each.value.function_timeout, var.application_timeout)
 
   layers = concat([aws_lambda_layer_version.runtime_dependencies.arn], var.additional_layers)
+  tracing_config {
+    mode = var.tracking_config
+  }
 
   environment {
     variables = merge({ APP_NAME = var.application_name }, { PARAMETER_STORE_PATH = var.parameter_store_path }, local.datastore_env_vars, var.application_env_vars)

@@ -534,6 +534,12 @@ variable "dynamodb_local_secondary_index_map" {
 
 variable "dynamodb_enable_autoscaler" {
   type        = bool
-  description = "Whether or not to enable DynamoDB autoscaling"
+  description = "Whether or not to enable DynamoDB autoscaling, defaults to `false`"
   default     = false
+}
+
+variable "tracking_config" {
+  type = string
+  default = "PassThrough"
+  description = "Sets the passing of sample and tracing of calls, possible values are `Passthrough`(default) or `Active`"
 }

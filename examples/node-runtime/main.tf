@@ -1,5 +1,5 @@
 module "example_lambda_applcation" {
-  source = "../../"
+  source    = "../../"
   providers = {
     aws = aws
   }
@@ -26,17 +26,19 @@ module "example_lambda_applcation" {
   dynamodb_range_key_type               = var.dynamodb_range_key_type
   dynamodb_autoscale_min_read_capacity  = var.dynamodb_autoscale_min_read_capacity
   dynamodb_autoscale_min_write_capacity = var.dynamodb_autoscale_max_write_capacity
-
-  dynamodb_global_secondary_index_map = var.dynamodb_global_secondary_index_map
-  tags                                = var.tags
-  ssm_kms_key_arn                     = var.ssm_kms_key_arn
-  application_version                 = var.application_version
-  alias_name                          = var.alias_name
-  zone_id                             = var.zone_id
-  parameter_store_path                = var.parameter_store_path
-  domain_name                         = var.domain_name
-  publish                             = var.publish
-  enable_api_gateway                  = var.enable_api_gateway
+  dynamodb_global_secondary_index_map   = var.dynamodb_global_secondary_index_map
+  tags                                  = var.tags
+  ssm_kms_key_arn                       = var.ssm_kms_key_arn
+  application_version                   = var.application_version
+  alias_name                            = var.alias_name
+  zone_id                               = var.zone_id
+  parameter_store_path                  = var.parameter_store_path
+  domain_name                           = var.domain_name
+  publish                               = var.publish
+  enable_api_gateway                    = var.enable_api_gateway
+  service_target_group_name             = var.service_target_group_name
+  service_target_group_path             = var.service_target_group_path
+  tracking_config                       = var.tracking_config
 }
 
 provider "aws" {
