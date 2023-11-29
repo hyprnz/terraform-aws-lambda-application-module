@@ -34,7 +34,6 @@ module "example_lambda_applcation" {
   zone_id                               = var.zone_id
   parameter_store_path                  = var.parameter_store_path
   domain_name                           = var.domain_name
-  publish                               = var.publish
   enable_api_gateway                    = var.enable_api_gateway
   service_target_group_name             = var.service_target_group_name
   service_target_group_path             = var.service_target_group_path
