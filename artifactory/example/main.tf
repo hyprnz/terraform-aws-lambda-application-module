@@ -1,4 +1,4 @@
-module "lambda_applciation_artifactory_example" {
+module "example" {
   source = "../"
 
   providers = {
@@ -7,7 +7,7 @@ module "lambda_applciation_artifactory_example" {
 
   artifactory_bucket_name = "lambda-app.stage.example.com"
   application_name        = "lambda-app"
-  cross_account_numbers   = [12345678901, 98765432109]
+  cross_account_numbers   = ["373538222530"]
   force_destroy           = true
 }
 
@@ -16,9 +16,9 @@ provider "aws" {
 }
 
 variable "aws_region" {
-  default = "ap-southeast-2"
+  default = "us-west-2"
 }
 
 output "bucket_name" {
-  value = module.lambda_applciation_artifactory_example.bucket_name
+  value = module.example.bucket_name
 }
