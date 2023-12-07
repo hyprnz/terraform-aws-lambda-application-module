@@ -97,7 +97,7 @@ variable "tags" {
   default     = {}
 }
 
-variable "enable_datastore_module" {
+variable "enable_datastore" {
   type        = bool
   description = "Enables the data store module that can provision data storage resources"
   default     = false

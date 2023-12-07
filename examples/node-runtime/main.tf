@@ -17,7 +17,7 @@ module "example_lambda_applcation" {
   internal_entrypoint_config = var.internal_entrypoint_config
 
   application_env_vars                  = var.application_env_vars
-  enable_datastore_module               = var.enable_datastore_module
+  enable_datastore                      = var.enable_datastore
   create_dynamodb_table                 = var.create_dynamodb_table
   dynamodb_table_name                   = var.dynamodb_table_name
   dynamodb_hash_key                     = var.dynamodb_hash_key

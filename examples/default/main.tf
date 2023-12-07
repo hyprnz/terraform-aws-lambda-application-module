@@ -6,6 +6,7 @@ module "example_lambda_applcation" {
 
   application_name    = "test_lambda_app"
   application_runtime = "python3.8"
+  application_version = "0.0.1"
   artifact_bucket     = "labda-app.stage.example.com"
   artifact_bucket_key = "0.0.1/app.zip"
   application_memory  = 256
@@ -38,7 +39,7 @@ module "example_lambda_applcation" {
     name = "foo"
   }
 
-  enable_datastore_module               = true
+  enable_datastore                      = true
   create_dynamodb_table                 = true
   dynamodb_table_name                   = "test_lambda_app"
   dynamodb_hash_key                     = "PK"
@@ -71,5 +72,5 @@ provider "aws" {
 }
 
 variable "aws_region" {
-  default = "ap-southeast-2"
+  default = "us-east-2"
 }

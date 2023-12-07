@@ -15,9 +15,9 @@ locals {
     S3_BUCKET_NAME = module.lambda_datastore.s3_bucket_name
   }
 
-  rds_env_vars_used      = var.enable_datastore_module && var.create_rds_instance ? local.rds_env_vars : {}
-  dynamodb_env_vars_used = var.enable_datastore_module && var.create_dynamodb_table ? local.dynamodb_env_vars : {}
-  s3_env_vars_used       = var.enable_datastore_module && var.create_s3_bucket ? local.s3_env_vars : {}
+  rds_env_vars_used      = var.enable_datastore && var.create_rds_instance ? local.rds_env_vars : {}
+  dynamodb_env_vars_used = var.enable_datastore && var.create_dynamodb_table ? local.dynamodb_env_vars : {}
+  s3_env_vars_used       = var.enable_datastore && var.create_s3_bucket ? local.s3_env_vars : {}
 
   datastore_env_vars = merge(local.rds_env_vars_used, local.dynamodb_env_vars_used, local.s3_env_vars_used)
 
