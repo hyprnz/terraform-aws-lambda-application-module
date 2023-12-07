@@ -5,7 +5,6 @@ locals {
 
 resource "aws_s3_bucket" "artifactory" {
   bucket = var.artifactory_bucket_name
-  acl = "private"
 
   force_destroy = var.force_destroy
 
@@ -35,4 +34,30 @@ resource "aws_s3_bucket_policy" "cross_account_policy" {
 
   bucket = aws_s3_bucket.artifactory.id
   policy = data.aws_iam_policy_document.cross_account_access_document.json
+}
+
+resource "aws_s3_bucket_acl" "this" {
+  bucket = aws_s3_bucket.artifactory.id
+  acl    = "private"
+
+  depends_on = [aws_s3_bucket_ownership_controls.this]
+}
+
+resource "aws_s3_bucket_ownership_controls" "this" {
+  bucket = aws_s3_bucket.artifactory.id
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+  bucket = aws_s3_bucket.artifactory.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "aws:kms"
+    }
+  }
 }
