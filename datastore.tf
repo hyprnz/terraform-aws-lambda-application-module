@@ -5,7 +5,7 @@ module "lambda_datastore" {
     aws = aws
   }
 
-  enable_datastore = var.enable_datastore_module
+  enable_datastore = var.enable_datastore
 
   create_rds_instance   = var.create_rds_instance
   use_rds_snapshot      = var.use_rds_snapshot
