@@ -1,4 +1,8 @@
-// Dynamodb variables ===========================
+variable "create_dynamodb_table" {
+  type        = bool
+  description = "Whether or not to enable DynamoDB resources"
+  default     = false
+}
 
 variable "dynamodb_tags" {
   type        = map(any)

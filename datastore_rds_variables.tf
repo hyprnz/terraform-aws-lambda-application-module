@@ -10,17 +10,9 @@ variable "use_rds_snapshot" {
   default     = false
 }
 
-variable "create_s3_bucket" {
-  type        = bool
-  description = "Controls if an S3 bucket should be provisioned"
-  default     = false
-}
 
-variable "create_dynamodb_table" {
-  type        = bool
-  description = "Whether or not to enable DynamoDB resources"
-  default     = false
-}
+
+
 
 // RDS variables ================================
 
@@ -123,11 +115,11 @@ variable "rds_parameter_group_family" {
 variable "rds_parameter_group_parameters" {
   type        = map(any)
   description = <<EOF
-  Map of parameters that will be added to this database's parameter group. 
+  Map of parameters that will be added to this database's parameter group.
   Parameters set here will override any AWS default parameters with the same name.
-  Requires `rds_parameter_group_name` and `rds_parameter_group_family` to be set as well. 
-  Parameters should be provided as a key value pair within this map. eg `"param_name" : "param_value"`. 
-  Default is empty and the AWS default parameter group is used. 
+  Requires `rds_parameter_group_name` and `rds_parameter_group_family` to be set as well.
+  Parameters should be provided as a key value pair within this map. eg `"param_name" : "param_value"`.
+  Default is empty and the AWS default parameter group is used.
   EOF
   default     = {}
 }

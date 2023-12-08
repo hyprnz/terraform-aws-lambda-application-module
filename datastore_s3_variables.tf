@@ -1,4 +1,8 @@
-// s3 variables =================================
+variable "create_s3_bucket" {
+  type        = bool
+  description = "Controls if an S3 bucket should be provisioned"
+  default     = false
+}
 
 variable "s3_tags" {
   type        = map(any)
