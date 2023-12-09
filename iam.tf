@@ -1,3 +1,7 @@
+locals {
+  has_customer_kms_key = length(var.ssm_kms_key_arn) > 0 ? true : false
+}
+
 data "aws_iam_policy_document" "lambda_application_assume_role_statement" {
   statement {
     sid = "LambdaApplicationAssumeRole"
@@ -78,7 +82,9 @@ data "aws_iam_policy_document" "ssm_parameters_access" {
       "arn:aws:ssm:*:*:parameter${var.parameter_store_path}write/*"
     ]
   }
+}
 
+data "aws_iam_policy_document" "ssm_kms_key" {
   statement {
     sid    = "KMSAccess"
     effect = "Allow"
@@ -99,7 +105,7 @@ resource "aws_iam_role" "lambda_application_execution_role" {
 
   assume_role_policy = data.aws_iam_policy_document.lambda_application_assume_role_statement.json
 
-  tags = merge({ Name = format("%s-Execution-Role", var.application_name) }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
+  tags = merge({ Name2 = format("%s-Execution-Role", var.application_name) }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
 }
 
 resource "aws_iam_policy" "event_bridge_internal_entrypoint" {
@@ -164,6 +170,19 @@ resource "aws_iam_role_policy_attachment" "ssm_access" {
   role       = aws_iam_role.lambda_application_execution_role.name
   policy_arn = aws_iam_policy.ssm_access_policy.arn
 }
+
+  resource "aws_iam_policy" "ssm_kms_key" {
+    count = local.has_customer_kms_key ? 1 : 0
+    name = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-SSMKMSKey"
+    policy = data.aws_iam_policy_document.ssm_kms_key.json
+  }
+
+  resource "aws_iam_role_policy_attachment" "ssm_kms_key" {
+    count = local.has_customer_kms_key ? 1 : 0
+    role = aws_iam_role.lambda_application_execution_role.name
+    policy_arn = aws_iam_policy.ssm_kms_key[0].arn
+
+  }
 
 resource "aws_iam_policy" "custom_lambda_policy" {
   count       = local.custom_policy_required ? 1 : 0

@@ -112,7 +112,7 @@ variable "parameter_store_path" {
 
 variable "ssm_kms_key_arn" {
   type        = string
-  description = "KMS key arn"
+  description = "Either he customer managed KMS or AWS manages key arn used for encrypting `SecureSting` parameters"
   default     = ""
 }
 
