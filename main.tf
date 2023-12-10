@@ -33,7 +33,7 @@ resource "aws_lambda_function" "lambda_application" {
 
   s3_bucket     = var.artifact_bucket
   s3_key        = var.artifact_bucket_key
-  function_name = format("%s-%s", var.application_name, each.value.name)
+  function_name = format("%s-%s", var.application_name, each.key)
   description   = each.value.description
   role          = aws_iam_role.lambda_application_execution_role.arn
   handler       = each.value.handler
@@ -60,7 +60,7 @@ resource "aws_lambda_function" "lambda_application" {
     }
   }
 
-  tags = merge({ Name = format("%s-%s", var.application_name, each.value.name) }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
+  tags = merge({ Name = format("%s-%s", var.application_name, each.key) }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
 }
 
 resource "aws_lambda_alias" "lambda_application_alias" {
