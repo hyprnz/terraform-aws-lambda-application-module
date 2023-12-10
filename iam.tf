@@ -105,7 +105,7 @@ resource "aws_iam_role" "lambda_application_execution_role" {
 
   assume_role_policy = data.aws_iam_policy_document.lambda_application_assume_role_statement.json
 
-  tags = merge({ Name2 = format("%s-Execution-Role", var.application_name) }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
+  tags = merge({ Name = format("%s-Execution-Role", var.application_name) }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
 }
 
 resource "aws_iam_policy" "event_bridge_internal_entrypoint" {
