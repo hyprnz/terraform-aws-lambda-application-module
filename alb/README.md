@@ -1,16 +1,24 @@
 <!-- BEGIN_TF_DOCS -->
+# Application Load Balancer Module
+
+A custom domain name is required to use this module since ALB does not provide a SSL certificate that is required for setting up HTTPs listeners.
+
 ## Requirements
 
 | Name | Version |
 |------|---------|
 | terraform | >= 0.12.31 |
-| aws | >= 3.38.0 |
+| aws | ~> 5.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | >= 3.38.0 |
+| aws | ~> 5.0 |
+
+## Modules
+
+No modules.
 
 ## Inputs
 
