@@ -77,9 +77,10 @@ resource "aws_lambda_permission" "internal_entrypoints" {
 
   statement_id  = replace(title(each.value.name), "/-| |_/", "")
   action        = "lambda:InvokeFunction"
-  function_name = "${aws_lambda_function.lambda_application[each.key].function_name}:${var.alias_name}"
+  function_name = aws_lambda_function.lambda_application[each.key].function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.internal_entrypoint[each.key].arn
+  qualifier     = aws_lambda_alias.lambda_application_alias[each.key].name
 }
 
 # resource "aws_lambda_permission" "external_entrypoints" {
