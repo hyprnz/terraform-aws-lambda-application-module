@@ -119,11 +119,6 @@ resource "aws_iam_role_policy_attachment" "lambda_application_logs" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-resource "aws_iam_role_policy_attachment" "s3_default_read_access" {
-  role       = aws_iam_role.lambda_application_execution_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
-}
-
 resource "aws_iam_role_policy_attachment" "event_bridge_internal_entrypoint_access" {
   role       = aws_iam_role.lambda_application_execution_role.name
   policy_arn = aws_iam_policy.event_bridge_internal_entrypoint.arn
