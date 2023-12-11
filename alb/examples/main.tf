@@ -1,14 +1,3 @@
-terraform {
-  required_version = ">= 0.12.31"
-
-  required_providers {
-    aws = {
-      source : "hashicorp/aws",
-      version : "~> 5.0"
-    }
-  }
-}
-
 provider "aws" {
   region = var.aws_region
 }
@@ -41,4 +30,5 @@ module "alb" {
   subnet_ids = data.aws_subnets.default.ids
   domain_name = "myexample.com"
   vpc_id = data.aws_vpc.default.id
+  enable_custom_domain = false
 }
