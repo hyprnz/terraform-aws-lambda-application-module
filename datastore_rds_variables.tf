@@ -94,7 +94,7 @@ variable "rds_iops" {
   default     = 0
 }
 
-variable "backup_retention_period" {
+variable "rds_backup_retention_period" {
   type        = number
   description = "The backup retention period in days"
   default     = 7

@@ -1,5 +1,5 @@
 module "lambda_datastore" {
-  source = "git::git@github.com:hyprnz/terraform-aws-data-storage-module?ref=3.5.0"
+  source = "git::git@github.com:hyprnz/terraform-aws-data-storage-module?ref=4.0.0"
 
   providers = {
     aws = aws
@@ -28,7 +28,7 @@ module "lambda_datastore" {
   rds_max_allocated_storage = var.rds_max_allocated_storage
   rds_iops                  = var.rds_iops
 
-  backup_retention_period = var.backup_retention_period
+  rds_backup_retention_period = var.rds_backup_retention_period
   rds_option_group_name   = var.rds_option_group_name
   rds_multi_az            = var.rds_multi_az
 
