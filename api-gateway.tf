@@ -14,11 +14,11 @@ resource "aws_apigatewayv2_stage" "default" {
 }
 
 resource "aws_apigatewayv2_integration" "lambda" {
-  for_each = var.lambda_functions_config
+  for_each = var.enable_api_gateway ? var.lambda_functions_config : {}
 
   api_id           = aws_apigatewayv2_api.this[0].id
   integration_type = "AWS_PROXY"
-  credentials_arn  = aws_iam_role.api_gateway_execution_role.arn
+  credentials_arn  = aws_iam_role.api_gateway_execution_role[0].arn
 
   connection_type      = "INTERNET"
   integration_method   = "POST"
@@ -26,7 +26,18 @@ resource "aws_apigatewayv2_integration" "lambda" {
   passthrough_behavior = "WHEN_NO_MATCH"
 }
 
+resource "aws_apigatewayv2_route" "lambda" {
+  for_each = var.enable_api_gateway ? var.lambda_functions_config : {}
+
+  api_id    = aws_apigatewayv2_api.this[0].id
+  route_key = "ANY /${each.key}/{proxy+}"
+
+  target = "integrations/${aws_apigatewayv2_integration.lambda[each.key].id}"
+}
+
 resource "aws_iam_role" "api_gateway_execution_role" {
+  count = var.enable_api_gateway ? 1 : 0
+
   name = format("ExecutionRole-APIGateway-%s", var.application_name)
 
   assume_role_policy = data.aws_iam_policy_document.apigateway_assume_role_policy.json
@@ -35,15 +46,19 @@ resource "aws_iam_role" "api_gateway_execution_role" {
   tags = merge({ "Lambda Application" = var.application_name }, var.tags)
 }
 
-resource "aws_iam_role_policy_attachment" "api_gateway_execution_role_policy_attach" {
-  role       = aws_iam_role.api_gateway_execution_role.name
-  policy_arn = aws_iam_policy.invoke_lambdas.arn
-}
-
 resource "aws_iam_policy" "invoke_lambdas" {
+  count = var.enable_api_gateway ? 1 : 0
+
   name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-APIGatewayLambdaExecutionPolicy"
   policy      = data.aws_iam_policy_document.apigateway_lambda_integration.json
   description = "Grants permissions to execute Lambda functions"
+}
+
+resource "aws_iam_role_policy_attachment" "api_gateway_execution_role_policy_attach" {
+  count = var.enable_api_gateway ? 1 : 0
+
+  role       = aws_iam_role.api_gateway_execution_role[0].name
+  policy_arn = aws_iam_policy.invoke_lambdas[0].arn
 }
 
 data "aws_iam_policy_document" "apigateway_lambda_integration" {
@@ -69,14 +84,5 @@ data "aws_iam_policy_document" "apigateway_assume_role_policy" {
   }
 }
 
-
-resource "aws_apigatewayv2_route" "lambda" {
-  for_each = var.lambda_functions_config
-
-  api_id    = aws_apigatewayv2_api.this[0].id
-  route_key = "ANY /${each.key}/{proxy+}"
-
-  target = "integrations/${aws_apigatewayv2_integration.lambda[each.key].id}"
-}
 
 # todo aws_apigatewayv2_authorizer: will be helpful to reduce duplicated work
