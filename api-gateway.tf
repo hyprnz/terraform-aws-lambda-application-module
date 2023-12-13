@@ -3,7 +3,7 @@ resource "aws_apigatewayv2_api" "this" {
   count         = var.enable_api_gateway ? 1 : 0
   name          = var.application_name
   protocol_type = "HTTP"
-  tags          = merge({ Name = format("%s-%s", var.application_name, "api_gateway") }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
+  tags          = merge({ "Lambda Application" = var.application_name }, var.tags)
 }
 
 resource "aws_apigatewayv2_stage" "default" {
@@ -32,7 +32,7 @@ resource "aws_iam_role" "api_gateway_execution_role" {
   assume_role_policy = data.aws_iam_policy_document.apigateway_assume_role_policy.json
   inline_policy {}
 
-  tags = merge({ Name = format("%s-Execution-Role", var.application_name) }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
+  tags = merge({ "Lambda Application" = var.application_name }, var.tags)
 }
 
 resource "aws_iam_role_policy_attachment" "api_gateway_execution_role_policy_attach" {
@@ -78,21 +78,5 @@ resource "aws_apigatewayv2_route" "lambda" {
 
   target = "integrations/${aws_apigatewayv2_integration.lambda[each.key].id}"
 }
-
-# resource "aws_lambda_permission" "allow_apigateway" {
-#   count         = var.enable_api_gateway ? 1 : 0
-#   statement_id  = "AllowExecutionFromApiGateway"
-#   action        = "lambda:InvokeFunction"
-#   function_name = "${aws_lambda_function.lambda_application["service"].function_name}:${var.alias_name}"
-#   principal     = "apigateway.amazonaws.com"
-#   source_arn    = "${aws_apigatewayv2_api.api_gateway[0].execution_arn}/*"
-# }
-
-# resource "aws_apigatewayv2_api_mapping" "api_gateway_mapping" {
-#   count       = var.enable_api_gateway ? 1 : 0
-#   api_id      = aws_apigatewayv2_api.api_gateway[0].id
-#   domain_name = aws_apigatewayv2_domain_name.api_gateway_domain[0].id
-#   stage       = "$default"
-# }
 
 # todo aws_apigatewayv2_authorizer: will be helpful to reduce duplicated work
