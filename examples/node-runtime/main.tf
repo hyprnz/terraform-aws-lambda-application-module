@@ -43,3 +43,7 @@ module "example_lambda_applcation" {
 provider "aws" {
   region = var.aws_region
 }
+
+output "url" {
+  value = module.example_lambda_applcation.api_gateway_endpoint
+}

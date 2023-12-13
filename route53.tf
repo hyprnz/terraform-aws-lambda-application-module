@@ -1,6 +1,6 @@
 resource "aws_apigatewayv2_domain_name" "api_gateway_domain" {
-  count       = var.enable_api_gateway ? 1 : 0
-  domain_name = var.domain_name
+  count       = var.enable_api_gateway && local.enable_custom_domain_name ? 1 : 0
+  domain_name = local.domain_name
 
   domain_name_configuration {
     certificate_arn = aws_acm_certificate.cert[0].arn
@@ -14,8 +14,8 @@ resource "aws_apigatewayv2_domain_name" "api_gateway_domain" {
 }
 
 resource "aws_route53_record" "api_gateway_live" {
-  count   = var.enable_api_gateway ? 1 : 0
-  name    = var.domain_name
+  count   = var.enable_api_gateway && local.enable_custom_domain_name ? 1 : 0
+  name    = local.domain_name
   type    = "A"
   zone_id = var.zone_id
 

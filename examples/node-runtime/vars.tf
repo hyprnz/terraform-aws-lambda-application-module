@@ -379,6 +379,7 @@ variable "zone_id" {
 variable "domain_name" {
   type        = string
   description = "The custom domain name for api gateway that points to lambda application"
+  default     = null
 }
 
 variable "parameter_store_path" {
