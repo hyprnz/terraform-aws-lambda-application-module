@@ -35,12 +35,28 @@ resource "aws_iam_role" "api_gateway_execution_role" {
   tags = merge({ Name = format("%s-Execution-Role", var.application_name) }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
 }
 
-resource "aws_iam_role_policy_attachment" "test-attach" {
+resource "aws_iam_role_policy_attachment" "api_gateway_execution_role_policy_attach" {
   role       = aws_iam_role.api_gateway_execution_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+  policy_arn = aws_iam_policy.invoke_lambdas.arn
 }
 
+resource "aws_iam_policy" "invoke_lambdas" {
+  name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-APIGatewayLambdaExecutionPolicy"
+  policy      = data.aws_iam_policy_document.apigateway_lambda_integration.json
+  description = "Grants permissions to execute Lambda functions"
+}
 
+data "aws_iam_policy_document" "apigateway_lambda_integration" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "lambda:InvokeFunction"
+    ]
+
+    resources = tolist([for i in aws_lambda_function.lambda_application : i.arn])
+  }
+}
 
 data "aws_iam_policy_document" "apigateway_assume_role_policy" {
   statement {
