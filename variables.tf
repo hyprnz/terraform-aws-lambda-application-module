@@ -153,7 +153,7 @@ variable "tags" {
 }
 
 variable "tracking_config" {
-  type = string
-  default = "PassThrough"
+  type        = string
+  default     = "PassThrough"
   description = "Sets the passing of sample and tracing of calls, possible values are `Passthrough`(default) or `Active`"
 }

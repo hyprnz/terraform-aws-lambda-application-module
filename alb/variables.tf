@@ -37,7 +37,7 @@ variable "access_logs_bucket_name" {
 variable "access_logs_bucket_prefix" {
   type        = string
   description = "The S3 bucket prefix. Logs are stored in the root if not configured."
-  default =    ""
+  default     = ""
 }
 
 variable "enable_access_logs" {

@@ -29,8 +29,8 @@ module "lambda_datastore" {
   rds_iops                  = var.rds_iops
 
   rds_backup_retention_period = var.rds_backup_retention_period
-  rds_option_group_name   = var.rds_option_group_name
-  rds_multi_az            = var.rds_multi_az
+  rds_option_group_name       = var.rds_option_group_name
+  rds_multi_az                = var.rds_multi_az
 
   rds_monitoring_interval         = var.rds_monitoring_interval
   rds_monitoring_role_arn         = var.rds_monitoring_role_arn

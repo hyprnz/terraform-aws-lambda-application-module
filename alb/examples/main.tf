@@ -11,7 +11,7 @@ data "aws_vpc" "default" {
 }
 
 
-data "aws_subnets" default {
+data "aws_subnets" "default" {
   filter {
     name   = "vpc-id"
     values = [data.aws_vpc.default.id]
@@ -26,9 +26,9 @@ module "alb" {
   source = "../"
 
   application_loadbalancer_name = "example"
-  zone_id = aws_route53_zone.this.id
-  subnet_ids = data.aws_subnets.default.ids
-  domain_name = "myexample.com"
-  vpc_id = data.aws_vpc.default.id
-  enable_custom_domain = false
+  zone_id                       = aws_route53_zone.this.id
+  subnet_ids                    = data.aws_subnets.default.ids
+  domain_name                   = "myexample.com"
+  vpc_id                        = data.aws_vpc.default.id
+  enable_custom_domain          = false
 }

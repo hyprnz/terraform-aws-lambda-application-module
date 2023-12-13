@@ -1,5 +1,5 @@
 module "example_lambda_applcation" {
-  source    = "../../"
+  source = "../../"
   providers = {
     aws = aws
   }

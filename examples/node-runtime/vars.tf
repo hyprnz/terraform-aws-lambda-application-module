@@ -92,7 +92,7 @@ variable "aws_cloudwatch_log_group_retention_in_days" {
 }
 
 variable "tags" {
-  type        = map
+  type        = map(any)
   description = "Additional tags that are added to all resources in this module."
   default     = {}
 }
@@ -212,7 +212,7 @@ variable "s3_enable_versioning" {
 }
 
 variable "dynamodb_tags" {
-  type        = map
+  type        = map(any)
   description = "Additional tags (e.g map(`BusinessUnit`,`XYX`)"
   default     = {}
 }
@@ -325,7 +325,7 @@ variable "dynamodb_ttl_attribute" {
 }
 
 variable "dynamodb_attributes" {
-  type        = list
+  type        = list(any)
   description = "Additional DynamoDB attributes in the form of a list of mapped values"
   default     = []
 }
@@ -337,7 +337,7 @@ variable "dynamodb_global_secondary_index_map" {
 }
 
 variable "dynamodb_local_secondary_index_map" {
-  type        = list
+  type        = list(any)
   description = "Additional local secondary indexes in the form of a list of mapped values"
   default     = []
 }
@@ -403,8 +403,8 @@ variable "alias_name" {
 }
 
 variable "tracking_config" {
-  type = string
-  default = "PassThrough"
+  type        = string
+  default     = "PassThrough"
   description = "Sets the passing of sample and tracing of calls, possible values are `Passthrough`(default) or `Active`"
 }
 
