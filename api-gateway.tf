@@ -13,7 +13,7 @@ resource "aws_apigatewayv2_stage" "default" {
   auto_deploy = true
 
   access_log_settings {
-    destination_arn = aws_cloudwatch_log_group.api_gateway_log_group.arn
+    destination_arn = aws_cloudwatch_log_group.api_gateway_log_group[0].arn
     format = jsonencode(
       {
         httpMethod     = "$context.httpMethod"
@@ -101,6 +101,8 @@ data "aws_iam_policy_document" "apigateway_assume_role_policy" {
 }
 
 resource "aws_cloudwatch_log_group" "api_gateway_log_group" {
+  count = var.enable_api_gateway ? 1 : 0
+
   name              = format("/aws/apigateway/%s", var.application_name)
   retention_in_days = var.aws_cloudwatch_log_group_retention_in_days
 
