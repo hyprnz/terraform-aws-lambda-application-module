@@ -25,14 +25,14 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12.31 |
-| aws | ~> 5.0 |
+| terraform | >= 1.3.0 |
+| aws | >= 5.26.0, <6.0.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | ~> 5.0 |
+| aws | >= 5.26.0, <6.0.0 |
 
 ## Modules
 

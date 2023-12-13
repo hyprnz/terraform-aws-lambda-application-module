@@ -6,7 +6,7 @@ variable "create_dynamodb_table" {
 
 variable "dynamodb_tags" {
   type        = map(any)
-  description = "Additional tags (e.g map(`BusinessUnit`,`XYX`)"
+  description = "Additional tags e.g map(`BusinessUnit`,`XYX`)"
   default     = {}
 }
 
