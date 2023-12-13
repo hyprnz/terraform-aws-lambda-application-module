@@ -11,6 +11,22 @@ resource "aws_apigatewayv2_stage" "default" {
   api_id      = aws_apigatewayv2_api.this[0].id
   name        = "$default"
   auto_deploy = true
+
+  access_log_settings {
+    destination_arn = aws_cloudwatch_log_group.api_gateway_log_group.arn
+    format = jsonencode(
+      {
+        httpMethod     = "$context.httpMethod"
+        ip             = "$context.identity.sourceIp"
+        protocol       = "$context.protocol"
+        requestId      = "$context.requestId"
+        requestTime    = "$context.requestTime"
+        responseLength = "$context.responseLength"
+        routeKey       = "$context.routeKey"
+        status         = "$context.status"
+      }
+    )
+  }
 }
 
 resource "aws_apigatewayv2_integration" "lambda" {
@@ -84,5 +100,11 @@ data "aws_iam_policy_document" "apigateway_assume_role_policy" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "api_gateway_log_group" {
+  name              = format("/aws/apigateway/%s", var.application_name)
+  retention_in_days = var.aws_cloudwatch_log_group_retention_in_days
+
+  tags = merge({ Name = format("%s", var.application_name) }, { "Lambda Application" = var.application_name }, var.tags)
+}
 
 # todo aws_apigatewayv2_authorizer: will be helpful to reduce duplicated work
