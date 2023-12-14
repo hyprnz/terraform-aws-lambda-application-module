@@ -1,4 +1,6 @@
-// to use the api-gateway, a service lambda must in lambda_application
+locals {
+  api_gateway_route_config = var.enable_api_gateway ? var.api_gateway_route_config : {}
+}
 resource "aws_apigatewayv2_api" "this" {
   count         = var.enable_api_gateway ? 1 : 0
   name          = var.application_name
@@ -30,7 +32,7 @@ resource "aws_apigatewayv2_stage" "default" {
 }
 
 resource "aws_apigatewayv2_integration" "lambda" {
-  for_each = var.enable_api_gateway ? var.lambda_functions_config : {}
+  for_each = local.api_gateway_route_config
 
   api_id           = aws_apigatewayv2_api.this[0].id
   integration_type = "AWS_PROXY"
@@ -43,10 +45,11 @@ resource "aws_apigatewayv2_integration" "lambda" {
 }
 
 resource "aws_apigatewayv2_route" "lambda" {
-  for_each = var.enable_api_gateway ? var.lambda_functions_config : {}
+  for_each = local.api_gateway_route_config
 
   api_id    = aws_apigatewayv2_api.this[0].id
   route_key = "ANY /${each.key}/{proxy+}"
+  operation_name = each.value.operation_name
 
   target = "integrations/${aws_apigatewayv2_integration.lambda[each.key].id}"
 }
