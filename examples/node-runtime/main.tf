@@ -13,6 +13,7 @@ module "example_lambda_applcation" {
   layer_artifact_key  = var.layer_artifact_key
 
   lambda_functions_config = var.lambda_functions_config
+  api_gateway_route_config = var.api_gateway_route_config
 
   internal_entrypoint_config = var.internal_entrypoint_config
 

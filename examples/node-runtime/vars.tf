@@ -22,6 +22,12 @@ variable "lambda_functions_config" {
   description = "Map of functions and associated configurations."
 }
 
+variable "api_gateway_route_config" {
+  type        = map(object({operation_name = optional(string, null)}))
+  description = "(optional) The API Gateway route configuration"
+  default     = null
+}
+
 variable "internal_entrypoint_config" {
   type        = map(any)
   description = "Map of configurations of internal entrypoints."
