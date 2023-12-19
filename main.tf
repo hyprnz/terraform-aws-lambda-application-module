@@ -1,6 +1,6 @@
 
 locals {
-  domain_name               = try(coalesce(var.domain_name), null) // treat both "" and null as absent
+  domain_name               = try(coalesce(var.api_gateway_custom_domain_name), null) // treat both "" and null as absent
   enable_custom_domain_name = local.domain_name == null ? false : true
   rds_env_vars = {
     RDS_DBNAME   = module.lambda_datastore.rds_db_name

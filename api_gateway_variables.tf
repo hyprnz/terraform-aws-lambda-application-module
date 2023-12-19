@@ -13,3 +13,15 @@ variable "api_gateway_route_config" {
   default     = {}
   nullable    = false
 }
+
+variable "api_gateway_custom_domain_zone_id" {
+  type        = string
+  description = "The Route 53 hosted zone id for the API gatewy custom domain. Must be provided and be valid, if the `api_gateway_custom_domain_name` is set"
+  default     = ""
+}
+
+variable "api_gateway_custom_domain_name" {
+  type        = string
+  description = "A custom domain name for the API gateway. If not provided will use the default AWS one. Requires `api_gateway_custom_domain_zone_id` to be provided"
+  default     = ""
+}

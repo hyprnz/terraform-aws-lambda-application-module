@@ -86,18 +86,6 @@ variable "aws_cloudwatch_log_group_retention_in_days" {
   default     = 30
 }
 
-variable "zone_id" {
-  type        = string
-  description = "Route 53 hosted zone id"
-  default     = ""
-}
-
-variable "domain_name" {
-  type        = string
-  description = "The custom domain name for api gateway that points to lambda application"
-  default     = ""
-}
-
 variable "parameter_store_path" {
   type        = string
   description = "SSM parameter path"

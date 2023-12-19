@@ -32,9 +32,9 @@ module "example_lambda_applcation" {
   ssm_kms_key_arn                       = var.ssm_kms_key_arn
   application_version                   = var.application_version
   alias_name                            = var.alias_name
-  zone_id                               = var.zone_id
+  api_gateway_custom_domain_zone_id     = var.api_gateway_custom_domain_zone_id
   parameter_store_path                  = var.parameter_store_path
-  domain_name                           = var.domain_name
+  api_gateway_custom_domain_name        = var.api_gateway_custom_domain_name
   enable_api_gateway                    = var.enable_api_gateway
   service_target_group_name             = var.service_target_group_name
   service_target_group_path             = var.service_target_group_path

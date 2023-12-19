@@ -377,12 +377,12 @@ variable "enable_api_gateway" {
   default     = false
 }
 
-variable "zone_id" {
+variable "api_gateway_custom_domain_zone_id" {
   type        = string
   description = "Route 53 hosted zone id"
 }
 
-variable "domain_name" {
+variable "api_gateway_custom_domain_name" {
   type        = string
   description = "The custom domain name for api gateway that points to lambda application"
   default     = null
