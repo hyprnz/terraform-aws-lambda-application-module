@@ -40,7 +40,7 @@ resource "aws_apigatewayv2_integration" "lambda" {
 
   connection_type      = "INTERNET"
   integration_method   = "POST"
-  integration_uri      = aws_lambda_function.lambda_application[each.key].invoke_arn
+  integration_uri      = aws_lambda_alias.lambda_application_alias[each.key].arn
   passthrough_behavior = "WHEN_NO_MATCH"
 }
 
@@ -88,7 +88,7 @@ data "aws_iam_policy_document" "apigateway_lambda_integration" {
       "lambda:InvokeFunction"
     ]
 
-    resources = tolist([for i in aws_lambda_function.lambda_application : i.arn])
+    resources = tolist([for i in aws_lambda_alias.lambda_application_alias : i.arn])
   }
 }
 
@@ -112,4 +112,3 @@ resource "aws_cloudwatch_log_group" "api_gateway_log_group" {
   tags = merge({ Name = format("%s", var.application_name) }, { "Lambda Application" = var.application_name }, var.tags)
 }
 
-# todo aws_apigatewayv2_authorizer: will be helpful to reduce duplicated work
