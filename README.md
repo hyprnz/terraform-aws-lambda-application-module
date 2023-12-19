@@ -55,6 +55,7 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | alb_lambda_listener_arn | Listener ARN of ALB | `string` | `""` | no |
 | alias_description | Name of the alias being created | `string` | `""` | no |
 | alias_name | Name of the alias being created | `string` | `""` | no |
+| api_gateway_route_config | The API Gateway route configuration. The keys should be the names of the Lambda functions that triggered by the API Gateway | <pre>map(object({<br>    # https://docs.aws.amazon.com/apigateway/latest/developerguide/simple-calc-lambda-api.html<br>    operation_name = optional(string, null)<br>  }))</pre> | `{}` | no |
 | application_env_vars | Map of environment variables required by any function in the application. | `map(any)` | `{}` | no |
 | application_memory | Memory allocated to all functions in the application. Defaults to `128`. | `number` | `128` | no |
 | application_timeout | Timeout in seconds for all functions in the application. Defaults to `3`. | `number` | `3` | no |
@@ -146,7 +147,14 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 
 | Name | Description |
 |------|-------------|
-| domain_id | n/a |
+| api_gateway_arn | The `ARN` of the v2 API Gateway resource |
+| api_gateway_endpoint | The `HTTP` endpoint of the v2 API Gateway resource |
+| api_gateway_id | The ID of the v2 API Gateway resource |
+| api_gateway_integration_ids | The ID's of the v2 API Gateway integration resource |
+| api_gateway_name | The name of the v2 API Gateway resource |
+| api_gateway_stage_api_id | The API ID of the v2 API Gateway stage resource |
+| api_gateway_stage_invoke_url | The API ID of the v2 API Gateway stage resource |
+| domain_id | The ID of the custom domain name used for the v2 API gateway resource |
 
 <br/>
 
