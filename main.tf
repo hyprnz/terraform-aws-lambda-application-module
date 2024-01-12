@@ -27,6 +27,7 @@ locals {
 
   custom_policy_required = length(var.custom_policy_document) > 0 ? true : false
   tracing_config         = var.tracking_config
+  enable_active_tracing  = local.tracing_config == "Active"
 }
 
 

@@ -176,7 +176,16 @@ resource "aws_iam_role_policy_attachment" "ssm_kms_key" {
   count      = local.has_customer_kms_key ? 1 : 0
   role       = aws_iam_role.lambda_application_execution_role.name
   policy_arn = aws_iam_policy.ssm_kms_key[0].arn
+}
 
+data "aws_iam_policy" "xray_daemon_write_access" {
+  name = "AWSXRayDaemonWriteAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "xray_daemon" {
+  count      = local.enable_active_tracing ? 1 : 0
+  role       = aws_iam_role.lambda_application_execution_role.name
+  policy_arn = data.aws_iam_policy.xray_daemon_write_access.arn
 }
 
 resource "aws_iam_policy" "custom_lambda_policy" {
