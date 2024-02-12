@@ -138,4 +138,8 @@ variable "tracking_config" {
   type        = string
   default     = "PassThrough"
   description = "Sets the passing of sample and tracing of calls, possible values are `Passthrough`(default) or `Active`"
+  validation {
+    condition     = contains(["PassThrough", "Active"], var.tracking_config)
+    error_message = "The tracking_config must be either 'PassThrough' or 'Active'"
+  }
 }
