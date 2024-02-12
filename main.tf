@@ -51,6 +51,13 @@ resource "aws_lambda_function" "lambda_application" {
     mode = var.tracking_config
   }
 
+  logging_config {
+    log_format            = coalesce(each.value.log_format, "Text")
+    log_group             = aws_cloudwatch_log_group.lambda_application_log_group[each.key].name
+    application_log_level = each.value.application_log_level
+    system_log_level      = each.value.system_log_level
+  }
+
   environment {
     variables = merge({ APP_NAME = var.application_name }, { PARAMETER_STORE_PATH = var.parameter_store_path }, local.datastore_env_vars, var.application_env_vars)
   }

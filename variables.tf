@@ -14,7 +14,17 @@ variable "application_version" {
 }
 
 variable "lambda_functions_config" {
-  type        = map(any)
+  type = map(object({
+    name                  = string
+    description           = string
+    handler               = string
+    enable_vpc            = bool
+    function_memory       = optional(string)
+    function_timeout      = optional(number)
+    log_format            = optional(string, "Text")
+    application_log_level = optional(string)
+    system_log_level      = optional(string)
+  }))
   description = "Map of functions and associated configurations."
 }
 
