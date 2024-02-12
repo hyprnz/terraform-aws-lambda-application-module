@@ -15,8 +15,7 @@ variable "application_version" {
 
 variable "lambda_functions_config" {
   type = map(object({
-    name                  = string
-    description           = string
+    description           = optional(string)
     handler               = string
     enable_vpc            = bool
     function_memory       = optional(string)
