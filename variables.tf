@@ -23,6 +23,8 @@ variable "lambda_functions_config" {
     log_format            = optional(string, "Text")
     application_log_level = optional(string)
     system_log_level      = optional(string)
+  
+    enable_lambda_insights_monitoring = optional(bool, null)
   }))
   description = "Map of functions and associated configurations."
 }
