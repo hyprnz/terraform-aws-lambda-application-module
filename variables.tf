@@ -152,3 +152,15 @@ variable "tracking_config" {
     error_message = "The tracking_config must be either 'PassThrough' or 'Active'"
   }
 }
+
+variable "enable_lambda_insights_monitoring" {
+  type        = bool
+  description = "Determine if enhanced monitoring (Lambda Insights) is enabled for all functions, can be overwritten by the function configuration."
+  default     = false
+}
+
+variable "lambda_insights_extension_layer" {
+  type        = string
+  description = "The arn of the Lambda Insights Extension layer"
+  default     = ""
+}

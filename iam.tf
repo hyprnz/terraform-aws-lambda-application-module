@@ -188,6 +188,15 @@ resource "aws_iam_role_policy_attachment" "xray_daemon" {
   policy_arn = data.aws_iam_policy.xray_daemon_write_access.arn
 }
 
+data "aws_iam_policy" "lambda_insights" {
+  name = "CloudWatchLambdaInsightsExecutionRolePolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_insights" {
+  role       = aws_iam_role.lambda_application_execution_role.name
+  policy_arn = data.aws_iam_policy.lambda_insights.arn
+}
+
 resource "aws_iam_policy" "custom_lambda_policy" {
   count       = local.custom_policy_required ? 1 : 0
   name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-CustomLambdaPolicy"
