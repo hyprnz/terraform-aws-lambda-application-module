@@ -28,6 +28,8 @@ locals {
   custom_policy_required = length(var.custom_policy_document) > 0 ? true : false
   tracing_config         = var.tracking_config
   enable_active_tracing  = local.tracing_config == "Active"
+
+  layers = concat([aws_lambda_layer_version.runtime_dependencies.arn], var.additional_layers)
 }
 
 
@@ -46,7 +48,7 @@ resource "aws_lambda_function" "lambda_application" {
   memory_size = try(each.value.function_memory, var.application_memory)
   timeout     = try(each.value.function_timeout, var.application_timeout)
 
-  layers = coalesce(each.value.enable_lambda_insights_monitoring, var.enable_lambda_insights_monitoring) ? concat([var.lambda_insights_extension_layer], var.additional_layers) : var.additional_layers
+  layers = coalesce(each.value.enable_lambda_insights_monitoring, var.enable_lambda_insights_monitoring) ? concat([var.lambda_insights_extension_layer], local.layers) : local.layers
   tracing_config {
     mode = var.tracking_config
   }
