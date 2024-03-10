@@ -12,7 +12,7 @@ module "example_lambda_applcation" {
   application_timeout = var.application_timeout
   layer_artifact_key  = var.layer_artifact_key
 
-  lambda_functions_config = var.lambda_functions_config
+  lambda_functions_config  = var.lambda_functions_config
   api_gateway_route_config = var.api_gateway_route_config
 
   internal_entrypoint_config = var.internal_entrypoint_config
@@ -39,6 +39,8 @@ module "example_lambda_applcation" {
   service_target_group_name             = var.service_target_group_name
   service_target_group_path             = var.service_target_group_path
   tracking_config                       = var.tracking_config
+  msk_arn                               = var.msk_arn
+  msk_event_source_config               = var.msk_event_source_config
 }
 
 provider "aws" {

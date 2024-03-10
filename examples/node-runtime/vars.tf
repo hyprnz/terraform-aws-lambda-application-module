@@ -23,7 +23,7 @@ variable "lambda_functions_config" {
 }
 
 variable "api_gateway_route_config" {
-  type        = map(object({operation_name = optional(string, null)}))
+  type        = map(object({ operation_name = optional(string, null) }))
   description = "(optional) The API Gateway route configuration"
   default     = null
 }
