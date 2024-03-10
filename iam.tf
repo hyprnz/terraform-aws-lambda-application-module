@@ -149,10 +149,59 @@ resource "aws_iam_role_policy_attachment" "lambda_vpc" {
   policy_arn = aws_iam_policy.lambda_vpc[0].arn
 }
 
+locals {
+  enable_msk_integration = length(keys(var.msk_event_source_config)) > 0 ? true : false
+}
 resource "aws_iam_role_policy_attachment" "msk_access_policy" {
-  count      = length(keys(var.msk_event_source_config)) > 0 ? 1 : 0
+  count      = local.enable_msk_integration ? 1 : 0
   role       = aws_iam_role.lambda_application_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaMSKExecutionRole"
+}
+
+data "aws_iam_policy_document" "msk_cluster_access" {
+  count = local.enable_msk_integration ? 1 : 0
+  statement {
+    sid    = "MSKConsumer"
+    effect = "Allow"
+
+    actions = [
+      "kafka-cluster:Connect",
+      "kafka-cluster:DescribeCluster",
+      "kafka-cluster:AlterGroup",
+      "kafka-cluster:DescribeGroup",
+      "kafka-cluster:DescribeTopic",
+      "kafka-cluster:ReadData",
+      "kafka-cluster:WriteData"
+    ]
+
+    resources = [
+      "arn:aws:kafka:*:*:cluster/*",
+      "arn:aws:kafka:*:*:topic/*",
+      "arn:aws:kafka:*:*:group/*"
+    ]
+  }
+
+  statement {
+    sid       = "DescribeVpcConnection"
+    effect    = "Allow"
+    actions   = ["kafka:DescribeVpcConnection"]
+    resources = ["arn:aws:kafka:*:*:vpc-connection/*"]
+  }
+}
+
+resource "aws_iam_policy" "msk_cluster_access" {
+  count = local.enable_msk_integration ? 1 : 0
+
+  name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-MSKAccess"
+  policy      = data.aws_iam_policy_document.msk_cluster_access[0].json
+  description = "Grant permissions to consume/produce messages from/to (cross-account) MSK clusters"
+}
+
+resource "aws_iam_role_policy_attachment" "msk_cluster_access" {
+  count = local.enable_msk_integration ? 1 : 0
+
+  role       = aws_iam_role.lambda_application_execution_role.name
+  policy_arn = aws_iam_policy.msk_cluster_access[0].arn
 }
 
 resource "aws_iam_policy" "ssm_access_policy" {
