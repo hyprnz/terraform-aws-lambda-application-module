@@ -84,28 +84,6 @@ resource "aws_lambda_alias" "lambda_application_alias" {
   function_version = aws_lambda_function.lambda_application[each.key].version
 }
 
-resource "aws_lambda_permission" "internal_entrypoints" {
-  for_each = var.internal_entrypoint_config
-
-  statement_id  = replace(title(each.value.name), "/-| |_/", "")
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.lambda_application[each.key].function_name
-  principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.internal_entrypoint[each.key].arn
-  qualifier     = aws_lambda_alias.lambda_application_alias[each.key].name
-}
-
-# resource "aws_lambda_permission" "external_entrypoints" {
-#   for_each = local.external_entrypoint_config
-
-#   statement_id   = replace(title(each.value.name), "/-| |_/", "")
-#   action         = "lambda:InvokeFunction"
-#   function_name  = aws_lambda_function.lambda_application[each.key].function_name
-#   principal      = "s3.amazonaws.com"
-#   source_account =
-# }
-
-
 resource "aws_lambda_layer_version" "runtime_dependencies" {
   layer_name = var.application_name
 
