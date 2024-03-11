@@ -1,5 +1,5 @@
 locals {
-  create_event_bus        = length(keys(var.msk_event_source_config)) > 0
+  create_event_bus = length(keys(var.internal_entrypoint_config)) > 0
 }
 
 resource "aws_cloudwatch_event_bus" "internal" {
