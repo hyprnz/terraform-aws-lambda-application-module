@@ -1,3 +1,15 @@
+locals {
+  create_event_bus        = length(keys(var.msk_event_source_config)) > 0
+}
+
+resource "aws_cloudwatch_event_bus" "internal" {
+  count = local.create_event_bus ? 1 : 0
+
+  name = var.application_name
+
+  tags = merge({ Name = var.application_name }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
+}
+
 resource "aws_cloudwatch_event_rule" "internal_entrypoint" {
   for_each = var.internal_entrypoint_config
 
@@ -6,7 +18,7 @@ resource "aws_cloudwatch_event_rule" "internal_entrypoint" {
 
   event_pattern       = contains(keys(each.value), "event_pattern_json") ? jsonencode(each.value.event_pattern_json) : null
   schedule_expression = contains(keys(each.value), "schedule_expression") ? each.value.schedule_expression : null
-  event_bus_name      = try(each.value.event_bus_name, "default")
+  event_bus_name      = aws_cloudwatch_event_bus.internal[0].name
 
   tags = merge({ Name = format("%s-%s", var.application_name, each.value.name) }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
 }
@@ -17,7 +29,7 @@ resource "aws_cloudwatch_event_target" "lambda_internal_entrypoint" {
   target_id = each.value.name
   arn       = aws_lambda_alias.lambda_application_alias[each.key].arn
 
-  event_bus_name = try(each.value.event_bus_name, "default")
+  event_bus_name = aws_cloudwatch_event_bus.internal[0].name
   lifecycle {
     replace_triggered_by = [
       aws_cloudwatch_event_rule.internal_entrypoint[each.key]
