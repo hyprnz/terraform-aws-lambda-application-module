@@ -36,9 +36,29 @@ variable "lambda_alb_config" {
 }
 
 variable "internal_entrypoint_config" {
-  type        = map(any)
+  type = map(object({
+    name                = string
+    description         = optional(string, null)
+    event_pattern_json  = optional(map(any), null)
+    schedule_expression = optional(string, null)
+  }))
   description = "Map of configurations of internal entrypoints."
+  default     = {}
 }
+
+variable "external_entrypoint_config" {
+  type = map(object({
+    name                = string
+    description         = optional(string, null)
+    event_pattern_json  = optional(map(any), null)
+    schedule_expression = optional(string, null)
+    event_bus_name      = string
+    source_account      = optional(string, null)
+  }))
+  description = "Map of configurations of external entrypoints."
+  default     = {}
+}
+
 variable "alb_lambda_listener_arn" {
   type        = string
   description = "Listener ARN of ALB"
