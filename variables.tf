@@ -35,6 +35,12 @@ variable "lambda_alb_config" {
   default     = {}
 }
 
+variable "create_event_bus" {
+  type        = bool
+  description = "Determine if an internal event bus should be created."
+  default     = false
+}
+
 variable "internal_entrypoint_config" {
   type = map(object({
     name                = string
