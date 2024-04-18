@@ -5,7 +5,21 @@ resource "aws_apigatewayv2_api" "this" {
   count         = var.enable_api_gateway ? 1 : 0
   name          = var.application_name
   protocol_type = "HTTP"
-  tags          = merge({ "Lambda Application" = var.application_name }, var.tags)
+
+  dynamic "cors_configuration" {
+    for_each = length(keys(var.api_gateway_cors_configuration)) == 0 ? [] : [var.api_gateway_cors_configuration]
+
+    content {
+      allow_credentials = try(cors_configuration.value.allow_credentials, null)
+      allow_headers     = try(cors_configuration.value.allow_headers, null)
+      allow_methods     = try(cors_configuration.value.allow_methods, null)
+      allow_origins     = try(cors_configuration.value.allow_origins, null)
+      expose_headers    = try(cors_configuration.value.expose_headers, null)
+      max_age           = try(cors_configuration.value.max_age, null)
+    }
+  }
+
+  tags = merge({ "Lambda Application" = var.application_name }, var.tags)
 }
 
 resource "aws_apigatewayv2_stage" "default" {

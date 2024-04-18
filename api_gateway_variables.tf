@@ -25,3 +25,17 @@ variable "api_gateway_custom_domain_name" {
   description = "A custom domain name for the API gateway. If not provided will use the default AWS one. Requires `api_gateway_custom_domain_zone_id` to be provided"
   default     = ""
 }
+
+variable "api_gateway_cors_configuration" {
+  type = object({
+    allow_credentials = optional(bool, null)
+    allow_headers     = optional(set(string), null)
+    allow_methods     = optional(set(string), null)
+    allow_origins     = optional(set(string), null)
+    expose_headers    = optional(set(string), null)
+    max_age           = optional(number, null)
+  })
+  description = "Cross-origin resource sharing (CORS) configuration."
+  nullable    = false
+  default     = {}
+}
