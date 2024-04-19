@@ -1,21 +1,23 @@
 locals {
-  api_gateway_route_config = var.enable_api_gateway ? var.api_gateway_route_config : {}
+  api_gateway_route_config_list = [for function_name, config in var.api_gateway_route_config: {for idx, method in config.methods: "${method} /${function_name}" => merge(config, {function_name: function_name, method: method})}]
+  api_gateway_route_config = var.enable_api_gateway && length(local.api_gateway_route_config_list) > 0 ? element(local.api_gateway_route_config_list, 0) : {}
 }
+
 resource "aws_apigatewayv2_api" "this" {
   count         = var.enable_api_gateway ? 1 : 0
   name          = var.application_name
   protocol_type = "HTTP"
 
   dynamic "cors_configuration" {
-    for_each = length(keys(var.api_gateway_cors_configuration)) == 0 ? [] : [var.api_gateway_cors_configuration]
+    for_each = [var.api_gateway_cors_configuration]
 
     content {
-      allow_credentials = try(cors_configuration.value.allow_credentials, null)
-      allow_headers     = try(cors_configuration.value.allow_headers, null)
-      allow_methods     = try(cors_configuration.value.allow_methods, null)
-      allow_origins     = try(cors_configuration.value.allow_origins, null)
-      expose_headers    = try(cors_configuration.value.expose_headers, null)
-      max_age           = try(cors_configuration.value.max_age, null)
+      allow_credentials = cors_configuration.value.allow_credentials
+      allow_headers     = cors_configuration.value.allow_headers
+      allow_methods     = cors_configuration.value.allow_methods
+      allow_origins     = cors_configuration.value.allow_origins
+      expose_headers    = cors_configuration.value.expose_headers
+      max_age           = cors_configuration.value.max_age
     }
   }
 
@@ -54,7 +56,7 @@ resource "aws_apigatewayv2_integration" "lambda" {
 
   connection_type      = "INTERNET"
   integration_method   = "POST"
-  integration_uri      = aws_lambda_alias.lambda_application_alias[each.key].arn
+  integration_uri      = aws_lambda_alias.lambda_application_alias[each.value.function_name].arn
   passthrough_behavior = "WHEN_NO_MATCH"
 }
 
@@ -62,7 +64,7 @@ resource "aws_apigatewayv2_route" "lambda" {
   for_each = local.api_gateway_route_config
 
   api_id         = aws_apigatewayv2_api.this[0].id
-  route_key      = "ANY /${each.key}/{proxy+}"
+  route_key      = "${each.key}/{proxy+}"
   operation_name = each.value.operation_name
 
   target = "integrations/${aws_apigatewayv2_integration.lambda[each.key].id}"
