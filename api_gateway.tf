@@ -1,6 +1,6 @@
 locals {
   api_gateway_route_config_list = [for function_name, config in var.api_gateway_route_config: {for idx, method in config.methods: "${method} /${function_name}" => merge(config, {function_name: function_name, method: method})}]
-  api_gateway_route_config = var.enable_api_gateway && length(local.api_gateway_route_config_list) > 0 ? element(local.api_gateway_route_config_list, 0) : {}
+  api_gateway_route_config = var.enable_api_gateway ? merge(flatten(local.api_gateway_route_config_list)...) : {}
 }
 
 resource "aws_apigatewayv2_api" "this" {
