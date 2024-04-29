@@ -7,7 +7,7 @@ locals {
       {
         function_name : function_name,
         event_source_arn: coalesce(config.event_source_arn, var.msk_arn),
-        consumer_group_id: coalesce(config.consumer_group_id, sha1(join("_", [function_name, coalesce(config.event_source_arn, var.msk_arn), config.topic])))
+        consumer_group_id: sha1(coalesce(config.consumer_group_id, join("_", [function_name, coalesce(config.event_source_arn, var.msk_arn), config.topic])))
       })
     ]
   ])
