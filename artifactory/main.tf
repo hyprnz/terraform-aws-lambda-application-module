@@ -51,13 +51,20 @@ resource "aws_s3_bucket_ownership_controls" "this" {
   }
 }
 
-
 resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
   bucket = aws_s3_bucket.artifactory.id
 
   rule {
     apply_server_side_encryption_by_default {
       sse_algorithm = "aws:kms"
+      kms_master_key_id = var.kms_key_id
     }
+  }
+}
+
+resource "aws_s3_bucket_versioning" "this" {
+  bucket = aws_s3_bucket.artifactory.id
+  versioning_configuration {
+    status = var.enable_versioning ? "Enabled" : "Disabled"
   }
 }

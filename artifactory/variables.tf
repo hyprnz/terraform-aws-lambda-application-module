@@ -25,3 +25,14 @@ variable "tags" {
   default     = {}
 }
 
+variable "kms_key_id" {
+  type        = string
+  description = "AWS KMS key ID used for the SSE-KMS encryption of the bucket."
+  default     = null
+}
+
+variable "enable_versioning" {
+  type        = bool
+  description = "Determine if versioning is enabled for the bucket."
+  default     = false
+}
