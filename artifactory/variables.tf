@@ -34,5 +34,5 @@ variable "kms_key_id" {
 variable "enable_versioning" {
   type        = bool
   description = "Determine if versioning is enabled for the bucket."
-  default     = false
+  default     = true
 }
