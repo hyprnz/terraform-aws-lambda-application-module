@@ -157,9 +157,10 @@ resource "aws_route53_record" "api_gateway_live" {
   }
 }
 
-resource "aws_api_gateway_base_path_mapping" "this" {
-  count       = var.enable_api_gateway && local.enable_custom_domain_name ? 1 : 0
+resource "aws_apigatewayv2_api_mapping" "this" {
+  count = var.enable_api_gateway && local.enable_custom_domain_name ? 1 : 0
+
   api_id      = aws_apigatewayv2_api.this[0].id
-  stage_name  = aws_apigatewayv2_stage.default[0].id
-  domain_name = aws_apigatewayv2_domain_name.api_gateway_domain[0].domain_name
+  domain_name = aws_apigatewayv2_domain_name.api_gateway_domain[0].id
+  stage       = aws_apigatewayv2_stage.default[0].id
 }
