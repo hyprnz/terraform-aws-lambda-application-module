@@ -11,6 +11,15 @@ resource "aws_s3_bucket" "artifactory" {
   tags = merge({ Name = var.artifactory_bucket_name }, { "Lambda Application Name" = var.application_name }, var.tags)
 }
 
+resource "aws_s3_bucket_public_access_block" "this" {
+  bucket = aws_s3_bucket.artifactory.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 data "aws_iam_policy_document" "cross_account_access_document" {
   statement {
     sid = "LambdaApplicationArtifactoryCrossAccountPermission"
