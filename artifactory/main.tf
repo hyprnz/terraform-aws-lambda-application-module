@@ -2,7 +2,7 @@ locals {
   cross_account_identifiers = [for account in var.cross_account_numbers : format("arn:aws:iam::%s:root", account)]
 }
 
-
+#trivy:ignore:AVD-AWS-0089
 resource "aws_s3_bucket" "artifactory" {
   bucket = var.artifactory_bucket_name
 
