@@ -30,7 +30,7 @@ resource "aws_cloudwatch_event_target" "lambda_internal_entrypoint" {
   target_id = each.value.name
   arn       = aws_lambda_alias.lambda_application_alias[each.key].arn
 
-  event_bus_name = local.internal_event_bus_name
+  event_bus_name = length(lookup(each.value, "schedule_expression", "")) > 0 ? null : local.internal_event_bus_name
   lifecycle {
     replace_triggered_by = [
       aws_cloudwatch_event_rule.internal_entrypoint[each.key]
