@@ -42,12 +42,7 @@ variable "create_event_bus" {
 }
 
 variable "internal_entrypoint_config" {
-  type = map(object({
-    name                = string
-    description         = optional(string, null)
-    event_pattern_json  = optional(map(any), null)
-    schedule_expression = optional(string, null)
-  }))
+  type        = map(any)
   description = "Map of configurations of internal entrypoints."
   default     = {}
 }
