@@ -19,7 +19,7 @@ resource "aws_cloudwatch_event_rule" "internal_entrypoint" {
 
   event_pattern       = contains(keys(each.value), "event_pattern_json") ? jsonencode(each.value.event_pattern_json) : null
   schedule_expression = contains(keys(each.value), "schedule_expression") ? each.value.schedule_expression : null
-  event_bus_name      = local.internal_event_bus_name
+  event_bus_name      = length(lookup(each.value, "schedule_expression", "")) > 0 ? null : local.internal_event_bus_name
 
   tags = merge({ Name = format("%s-%s", var.application_name, each.value.name) }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
 }
