@@ -1,6 +1,6 @@
 locals {
   create_event_bus        = var.create_event_bus && length(keys(var.internal_entrypoint_config)) > 0
-  internal_event_bus_name = local.create_event_bus ? aws_cloudwatch_event_bus.internal[0].name : "default"
+  internal_event_bus_name = local.create_event_bus ? aws_cloudwatch_event_bus.internal[0].name : null
 }
 
 resource "aws_cloudwatch_event_bus" "internal" {
