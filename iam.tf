@@ -102,6 +102,7 @@ data "aws_iam_policy_document" "ssm_kms_key" {
 
 resource "aws_iam_role" "lambda_application_execution_role" {
   name = format("ExecutionRole-Lambda-%s", var.application_name)
+  path = var.iam_resource_path
 
   assume_role_policy = data.aws_iam_policy_document.lambda_application_assume_role_statement.json
 
@@ -110,6 +111,7 @@ resource "aws_iam_role" "lambda_application_execution_role" {
 
 resource "aws_iam_policy" "event_bridge_internal_entrypoint" {
   name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-EventBridgeInternalEntrypointPolicy"
+  path        = var.iam_resource_path  
   policy      = data.aws_iam_policy_document.event_bridge_internal_entrypoint.json
   description = "Grants permissions to write internal entrypoint events to EventBridge"
 }
@@ -139,6 +141,7 @@ resource "aws_iam_role_policy_attachment" "datastore_dynamodb_access_policy" {
 resource "aws_iam_policy" "lambda_vpc" {
   count       = local.vpc_policy_required ? 1 : 0
   name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-LambdaVPC"
+  path        = var.iam_resource_path
   description = "Grants permissions to access VPC"
   policy      = data.aws_iam_policy_document.lambda_vpc_document.json
 }
@@ -193,6 +196,7 @@ resource "aws_iam_policy" "msk_cluster_access" {
   count = local.enable_msk_integration ? 1 : 0
 
   name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-MSKAccess"
+  path        = var.iam_resource_path
   policy      = data.aws_iam_policy_document.msk_cluster_access[0].json
   description = "Grant permissions to consume/produce messages from/to (cross-account) MSK clusters"
 }
@@ -206,6 +210,7 @@ resource "aws_iam_role_policy_attachment" "msk_cluster_access" {
 
 resource "aws_iam_policy" "ssm_access_policy" {
   name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-SSMAccess"
+  path        = var.iam_resource_path
   policy      = data.aws_iam_policy_document.ssm_parameters_access.json
   description = "Grants permissions to access parameters from SSM"
 }
@@ -218,6 +223,7 @@ resource "aws_iam_role_policy_attachment" "ssm_access" {
 resource "aws_iam_policy" "ssm_kms_key" {
   count  = local.has_customer_kms_key ? 1 : 0
   name   = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-SSMKMSKey"
+  path   = var.iam_resource_path
   policy = data.aws_iam_policy_document.ssm_kms_key.json
 }
 
@@ -249,6 +255,7 @@ resource "aws_iam_role_policy_attachment" "lambda_insights" {
 resource "aws_iam_policy" "custom_lambda_policy" {
   count       = local.custom_policy_required ? 1 : 0
   name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-CustomLambdaPolicy"
+  path        = var.iam_resource_path
   description = var.custom_policy_description
   policy      = var.custom_policy_document
 }

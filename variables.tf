@@ -142,6 +142,12 @@ variable "alias_description" {
   default     = ""
 }
 
+variable "iam_resource_path" {
+  type        = string
+  description = "The path for IAM roles and policies"
+  default     = "/"
+}
+
 variable "custom_policy_document" {
   type        = string
   description = "A valid policy json string that defines additional actions required by the execution role of the Lambda function"

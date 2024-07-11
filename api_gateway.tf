@@ -75,6 +75,7 @@ resource "aws_iam_role" "api_gateway_execution_role" {
   count = var.enable_api_gateway ? 1 : 0
 
   name = format("ExecutionRole-APIGateway-%s", var.application_name)
+  path = var.iam_resource_path
 
   assume_role_policy = data.aws_iam_policy_document.apigateway_assume_role_policy.json
   inline_policy {}
@@ -86,6 +87,7 @@ resource "aws_iam_policy" "invoke_lambdas" {
   count = var.enable_api_gateway ? 1 : 0
 
   name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-APIGatewayLambdaExecutionPolicy"
+  path        = var.iam_resource_path
   policy      = data.aws_iam_policy_document.apigateway_lambda_integration.json
   description = "Grants permissions to execute Lambda functions"
 }
