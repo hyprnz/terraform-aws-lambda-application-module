@@ -1,11 +1,12 @@
 module "lambda_datastore" {
-  source = "github.com/hyprnz/terraform-aws-data-storage-module?ref=4.0.0"
+  source = "github.com/hyprnz/terraform-aws-data-storage-module?ref=v4.1.0"
 
   providers = {
     aws = aws
   }
 
-  enable_datastore = var.enable_datastore
+  enable_datastore  = var.enable_datastore
+  iam_resource_path = var.iam_resource_path
 
   create_rds_instance   = var.create_rds_instance
   use_rds_snapshot      = var.use_rds_snapshot
