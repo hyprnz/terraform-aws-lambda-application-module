@@ -41,7 +41,7 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 
 | Name | Source | Version |
 |------|--------|---------|
-| lambda_datastore | github.com/hyprnz/terraform-aws-data-storage-module | 4.0.0 |
+| lambda_datastore | github.com/hyprnz/terraform-aws-data-storage-module | v4.1.0 |
 
 ## Inputs
 
@@ -100,7 +100,8 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | enable_lambda_insights_monitoring | Determine if enhanced monitoring (Lambda Insights) is enabled for all functions, can be overwritten by the function configuration. | `bool` | `false` | no |
 | enable_load_balancer | Allow to create load balancer | `bool` | `false` | no |
 | external_entrypoint_config | Map of configurations of external entrypoints. | <pre>map(object({<br>    name                = string<br>    description         = optional(string, null)<br>    event_pattern_json  = optional(map(any), null)<br>    schedule_expression = optional(string, null)<br>    event_bus_name      = string<br>    source_account      = optional(string, null)<br>  }))</pre> | `{}` | no |
-| internal_entrypoint_config | Map of configurations of internal entrypoints. | <pre>map(object({<br>    name                = string<br>    description         = optional(string, null)<br>    event_pattern_json  = optional(map(any), null)<br>    schedule_expression = optional(string, null)<br>  }))</pre> | `{}` | no |
+| iam_resource_path | The path for IAM roles and policies | `string` | `"/"` | no |
+| internal_entrypoint_config | Map of configurations of internal entrypoints. | `map(any)` | `{}` | no |
 | lambda_alb_config | Contains entry point lambda function key | `map(string)` | `{}` | no |
 | lambda_insights_extension_layer | The arn of the Lambda Insights Extension layer | `string` | `""` | no |
 | layer_artifact_key | File name key of the layer artifact to load. | `string` | `""` | no |
