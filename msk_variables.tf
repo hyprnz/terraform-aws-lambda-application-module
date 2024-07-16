@@ -6,11 +6,11 @@ variable "msk_arn" {
 
 variable "msk_event_source_config" {
   type = map(set(object({
-    event_source_arn  = optional(string, null)
-    topic             = string
-    starting_position = optional(string, "LATEST")
-    batch_size        = optional(number, null)
-    consumer_group_id = optional(string, null)
+    event_source_arn         = optional(string, null)
+    topic                    = string
+    starting_position        = optional(string, "LATEST")
+    batch_size               = optional(number, null)
+    consumer_group_id_prefix = optional(string, null)
   })))
   description = "Map of configurations of MSK event source for each lambda"
   default     = {}

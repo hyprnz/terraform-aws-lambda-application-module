@@ -106,7 +106,7 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | lambda_insights_extension_layer | The arn of the Lambda Insights Extension layer | `string` | `""` | no |
 | layer_artifact_key | File name key of the layer artifact to load. | `string` | `""` | no |
 | msk_arn | the MSK source arn for all lambda requires MSK | `string` | `""` | no |
-| msk_event_source_config | Map of configurations of MSK event source for each lambda | <pre>map(set(object({<br>    event_source_arn  = optional(string, null)<br>    topic             = string<br>    starting_position = optional(string, "LATEST")<br>    batch_size        = optional(number, null)<br>    consumer_group_id = optional(string, null)<br>  })))</pre> | `{}` | no |
+| msk_event_source_config | Map of configurations of MSK event source for each lambda | <pre>map(set(object({<br>    event_source_arn         = optional(string, null)<br>    topic                    = string<br>    starting_position        = optional(string, "LATEST")<br>    batch_size               = optional(number, null)<br>    consumer_group_id_prefix = optional(string, null)<br>  })))</pre> | `{}` | no |
 | parameter_store_path | SSM parameter path | `string` | `""` | no |
 | rds_allocated_storage | Amount of storage allocated to RDS instance | `number` | `100` | no |
 | rds_apply_immediately | Specifies whether any database modifications are applied immediately, or during the next maintenance window. Defaults to `false`. | `bool` | `false` | no |

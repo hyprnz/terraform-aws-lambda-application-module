@@ -3,11 +3,11 @@ locals {
     for function_name, configs in var.msk_event_source_config : [
       for idx, config in configs :
       merge(
-      config, 
-      {
-        function_name : function_name,
-        event_source_arn: coalesce(config.event_source_arn, var.msk_arn),
-        consumer_group_id: sha1(coalesce(config.consumer_group_id, join("_", [function_name, coalesce(config.event_source_arn, var.msk_arn), config.topic])))
+        config,
+        {
+          function_name : function_name,
+          event_source_arn : coalesce(config.event_source_arn, var.msk_arn),
+          consumer_group_id : sha1(join("_", [function_name, coalesce(config.event_source_arn, var.msk_arn), config.topic]))
       })
     ]
   ])
@@ -23,6 +23,6 @@ resource "aws_lambda_event_source_mapping" "msk_event_source" {
   batch_size        = each.value.batch_size
 
   amazon_managed_kafka_event_source_config {
-    consumer_group_id = each.value.consumer_group_id
+    consumer_group_id = join("", [each.value.consumer_group_id_prefix, each.value.consumer_group_id])
   }
 }

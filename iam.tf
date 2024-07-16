@@ -111,7 +111,7 @@ resource "aws_iam_role" "lambda_application_execution_role" {
 
 resource "aws_iam_policy" "event_bridge_internal_entrypoint" {
   name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-EventBridgeInternalEntrypointPolicy"
-  path        = var.iam_resource_path  
+  path        = var.iam_resource_path
   policy      = data.aws_iam_policy_document.event_bridge_internal_entrypoint.json
   description = "Grants permissions to write internal entrypoint events to EventBridge"
 }
