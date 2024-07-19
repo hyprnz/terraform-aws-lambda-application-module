@@ -1,5 +1,5 @@
 module "lambda_datastore" {
-  source = "github.com/hyprnz/terraform-aws-data-storage-module?ref=v4.1.0"
+  source = "github.com/hyprnz/terraform-aws-data-storage-module?ref=v4.1.1"
 
   providers = {
     aws = aws
