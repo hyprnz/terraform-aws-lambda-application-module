@@ -101,16 +101,18 @@ data "aws_iam_policy_document" "ssm_kms_key" {
 
 
 resource "aws_iam_role" "lambda_application_execution_role" {
-  name = format("ExecutionRole-Lambda-%s", var.application_name)
+  name = "${var.application_name}-LA-ER"
   path = var.iam_resource_path
+
+  description = "Lambda Application Execution Role"
 
   assume_role_policy = data.aws_iam_policy_document.lambda_application_assume_role_statement.json
 
-  tags = merge({ Name = format("%s-Execution-Role", var.application_name) }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
+  tags = merge({ "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
 }
 
 resource "aws_iam_policy" "event_bridge_internal_entrypoint" {
-  name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-EventBridgeInternalEntrypointPolicy"
+  name        = "${var.application_name}-LA-EB"
   path        = var.iam_resource_path
   policy      = data.aws_iam_policy_document.event_bridge_internal_entrypoint.json
   description = "Grants permissions to write internal entrypoint events to EventBridge"
@@ -140,9 +142,9 @@ resource "aws_iam_role_policy_attachment" "datastore_dynamodb_access_policy" {
 
 resource "aws_iam_policy" "lambda_vpc" {
   count       = local.vpc_policy_required ? 1 : 0
-  name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-LambdaVPC"
+  name        = "${var.application_name}-LA-VPC"
   path        = var.iam_resource_path
-  description = "Grants permissions to access VPC"
+  description = "Grants Lambda Application permissions to access VPC"
   policy      = data.aws_iam_policy_document.lambda_vpc_document.json
 }
 
@@ -195,10 +197,10 @@ data "aws_iam_policy_document" "msk_cluster_access" {
 resource "aws_iam_policy" "msk_cluster_access" {
   count = local.enable_msk_integration ? 1 : 0
 
-  name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-MSKAccess"
+  name        = "${var.application_name}-LA-MSK"
   path        = var.iam_resource_path
   policy      = data.aws_iam_policy_document.msk_cluster_access[0].json
-  description = "Grant permissions to consume/produce messages from/to (cross-account) MSK clusters"
+  description = "Grant Lambda Application permissions to consume/produce messages from/to (cross-account) MSK clusters"
 }
 
 resource "aws_iam_role_policy_attachment" "msk_cluster_access" {
@@ -209,10 +211,10 @@ resource "aws_iam_role_policy_attachment" "msk_cluster_access" {
 }
 
 resource "aws_iam_policy" "ssm_access_policy" {
-  name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-SSMAccess"
+  name        = "${var.application_name}-LA-SSM"
   path        = var.iam_resource_path
   policy      = data.aws_iam_policy_document.ssm_parameters_access.json
-  description = "Grants permissions to access parameters from SSM"
+  description = "Grants Lambda Application permissions to access parameters from SSM"
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_access" {
@@ -222,9 +224,10 @@ resource "aws_iam_role_policy_attachment" "ssm_access" {
 
 resource "aws_iam_policy" "ssm_kms_key" {
   count  = local.has_customer_kms_key ? 1 : 0
-  name   = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-SSMKMSKey"
+  name   = "${var.application_name}-LA-KMS"
   path   = var.iam_resource_path
   policy = data.aws_iam_policy_document.ssm_kms_key.json
+  description = "Grants Lambda Application permissions to access keys from KMS"
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_kms_key" {
@@ -254,7 +257,7 @@ resource "aws_iam_role_policy_attachment" "lambda_insights" {
 
 resource "aws_iam_policy" "custom_lambda_policy" {
   count       = local.custom_policy_required ? 1 : 0
-  name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-CustomLambdaPolicy"
+  name        = "${var.application_name}-LA-Custom"
   path        = var.iam_resource_path
   description = var.custom_policy_description
   policy      = var.custom_policy_document
@@ -264,4 +267,57 @@ resource "aws_iam_role_policy_attachment" "custom_lambda" {
   count      = local.custom_policy_required ? 1 : 0
   role       = aws_iam_role.lambda_application_execution_role.name
   policy_arn = aws_iam_policy.custom_lambda_policy[0].arn
+}
+
+resource "aws_iam_role" "api_gateway_execution_role" {
+  count = var.enable_api_gateway ? 1 : 0
+
+  name = "${var.application_name}-LA-API-ER"
+  path = var.iam_resource_path
+
+  description = "Lambda Application external entrypoint API Gateway execution role"
+
+  assume_role_policy = data.aws_iam_policy_document.apigateway_assume_role_policy.json
+  inline_policy {}
+
+  tags = merge({ "Lambda Application" = var.application_name }, var.tags)
+}
+
+resource "aws_iam_policy" "invoke_lambdas" {
+  count = var.enable_api_gateway ? 1 : 0
+
+  name        = "${var.application_name}-LA-API"
+  path        = var.iam_resource_path
+  policy      = data.aws_iam_policy_document.apigateway_lambda_integration.json
+  description = "Grants API Gateway permissions to execute Lambda Application functions"
+}
+
+resource "aws_iam_role_policy_attachment" "api_gateway_execution_role_policy_attach" {
+  count = var.enable_api_gateway ? 1 : 0
+
+  role       = aws_iam_role.api_gateway_execution_role[0].name
+  policy_arn = aws_iam_policy.invoke_lambdas[0].arn
+}
+
+data "aws_iam_policy_document" "apigateway_lambda_integration" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "lambda:InvokeFunction"
+    ]
+
+    resources = tolist([for i in aws_lambda_alias.lambda_application_alias : i.arn])
+  }
+}
+
+data "aws_iam_policy_document" "apigateway_assume_role_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["apigateway.amazonaws.com"]
+    }
+  }
 }

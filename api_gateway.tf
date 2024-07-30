@@ -71,57 +71,6 @@ resource "aws_apigatewayv2_route" "lambda" {
   target = "integrations/${aws_apigatewayv2_integration.lambda[each.value.function_name].id}"
 }
 
-resource "aws_iam_role" "api_gateway_execution_role" {
-  count = var.enable_api_gateway ? 1 : 0
-
-  name = format("ExecutionRole-APIGateway-%s", var.application_name)
-  path = var.iam_resource_path
-
-  assume_role_policy = data.aws_iam_policy_document.apigateway_assume_role_policy.json
-  inline_policy {}
-
-  tags = merge({ "Lambda Application" = var.application_name }, var.tags)
-}
-
-resource "aws_iam_policy" "invoke_lambdas" {
-  count = var.enable_api_gateway ? 1 : 0
-
-  name        = "LambdaApplication-${replace(var.application_name, "/-| |_/", "")}-APIGatewayLambdaExecutionPolicy"
-  path        = var.iam_resource_path
-  policy      = data.aws_iam_policy_document.apigateway_lambda_integration.json
-  description = "Grants permissions to execute Lambda functions"
-}
-
-resource "aws_iam_role_policy_attachment" "api_gateway_execution_role_policy_attach" {
-  count = var.enable_api_gateway ? 1 : 0
-
-  role       = aws_iam_role.api_gateway_execution_role[0].name
-  policy_arn = aws_iam_policy.invoke_lambdas[0].arn
-}
-
-data "aws_iam_policy_document" "apigateway_lambda_integration" {
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "lambda:InvokeFunction"
-    ]
-
-    resources = tolist([for i in aws_lambda_alias.lambda_application_alias : i.arn])
-  }
-}
-
-data "aws_iam_policy_document" "apigateway_assume_role_policy" {
-  statement {
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "Service"
-      identifiers = ["apigateway.amazonaws.com"]
-    }
-  }
-}
-
 resource "aws_cloudwatch_log_group" "api_gateway_log_group" {
   count = var.enable_api_gateway ? 1 : 0
 
