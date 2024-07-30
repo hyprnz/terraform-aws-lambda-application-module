@@ -133,13 +133,13 @@ variable "ssm_kms_key_arn" {
 variable "alias_name" {
   type        = string
   description = "Name of the alias being created"
-  default     = ""
+  default     = "live"
 }
 
 variable "alias_description" {
   type        = string
   description = "Name of the alias being created"
-  default     = ""
+  default     = "Default alias"
 }
 
 variable "iam_resource_path" {
