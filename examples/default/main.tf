@@ -38,9 +38,9 @@ module "example_lambda_applcation" {
     }
   }
 
-  enable_api_gateway       = true
+  enable_api_gateway = true
   api_gateway_route_config = {
-      ext-function = {
+    ext-function = {
       operation_name = "service:ext-function"
     }
   }

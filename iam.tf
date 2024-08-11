@@ -223,10 +223,10 @@ resource "aws_iam_role_policy_attachment" "ssm_access" {
 }
 
 resource "aws_iam_policy" "ssm_kms_key" {
-  count  = local.has_customer_kms_key ? 1 : 0
-  name   = "${var.application_name}-LA-KMS"
-  path   = var.iam_resource_path
-  policy = data.aws_iam_policy_document.ssm_kms_key.json
+  count       = local.has_customer_kms_key ? 1 : 0
+  name        = "${var.application_name}-LA-KMS"
+  path        = var.iam_resource_path
+  policy      = data.aws_iam_policy_document.ssm_kms_key.json
   description = "Grants Lambda Application permissions to access keys from KMS"
 }
 
