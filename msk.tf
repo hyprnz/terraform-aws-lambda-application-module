@@ -21,6 +21,7 @@ resource "aws_lambda_event_source_mapping" "msk_event_source" {
   topics            = [each.value.topic]
   starting_position = each.value.starting_position
   batch_size        = each.value.batch_size
+  enabled           = each.value.enabled
 
   amazon_managed_kafka_event_source_config {
     consumer_group_id = join("", [each.value.consumer_group_id_prefix, each.value.consumer_group_id])
