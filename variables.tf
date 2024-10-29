@@ -25,6 +25,7 @@ variable "lambda_functions_config" {
     system_log_level      = optional(string)
 
     enable_lambda_insights_monitoring = optional(bool, null)
+    function_concurrency_limit        = optional(number)
   }))
   description = "Map of functions and associated configurations."
 }

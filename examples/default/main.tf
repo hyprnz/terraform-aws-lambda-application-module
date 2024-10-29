@@ -17,10 +17,11 @@ module "example_lambda_applcation" {
 
   lambda_functions_config = {
     ext-function = {
-      name        = "ext-function"
-      description = "external endpoint function description"
-      handler     = "external_endpoint_function.handler.handle"
-      enable_vpc  = false
+      name                       = "ext-function"
+      description                = "external endpoint function description"
+      handler                    = "external_endpoint_function.handler.handle"
+      enable_vpc                 = false
+      function_concurrency_limit = 50
     },
     int-function = {
       name        = "int-function"
