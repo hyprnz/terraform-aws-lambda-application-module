@@ -1,5 +1,5 @@
 module "lambda_datastore" {
-  source = "github.com/hyprnz/terraform-aws-data-storage-module?ref=v4.1.2"
+  source = "github.com/hyprnz/terraform-aws-data-storage-module?ref=v4.2.0"
 
   providers = {
     aws = aws
@@ -79,6 +79,8 @@ module "lambda_datastore" {
   dynamodb_local_secondary_index_map  = var.dynamodb_local_secondary_index_map
 
   dynamodb_enable_autoscaler = var.dynamodb_enable_autoscaler
+
+  dynamodb_enable_insights = var.dynamodb_enable_insights
 
   rds_tags      = var.rds_tags
   s3_tags       = var.s3_tags

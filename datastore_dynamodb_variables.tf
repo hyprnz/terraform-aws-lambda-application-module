@@ -142,3 +142,9 @@ variable "dynamodb_enable_autoscaler" {
   description = "Whether or not to enable DynamoDB autoscaling"
   default     = false
 }
+
+variable "dynamodb_enable_insights" {
+  type        = bool
+  description = "Enables Contributor Insights for Dynamodb"
+  default     = false
+}
