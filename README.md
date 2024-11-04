@@ -41,7 +41,7 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 
 | Name | Source | Version |
 |------|--------|---------|
-| lambda_datastore | github.com/hyprnz/terraform-aws-data-storage-module | v4.1.0 |
+| lambda_datastore | github.com/hyprnz/terraform-aws-data-storage-module | v4.2.0 |
 
 ## Inputs
 
@@ -52,11 +52,11 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | application_version | Version of the function(s) deployed for the application. | `string` | n/a | yes |
 | artifact_bucket | Bucket that stores function artifacts. Includes layer dependencies. | `string` | n/a | yes |
 | artifact_bucket_key | File name key of the artifact to load. | `string` | n/a | yes |
-| lambda_functions_config | Map of functions and associated configurations. | <pre>map(object({<br>    description           = optional(string)<br>    handler               = string<br>    enable_vpc            = bool<br>    function_memory       = optional(string)<br>    function_timeout      = optional(number)<br>    log_format            = optional(string, "Text")<br>    application_log_level = optional(string)<br>    system_log_level      = optional(string)<br><br>    enable_lambda_insights_monitoring = optional(bool, null)<br>  }))</pre> | n/a | yes |
+| lambda_functions_config | Map of functions and associated configurations. | <pre>map(object({<br>    description           = optional(string)<br>    handler               = string<br>    enable_vpc            = bool<br>    function_memory       = optional(string)<br>    function_timeout      = optional(number)<br>    log_format            = optional(string, "Text")<br>    application_log_level = optional(string)<br>    system_log_level      = optional(string)<br><br>    enable_lambda_insights_monitoring = optional(bool, null)<br>    function_concurrency_limit        = optional(number)<br>  }))</pre> | n/a | yes |
 | additional_layers | A list of layer ARN's (with or without aliases) to add to all functions within the Lambda application. Provides the ability to add dependencies for additional functionality such as monitoring and observability. | `list(string)` | `[]` | no |
 | alb_lambda_listener_arn | Listener ARN of ALB | `string` | `""` | no |
-| alias_description | Name of the alias being created | `string` | `""` | no |
-| alias_name | Name of the alias being created | `string` | `""` | no |
+| alias_description | Name of the alias being created | `string` | `"Default alias"` | no |
+| alias_name | Name of the alias being created | `string` | `"live"` | no |
 | api_gateway_cors_configuration | Cross-origin resource sharing (CORS) configuration. | <pre>object({<br>    allow_credentials = optional(bool, null)<br>    allow_headers     = optional(set(string), null)<br>    allow_methods     = optional(set(string), null)<br>    allow_origins     = optional(set(string), null)<br>    expose_headers    = optional(set(string), null)<br>    max_age           = optional(number, null)<br>  })</pre> | `{}` | no |
 | api_gateway_custom_domain_name | A custom domain name for the API gateway. If not provided will use the default AWS one. Requires `api_gateway_custom_domain_zone_id` to be provided | `string` | `""` | no |
 | api_gateway_custom_domain_zone_id | The Route 53 hosted zone id for the API gatewy custom domain. Must be provided and be valid, if the `api_gateway_custom_domain_name` is set | `string` | `""` | no |
@@ -66,7 +66,6 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | application_timeout | Timeout in seconds for all functions in the application. Defaults to `3`. | `number` | `3` | no |
 | aws_cloudwatch_log_group_retention_in_days | The retention period in days of all log group created for each function. Defaults to `30`. | `number` | `30` | no |
 | create_dynamodb_table | Whether or not to enable DynamoDB resources | `bool` | `false` | no |
-| create_event_bus | Determine if an internal event bus should be created. | `bool` | `false` | no |
 | create_rds_instance | Controls if an RDS instance should be provisioned. Will take precedence if this and `use_rds_snapshot` are both true. | `bool` | `false` | no |
 | create_s3_bucket | Controls if an S3 bucket should be provisioned | `bool` | `false` | no |
 | custom_policy_description | Allows to override the custom Lambda policy's description | `string` | `""` | no |
@@ -82,6 +81,7 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | dynamodb_billing_mode | DynamoDB Billing mode. Can be PROVISIONED or PAY_PER_REQUEST | `string` | `"PROVISIONED"` | no |
 | dynamodb_enable_autoscaler | Whether or not to enable DynamoDB autoscaling | `bool` | `false` | no |
 | dynamodb_enable_encryption | Enable DynamoDB server-side encryption | `bool` | `true` | no |
+| dynamodb_enable_insights | Enables Contributor Insights for Dynamodb | `bool` | `false` | no |
 | dynamodb_enable_point_in_time_recovery | Enable DynamoDB point in time recovery | `bool` | `true` | no |
 | dynamodb_enable_streams | Enable DynamoDB streams | `bool` | `false` | no |
 | dynamodb_global_secondary_index_map | Additional global secondary indexes in the form of a list of mapped values | `any` | `[]` | no |
@@ -101,12 +101,12 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | enable_load_balancer | Allow to create load balancer | `bool` | `false` | no |
 | external_entrypoint_config | Map of configurations of external entrypoints. | <pre>map(object({<br>    name                = string<br>    description         = optional(string, null)<br>    event_pattern_json  = optional(map(any), null)<br>    schedule_expression = optional(string, null)<br>    event_bus_name      = string<br>    source_account      = optional(string, null)<br>  }))</pre> | `{}` | no |
 | iam_resource_path | The path for IAM roles and policies | `string` | `"/"` | no |
-| internal_entrypoint_config | Map of configurations of internal entrypoints. | `map(any)` | `{}` | no |
+| internal_entrypoint_config | Map of configurations of internal entrypoints. | <pre>map(object({<br>    name                = string<br>    description         = optional(string, null)<br>    event_pattern_json  = optional(any, {})<br>    schedule_expression = optional(string, "")<br>  }))</pre> | `{}` | no |
 | lambda_alb_config | Contains entry point lambda function key | `map(string)` | `{}` | no |
 | lambda_insights_extension_layer | The arn of the Lambda Insights Extension layer | `string` | `""` | no |
 | layer_artifact_key | File name key of the layer artifact to load. | `string` | `""` | no |
 | msk_arn | the MSK source arn for all lambda requires MSK | `string` | `""` | no |
-| msk_event_source_config | Map of configurations of MSK event source for each lambda | <pre>map(set(object({<br>    event_source_arn         = optional(string, null)<br>    topic                    = string<br>    starting_position        = optional(string, "LATEST")<br>    batch_size               = optional(number, null)<br>    consumer_group_id_prefix = optional(string, null)<br>  })))</pre> | `{}` | no |
+| msk_event_source_config | Map of configurations of MSK event source for each lambda | <pre>map(set(object({<br>    event_source_arn         = optional(string, null)<br>    topic                    = string<br>    starting_position        = optional(string, "LATEST")<br>    batch_size               = optional(number, null)<br>    consumer_group_id_prefix = optional(string, "")<br>    enabled                  = optional(bool, true)<br>  })))</pre> | `{}` | no |
 | parameter_store_path | SSM parameter path | `string` | `""` | no |
 | rds_allocated_storage | Amount of storage allocated to RDS instance | `number` | `100` | no |
 | rds_apply_immediately | Specifies whether any database modifications are applied immediately, or during the next maintenance window. Defaults to `false`. | `bool` | `false` | no |
