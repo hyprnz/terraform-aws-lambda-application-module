@@ -52,15 +52,15 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | application_version | Version of the function(s) deployed for the application. | `string` | n/a | yes |
 | artifact_bucket | Bucket that stores function artifacts. Includes layer dependencies. | `string` | n/a | yes |
 | artifact_bucket_key | File name key of the artifact to load. | `string` | n/a | yes |
-| lambda_functions_config | Map of functions and associated configurations. | <pre>map(object({<br>    description           = optional(string)<br>    handler               = string<br>    enable_vpc            = bool<br>    function_memory       = optional(string)<br>    function_timeout      = optional(number)<br>    log_format            = optional(string, "Text")<br>    application_log_level = optional(string)<br>    system_log_level      = optional(string)<br><br>    enable_lambda_insights_monitoring = optional(bool, null)<br>    function_concurrency_limit        = optional(number)<br>  }))</pre> | n/a | yes |
+| lambda_functions_config | Map of functions and associated configurations. | <pre>map(object({<br/>    description           = optional(string)<br/>    handler               = string<br/>    enable_vpc            = bool<br/>    function_memory       = optional(string)<br/>    function_timeout      = optional(number)<br/>    log_format            = optional(string, "Text")<br/>    application_log_level = optional(string)<br/>    system_log_level      = optional(string)<br/><br/>    enable_lambda_insights_monitoring = optional(bool, null)<br/>    function_concurrency_limit        = optional(number)<br/>  }))</pre> | n/a | yes |
 | additional_layers | A list of layer ARN's (with or without aliases) to add to all functions within the Lambda application. Provides the ability to add dependencies for additional functionality such as monitoring and observability. | `list(string)` | `[]` | no |
 | alb_lambda_listener_arn | Listener ARN of ALB | `string` | `""` | no |
 | alias_description | Name of the alias being created | `string` | `"Default alias"` | no |
 | alias_name | Name of the alias being created | `string` | `"live"` | no |
-| api_gateway_cors_configuration | Cross-origin resource sharing (CORS) configuration. | <pre>object({<br>    allow_credentials = optional(bool, null)<br>    allow_headers     = optional(set(string), null)<br>    allow_methods     = optional(set(string), null)<br>    allow_origins     = optional(set(string), null)<br>    expose_headers    = optional(set(string), null)<br>    max_age           = optional(number, null)<br>  })</pre> | `{}` | no |
+| api_gateway_cors_configuration | Cross-origin resource sharing (CORS) configuration. | <pre>object({<br/>    allow_credentials = optional(bool, null)<br/>    allow_headers     = optional(set(string), null)<br/>    allow_methods     = optional(set(string), null)<br/>    allow_origins     = optional(set(string), null)<br/>    expose_headers    = optional(set(string), null)<br/>    max_age           = optional(number, null)<br/>  })</pre> | `{}` | no |
 | api_gateway_custom_domain_name | A custom domain name for the API gateway. If not provided will use the default AWS one. Requires `api_gateway_custom_domain_zone_id` to be provided | `string` | `""` | no |
 | api_gateway_custom_domain_zone_id | The Route 53 hosted zone id for the API gatewy custom domain. Must be provided and be valid, if the `api_gateway_custom_domain_name` is set | `string` | `""` | no |
-| api_gateway_route_config | The API Gateway route configuration. The keys should be the names of the Lambda functions that triggered by the API Gateway | <pre>map(object({<br>    # https://docs.aws.amazon.com/apigateway/latest/developerguide/simple-calc-lambda-api.html<br>    operation_name = optional(string, null)<br>    methods        = optional(set(string), ["ANY"])<br>  }))</pre> | `{}` | no |
+| api_gateway_route_config | The API Gateway route configuration. The keys should be the names of the Lambda functions that triggered by the API Gateway | <pre>map(object({<br/>    # https://docs.aws.amazon.com/apigateway/latest/developerguide/simple-calc-lambda-api.html<br/>    operation_name = optional(string, null)<br/>    methods        = optional(set(string), ["ANY"])<br/>  }))</pre> | `{}` | no |
 | application_env_vars | Map of environment variables required by any function in the application. | `map(any)` | `{}` | no |
 | application_memory | Memory allocated to all functions in the application. Defaults to `128`. | `number` | `128` | no |
 | application_timeout | Timeout in seconds for all functions in the application. Defaults to `3`. | `number` | `3` | no |
@@ -99,14 +99,14 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | enable_datastore | Enables the data store module that will provision data storage resources | `bool` | `true` | no |
 | enable_lambda_insights_monitoring | Determine if enhanced monitoring (Lambda Insights) is enabled for all functions, can be overwritten by the function configuration. | `bool` | `false` | no |
 | enable_load_balancer | Allow to create load balancer | `bool` | `false` | no |
-| external_entrypoint_config | Map of configurations of external entrypoints. | <pre>map(object({<br>    name                = string<br>    description         = optional(string, null)<br>    event_pattern_json  = optional(map(any), null)<br>    schedule_expression = optional(string, null)<br>    event_bus_name      = string<br>    source_account      = optional(string, null)<br>  }))</pre> | `{}` | no |
+| external_entrypoint_config | Map of configurations of external entrypoints. | <pre>map(object({<br/>    name                = string<br/>    description         = optional(string, null)<br/>    event_pattern_json  = optional(map(any), null)<br/>    schedule_expression = optional(string, null)<br/>    event_bus_name      = string<br/>    source_account      = optional(string, null)<br/>  }))</pre> | `{}` | no |
 | iam_resource_path | The path for IAM roles and policies | `string` | `"/"` | no |
-| internal_entrypoint_config | Map of configurations of internal entrypoints. | <pre>map(object({<br>    name                = string<br>    description         = optional(string, null)<br>    event_pattern_json  = optional(any, {})<br>    schedule_expression = optional(string, "")<br>  }))</pre> | `{}` | no |
+| internal_entrypoint_config | Map of configurations of internal entrypoints. | <pre>map(object({<br/>    name                = string<br/>    description         = optional(string, null)<br/>    event_pattern_json  = optional(any, {})<br/>    schedule_expression = optional(string, "")<br/>  }))</pre> | `{}` | no |
 | lambda_alb_config | Contains entry point lambda function key | `map(string)` | `{}` | no |
 | lambda_insights_extension_layer | The arn of the Lambda Insights Extension layer | `string` | `""` | no |
 | layer_artifact_key | File name key of the layer artifact to load. | `string` | `""` | no |
 | msk_arn | the MSK source arn for all lambda requires MSK | `string` | `""` | no |
-| msk_event_source_config | Map of configurations of MSK event source for each lambda | <pre>map(set(object({<br>    event_source_arn         = optional(string, null)<br>    topic                    = string<br>    starting_position        = optional(string, "LATEST")<br>    batch_size               = optional(number, null)<br>    consumer_group_id_prefix = optional(string, "")<br>    enabled                  = optional(bool, true)<br>  })))</pre> | `{}` | no |
+| msk_event_source_config | Map of configurations of MSK event source for each lambda | <pre>map(set(object({<br/>    event_source_arn         = optional(string, null)<br/>    topic                    = string<br/>    starting_position        = optional(string, "LATEST")<br/>    batch_size               = optional(number, null)<br/>    consumer_group_id_prefix = optional(string, "")<br/>    enabled                  = optional(bool, true)<br/>  })))</pre> | `{}` | no |
 | parameter_store_path | SSM parameter path | `string` | `""` | no |
 | rds_allocated_storage | Amount of storage allocated to RDS instance | `number` | `100` | no |
 | rds_apply_immediately | Specifies whether any database modifications are applied immediately, or during the next maintenance window. Defaults to `false`. | `bool` | `false` | no |
@@ -132,7 +132,7 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | rds_option_group_name | Name of the DB option group to associate | `string` | `null` | no |
 | rds_parameter_group_family | Name of the DB family (engine & version) for the parameter group. eg. postgres11 | `string` | `null` | no |
 | rds_parameter_group_name | Name of the DB parameter group to create and associate with the instance | `string` | `null` | no |
-| rds_parameter_group_parameters | Map of parameters that will be added to this database's parameter group.<br>  Parameters set here will override any AWS default parameters with the same name.<br>  Requires `rds_parameter_group_name` and `rds_parameter_group_family` to be set as well.<br>  Parameters should be provided as a key value pair within this map. eg `"param_name" : "param_value"`.<br>  Default is empty and the AWS default parameter group is used. | `map(any)` | `{}` | no |
+| rds_parameter_group_parameters | Map of parameters that will be added to this database's parameter group.<br/>  Parameters set here will override any AWS default parameters with the same name.<br/>  Requires `rds_parameter_group_name` and `rds_parameter_group_family` to be set as well.<br/>  Parameters should be provided as a key value pair within this map. eg `"param_name" : "param_value"`.<br/>  Default is empty and the AWS default parameter group is used. | `map(any)` | `{}` | no |
 | rds_password | RDS database password for the user | `string` | `""` | no |
 | rds_security_group_ids | A List of security groups to bind to the rds instance | `list(string)` | `[]` | no |
 | rds_skip_final_snapshot | Determines whether a final DB snapshot is created before the DB instance is deleted. If true is specified, no DBSnapshot is created. If false is specified, a DB snapshot is created before the DB instance is deleted, using the value from final_snapshot_identifier | `bool` | `true` | no |
@@ -164,6 +164,9 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | api_gateway_stage_api_id | The API ID of the v2 API Gateway stage resource |
 | api_gateway_stage_invoke_url | The API ID of the v2 API Gateway stage resource |
 | domain_id | The ID of the custom domain name used for the v2 API gateway resource |
+| lambda_function_alias_arns | ARNs of the Lambda function aliases |
+| lambda_function_arns | ARNs of the Lambda functions |
+| lambda_function_names | Names of the Lambda functions |
 
 ---
 
