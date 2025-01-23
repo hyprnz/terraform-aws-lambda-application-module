@@ -278,7 +278,6 @@ resource "aws_iam_role" "api_gateway_execution_role" {
   description = "Lambda Application external entrypoint API Gateway execution role"
 
   assume_role_policy = data.aws_iam_policy_document.apigateway_assume_role_policy.json
-  inline_policy {}
 
   tags = merge({ "Lambda Application" = var.application_name }, var.tags)
 }
