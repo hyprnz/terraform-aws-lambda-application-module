@@ -306,7 +306,7 @@ data "aws_iam_policy_document" "apigateway_lambda_integration" {
       "lambda:InvokeFunction"
     ]
 
-    resources = tolist([for i in aws_lambda_alias.lambda_application_alias : i.arn])
+    resources = sort(tolist([for k, v in aws_lambda_alias.lambda_application_alias : v.arn if contains(keys(var.api_gateway_route_config), k)]))
   }
 }
 
