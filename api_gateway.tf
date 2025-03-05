@@ -1,7 +1,14 @@
 locals {
-  api_gateway_route_config_list  = [for function_name, config in var.api_gateway_route_config : { for idx, method in config.methods : "${method} /${function_name}" => merge(config, { function_name : function_name, method : method }) }]
-  api_gateway_route_config       = var.enable_api_gateway ? merge(flatten(local.api_gateway_route_config_list)...) : {}
-  api_gateway_integration_config = var.enable_api_gateway ? var.api_gateway_route_config : {}
+  route_config_list  = [for function_config_key, config in var.api_gateway_route_config : {
+    for idx, method in config.methods :
+    "${method} /${function_config_key}" =>
+    merge(config, {
+      function_config_key : function_config_key,
+      method : method
+      route : coalesce(try(config.route, null),"/${function_config_key}/{proxy+}")})
+  }]
+  route_config       = var.enable_api_gateway ? merge(flatten(local.route_config_list)...) : {}
+  integration_config = var.enable_api_gateway ? var.api_gateway_route_config : {}
 }
 
 resource "aws_apigatewayv2_api" "this" {
@@ -49,7 +56,7 @@ resource "aws_apigatewayv2_stage" "default" {
 }
 
 resource "aws_apigatewayv2_integration" "lambda" {
-  for_each = local.api_gateway_integration_config
+  for_each = local.integration_config
 
   api_id           = aws_apigatewayv2_api.this[0].id
   integration_type = "AWS_PROXY"
@@ -62,13 +69,13 @@ resource "aws_apigatewayv2_integration" "lambda" {
 }
 
 resource "aws_apigatewayv2_route" "lambda" {
-  for_each = local.api_gateway_route_config
+  for_each = local.route_config
 
   api_id         = aws_apigatewayv2_api.this[0].id
-  route_key      = "${each.key}/{proxy+}"
+  route_key      = "${each.value.method} ${each.value.route}"
   operation_name = each.value.operation_name
 
-  target = "integrations/${aws_apigatewayv2_integration.lambda[each.value.function_name].id}"
+  target = "integrations/${aws_apigatewayv2_integration.lambda[each.value.function_config_key].id}"
 }
 
 resource "aws_cloudwatch_log_group" "api_gateway_log_group" {

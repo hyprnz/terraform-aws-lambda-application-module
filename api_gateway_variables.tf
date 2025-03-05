@@ -7,6 +7,7 @@ variable "enable_api_gateway" {
 variable "api_gateway_route_config" {
   type = map(object({
     # https://docs.aws.amazon.com/apigateway/latest/developerguide/simple-calc-lambda-api.html
+    route          = optional(string, null)
     operation_name = optional(string, null)
     methods        = optional(set(string), ["ANY"])
   }))
@@ -17,7 +18,7 @@ variable "api_gateway_route_config" {
 
 variable "api_gateway_custom_domain_zone_id" {
   type        = string
-  description = "The Route 53 hosted zone id for the API gatewy custom domain. Must be provided and be valid, if the `api_gateway_custom_domain_name` is set"
+  description = "The Route 53 hosted zone id for the API gateway custom domain. Must be provided and be valid, if the `api_gateway_custom_domain_name` is set"
   default     = ""
 }
 
