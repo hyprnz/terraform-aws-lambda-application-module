@@ -31,6 +31,14 @@ locals {
   enable_active_tracing  = local.tracing_config == "Active"
 
   layers = concat([aws_lambda_layer_version.runtime_dependencies.arn], var.additional_layers)
+
+  function_env_vars = merge(
+      { APP_NAME = var.application_name },
+      { PARAMETER_STORE_PATH = var.parameter_store_path },
+      local.datastore_env_vars,
+      local.event_bus_name_env_var,
+      var.application_env_vars
+    )
 }
 
 
@@ -64,13 +72,7 @@ resource "aws_lambda_function" "lambda_application" {
   }
 
   environment {
-    variables = merge(
-      { APP_NAME = var.application_name },
-      { PARAMETER_STORE_PATH = var.parameter_store_path },
-      local.datastore_env_vars,
-      local.event_bus_name_env_var,
-      var.application_env_vars
-    )
+    variables = local.function_env_vars
   }
 
   dynamic "vpc_config" {

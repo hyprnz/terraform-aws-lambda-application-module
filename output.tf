@@ -21,3 +21,8 @@ output "lambda_function_alias_arns" {
     function_key => lambda_function_alias.arn
   }
 }
+
+output "lambda_function_global_env_vars" {
+  description = "A map of environment variables configured for every function. Excludes function specific env vars"
+  value       = local.function_env_vars
+}
