@@ -27,7 +27,7 @@ output:
   mode: inject
 #   template: |-
 #     <!-- BEGIN_TF_DOCS -->
-#     The template can be customized with aribitrary markdown content.
+#     The template can be customized with arbitrary markdown content.
 #     For example this can be shown before the actual content generated
 #     by formatters.
 #
