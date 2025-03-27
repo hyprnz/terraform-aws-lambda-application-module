@@ -1,5 +1,9 @@
 locals {
   cross_account_identifiers = [for account in var.cross_account_numbers : format("arn:aws:iam::%s:root", account)]
+
+  kms_key_id = var.kms_key_arn != null ? var.kms_key_arn : try(aws_kms_key.s3_sse[0].arn, null)
+
+  kms_key_count = var.kms_key_arn == null && var.create_kms_key ? 1 : 0
 }
 
 #trivy:ignore:AVD-AWS-0089
@@ -66,7 +70,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
   rule {
     apply_server_side_encryption_by_default {
       sse_algorithm = "aws:kms"
-      kms_master_key_id = var.kms_key_id
+      kms_master_key_id = local.kms_key_id
     }
   }
 }
