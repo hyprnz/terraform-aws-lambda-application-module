@@ -64,7 +64,7 @@ resource "aws_lambda_function" "lambda_application" {
 
   reserved_concurrent_executions = try(each.value.function_concurrency_limit, -1)
 
-  layers = coalesce(each.value.enable_lambda_insights_monitoring, var.enable_lambda_insights_monitoring) ? concat([var.lambda_insights_extension_layer], local.layers) : local.layers
+  layers = local.layers
   tracing_config {
     mode = var.tracking_config
   }
