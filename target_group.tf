@@ -3,6 +3,8 @@ resource "aws_lb_target_group" "alb_lambda_target_group" {
   count       = var.enable_load_balancer ? 1 : 0
   name        = var.service_target_group_name
   target_type = "lambda"
+  
+  tags = local.tags
 }
 
 resource "aws_lambda_permission" "alb_lambda_permission" {

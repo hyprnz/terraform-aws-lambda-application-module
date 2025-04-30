@@ -28,6 +28,9 @@ out/
 # VScode
 .vscode/
 
+# Cursor
+.cursor
+
 *.pem
 
 #direnv

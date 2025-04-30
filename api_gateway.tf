@@ -53,6 +53,8 @@ resource "aws_apigatewayv2_stage" "default" {
       }
     )
   }
+  
+  tags = local.tags
 }
 
 resource "aws_apigatewayv2_integration" "lambda" {
