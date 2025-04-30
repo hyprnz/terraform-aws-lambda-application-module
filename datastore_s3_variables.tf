@@ -4,12 +4,6 @@ variable "create_s3_bucket" {
   default     = false
 }
 
-variable "s3_tags" {
-  type        = map(any)
-  description = "Additional tags to be added to the s3 resources"
-  default     = {}
-}
-
 variable "s3_bucket_name" {
   type        = string
   description = "The name of the bucket. It is recommended to add a namespace/suffix to the name to avoid naming collisions"

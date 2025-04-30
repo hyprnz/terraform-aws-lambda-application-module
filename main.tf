@@ -44,8 +44,18 @@ locals {
     local.event_bus_name_env_var,
     var.application_env_vars
   )
+
+  tags = merge(
+    { "awsApplication" : aws_servicecatalogappregistry_application.this.application_tag.awsApplication },
+    var.tags
+  )
 }
 
+resource "aws_servicecatalogappregistry_application" "this" {
+  name        = var.application_name
+  description = "${var.application_name} Lambda Application"
+  tags        = var.tags
+}
 
 resource "aws_lambda_function" "lambda_application" {
   for_each = var.lambda_functions_config
@@ -88,7 +98,7 @@ resource "aws_lambda_function" "lambda_application" {
     }
   }
 
-  tags = merge({ Name = format("%s-%s", var.application_name, each.key) }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
+  tags = local.tags
 }
 
 resource "aws_lambda_alias" "lambda_application_alias" {

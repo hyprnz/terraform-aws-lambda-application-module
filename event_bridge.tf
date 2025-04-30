@@ -1,7 +1,7 @@
 resource "aws_cloudwatch_event_bus" "internal" {
   name = var.application_name
 
-  tags = merge({ Name = var.application_name }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
+  tags = local.tags
 }
 
 resource "aws_cloudwatch_event_rule" "internal_entrypoint" {
@@ -14,7 +14,7 @@ resource "aws_cloudwatch_event_rule" "internal_entrypoint" {
   schedule_expression = length(each.value.schedule_expression) > 0 ? each.value.schedule_expression : null
   event_bus_name      = length(each.value.schedule_expression) > 0 ? null : aws_cloudwatch_event_bus.internal.name
 
-  tags = merge({ Name = format("%s-%s", var.application_name, each.value.name) }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
+  tags = local.tags
 }
 
 resource "aws_cloudwatch_event_target" "lambda_internal_entrypoint" {
@@ -56,7 +56,7 @@ resource "aws_cloudwatch_event_rule" "external_entrypoint" {
   schedule_expression = contains(keys(each.value), "schedule_expression") ? each.value.schedule_expression : null
   event_bus_name      = each.value.event_bus_name
 
-  tags = merge({ Name = format("%s-%s", var.application_name, each.value.name) }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
+  tags = local.tags
 }
 
 resource "aws_cloudwatch_event_target" "lambda_external_entrypoint" {

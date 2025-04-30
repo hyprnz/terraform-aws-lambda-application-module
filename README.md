@@ -70,7 +70,6 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | create_s3_bucket | Controls if an S3 bucket should be provisioned | `bool` | `false` | no |
 | custom_policy_description | Allows to override the custom Lambda policy's description | `string` | `""` | no |
 | custom_policy_document | A valid policy json string that defines additional actions required by the execution role of the Lambda function | `string` | `""` | no |
-| datastore_tags | Tags for all datastore resources | `map(any)` | `{}` | no |
 | dynamodb_attributes | Additional DynamoDB attributes in the form of a list of mapped values | `list(any)` | `[]` | no |
 | dynamodb_autoscale_max_read_capacity | DynamoDB autoscaling max read capacity | `number` | `20` | no |
 | dynamodb_autoscale_max_write_capacity | DynamoDB autoscaling max write capacity | `number` | `20` | no |
@@ -92,7 +91,6 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | dynamodb_range_key_type | Range Key type, which must be a scalar type: `S`, `N` or `B` for (S)tring, (N)umber or (B)inary data | `string` | `"S"` | no |
 | dynamodb_stream_view_type | When an item in a table is modified, what information is written to the stream | `string` | `""` | no |
 | dynamodb_table_name | DynamoDB table name. Must be supplied if creating a dynamodb table | `string` | `""` | no |
-| dynamodb_tags | Additional tags e.g map(`BusinessUnit`,`XYX`) | `map(any)` | `{}` | no |
 | dynamodb_ttl_attribute | DynamoDB table ttl attribute | `string` | `"Expires"` | no |
 | dynamodb_ttl_enabled | Whether ttl is enabled or disabled | `bool` | `true` | no |
 | enable_api_gateway | Allow to create api-gateway | `bool` | `false` | no |
@@ -136,11 +134,9 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | rds_skip_final_snapshot | Determines whether a final DB snapshot is created before the DB instance is deleted. If true is specified, no DBSnapshot is created. If false is specified, a DB snapshot is created before the DB instance is deleted, using the value from final_snapshot_identifier | `bool` | `true` | no |
 | rds_storage_encryption_kms_key_arn | The ARN for the KMS encryption key. If creating an encrypted replica, set this to the destination KMS ARN. If storage_encrypted is set to true and kms_key_id is not specified the default KMS key created in your account will be used | `string` | `""` | no |
 | rds_subnet_group | Subnet group for RDS instances | `string` | `""` | no |
-| rds_tags | Additional tags for rds datastore resources | `map(any)` | `{}` | no |
 | rds_username | RDS database user name | `string` | `""` | no |
 | s3_bucket_name | The name of the bucket. It is recommended to add a namespace/suffix to the name to avoid naming collisions | `string` | `""` | no |
 | s3_enable_versioning | If versioning should be configured on the bucket | `bool` | `true` | no |
-| s3_tags | Additional tags to be added to the s3 resources | `map(any)` | `{}` | no |
 | service_target_group_name | The service target group attached to application load balancer listener | `string` | `""` | no |
 | service_target_group_path | The target path attached to the service target group | `string` | `""` | no |
 | ssm_kms_key_arn | Either he customer managed KMS or AWS manages key arn used for encrypting `SecureSting` parameters | `string` | `""` | no |

@@ -2,7 +2,7 @@ resource "aws_acm_certificate" "cert" {
   count             = var.enable_api_gateway && local.enable_custom_domain_name ? 1 : 0
   domain_name       = local.domain_name
   validation_method = "DNS"
-  tags              = merge({ Name = format("%s-%s", var.application_name, "acm certificate") }, { "Lambda Application" = var.application_name }, var.tags)
+  tags              = local.tags
 
   lifecycle {
     create_before_destroy = true

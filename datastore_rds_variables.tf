@@ -16,12 +16,6 @@ variable "use_rds_snapshot" {
 
 // RDS variables ================================
 
-variable "rds_tags" {
-  type        = map(any)
-  description = "Additional tags for rds datastore resources"
-  default     = {}
-}
-
 variable "rds_database_name" {
   type        = string
   description = "The name of the database. Can only contain alphanumeric characters"

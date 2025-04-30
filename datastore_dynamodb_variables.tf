@@ -4,12 +4,6 @@ variable "create_dynamodb_table" {
   default     = false
 }
 
-variable "dynamodb_tags" {
-  type        = map(any)
-  description = "Additional tags e.g map(`BusinessUnit`,`XYX`)"
-  default     = {}
-}
-
 variable "dynamodb_table_name" {
   type        = string
   description = "DynamoDB table name. Must be supplied if creating a dynamodb table"

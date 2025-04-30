@@ -29,7 +29,7 @@ resource "aws_apigatewayv2_api" "this" {
     }
   }
 
-  tags = merge({ "Lambda Application" = var.application_name }, var.tags)
+  tags = local.tags
 }
 
 resource "aws_apigatewayv2_stage" "default" {
@@ -84,7 +84,7 @@ resource "aws_cloudwatch_log_group" "api_gateway_log_group" {
   name              = format("/aws/apigateway/%s", var.application_name)
   retention_in_days = var.aws_cloudwatch_log_group_retention_in_days
 
-  tags = merge({ Name = format("%s", var.application_name) }, { "Lambda Application" = var.application_name }, var.tags)
+  tags = local.tags
 }
 
 resource "aws_apigatewayv2_domain_name" "api_gateway_domain" {
@@ -97,7 +97,7 @@ resource "aws_apigatewayv2_domain_name" "api_gateway_domain" {
     security_policy = "TLS_1_2"
   }
 
-  tags = merge({ "Lambda Application" = var.application_name }, var.tags)
+  tags = local.tags
 
   depends_on = [aws_acm_certificate_validation.cert]
 }

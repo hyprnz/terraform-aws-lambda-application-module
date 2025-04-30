@@ -39,5 +39,6 @@ resource "aws_lb_listener_rule" "alb_lambda_listener_rule" {
       values = ["/${var.service_target_group_path}/*"]
     }
   }
-  tags = merge({ Name = format("%s-%s", var.application_name, "alb_lambda") }, { "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
+
+  tags = local.tags
 }

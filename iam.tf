@@ -109,7 +109,7 @@ resource "aws_iam_role" "lambda_application_execution_role" {
 
   assume_role_policy = data.aws_iam_policy_document.lambda_application_assume_role_statement.json
 
-  tags = merge({ "Lambda Application" = var.application_name }, { "version" = var.application_version }, var.tags)
+  tags = local.tags
 }
 
 resource "aws_iam_role_policy" "event_bridge_internal_entrypoint" {
@@ -236,7 +236,7 @@ resource "aws_iam_role" "api_gateway_execution_role" {
 
   assume_role_policy = data.aws_iam_policy_document.apigateway_assume_role_policy.json
 
-  tags = merge({ "Lambda Application" = var.application_name }, var.tags)
+  tags = local.tags
 }
 
 resource "aws_iam_role_policy" "invoke_lambdas" {
