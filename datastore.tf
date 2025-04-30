@@ -78,5 +78,5 @@ module "lambda_datastore" {
 
   dynamodb_enable_insights = var.dynamodb_enable_insights
 
-  tags          = local.tags
+  tags = local.tags
 }

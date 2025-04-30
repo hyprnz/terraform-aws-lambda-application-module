@@ -1,11 +1,11 @@
 locals {
-  route_config_list  = [for function_config_key, config in var.api_gateway_route_config : {
+  route_config_list = [for function_config_key, config in var.api_gateway_route_config : {
     for idx, method in config.methods :
     "${method} /${function_config_key}" =>
     merge(config, {
       function_config_key : function_config_key,
       method : method
-      route : coalesce(try(config.route, null),"/${function_config_key}/{proxy+}")})
+    route : coalesce(try(config.route, null), "/${function_config_key}/{proxy+}") })
   }]
   route_config       = var.enable_api_gateway ? merge(flatten(local.route_config_list)...) : {}
   integration_config = var.enable_api_gateway ? var.api_gateway_route_config : {}
