@@ -26,3 +26,8 @@ output "lambda_function_global_env_vars" {
   description = "A map of environment variables configured for every function. Excludes function specific env vars"
   value       = local.function_env_vars
 }
+
+output "service_catalog_application_tag" {
+  description = "The application tag for service catalog Applications"
+  value       = aws_servicecatalogappregistry_application.this.application_tag
+}
