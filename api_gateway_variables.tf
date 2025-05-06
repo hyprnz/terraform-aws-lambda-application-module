@@ -41,3 +41,14 @@ variable "api_gateway_cors_configuration" {
   nullable    = false
   default     = {}
 }
+
+variable "api_gateway_payload_format_version" {
+  type        = string
+  description = "Specifies the format of the payload sent to an integration. Required for HTTP APIs."
+  default     = "1.0"
+
+  validation {
+    condition     = contains(["1.0", "2.0"], var.api_gateway_payload_format_version)
+    error_message = "Valid values for api_gateway_payload_format_version are \"1.0\" or \"2.0\"."
+  }
+}

@@ -53,7 +53,7 @@ resource "aws_apigatewayv2_stage" "default" {
       }
     )
   }
-  
+
   tags = local.tags
 }
 
@@ -64,10 +64,11 @@ resource "aws_apigatewayv2_integration" "lambda" {
   integration_type = "AWS_PROXY"
   credentials_arn  = aws_iam_role.api_gateway_execution_role[0].arn
 
-  connection_type      = "INTERNET"
-  integration_method   = "POST"
-  integration_uri      = aws_lambda_alias.lambda_application_alias[each.key].arn
-  passthrough_behavior = "WHEN_NO_MATCH"
+  connection_type        = "INTERNET"
+  integration_method     = "POST"
+  integration_uri        = aws_lambda_alias.lambda_application_alias[each.key].arn
+  passthrough_behavior   = "WHEN_NO_MATCH"
+  payload_format_version = var.api_gateway_payload_format_version
 }
 
 resource "aws_apigatewayv2_route" "lambda" {

@@ -60,6 +60,7 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | api_gateway_cors_configuration | Cross-origin resource sharing (CORS) configuration. | <pre>object({<br/>    allow_credentials = optional(bool, null)<br/>    allow_headers     = optional(set(string), null)<br/>    allow_methods     = optional(set(string), null)<br/>    allow_origins     = optional(set(string), null)<br/>    expose_headers    = optional(set(string), null)<br/>    max_age           = optional(number, null)<br/>  })</pre> | `{}` | no |
 | api_gateway_custom_domain_name | A custom domain name for the API gateway. If not provided will use the default AWS one. Requires `api_gateway_custom_domain_zone_id` to be provided | `string` | `""` | no |
 | api_gateway_custom_domain_zone_id | The Route 53 hosted zone id for the API gateway custom domain. Must be provided and be valid, if the `api_gateway_custom_domain_name` is set | `string` | `""` | no |
+| api_gateway_payload_format_version | Specifies the format of the payload sent to an integration. Required for HTTP APIs. | `string` | `"1.0"` | no |
 | api_gateway_route_config | The API Gateway route configuration. The keys should be the names of the Lambda functions that triggered by the API Gateway | <pre>map(object({<br/>    # https://docs.aws.amazon.com/apigateway/latest/developerguide/simple-calc-lambda-api.html<br/>    route          = optional(string, null)<br/>    operation_name = optional(string, null)<br/>    methods        = optional(set(string), ["ANY"])<br/>  }))</pre> | `{}` | no |
 | application_env_vars | Map of environment variables required by any function in the application. | `map(any)` | `{}` | no |
 | application_memory | Memory allocated to all functions in the application. Defaults to `128`. | `number` | `128` | no |
@@ -174,6 +175,7 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | lambda_function_arns | ARNs of the Lambda functions |
 | lambda_function_global_env_vars | A map of environment variables configured for every function. Excludes function specific env vars |
 | lambda_function_names | Names of the Lambda functions |
+| service_catalog_application_tag | The application tag for service catalog Applications |
 
 ---
 
