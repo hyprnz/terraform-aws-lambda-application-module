@@ -4,6 +4,12 @@ resource "aws_cloudwatch_event_bus" "internal" {
   tags = local.tags
 }
 
+# Data sources for external event buses
+data "aws_cloudwatch_event_bus" "external" {
+  for_each = var.event_bus_config
+  name     = each.value
+}
+
 resource "aws_cloudwatch_event_rule" "internal_entrypoint" {
   for_each = var.internal_entrypoint_config
 

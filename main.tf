@@ -24,7 +24,11 @@ locals {
 
   vpc_policy_required = contains(values(var.lambda_functions_config)[*].enable_vpc, true) ? true : false
 
-  event_bus_name_env_var = { "INTRA_SERVICE_EVENT_BUS" : aws_cloudwatch_event_bus.internal.name }
+  event_bus_name_env_var = {
+    "INTRA_SERVICE_EVENT_BUS" : aws_cloudwatch_event_bus.internal.name,
+    "ORG_EVENT_BUS" : lookup(var.event_bus_config, "org_event_bus_name", ""),
+    "DOMAIN_EVENT_BUS" : lookup(var.event_bus_config, "domain_event_bus_name", "")
+  }
   custom_policy_required = length(var.custom_policy_document) > 0 ? true : false
   tracing_config         = var.tracking_config
   enable_active_tracing  = local.tracing_config == "Active"

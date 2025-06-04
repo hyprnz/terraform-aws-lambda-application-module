@@ -97,6 +97,7 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | enable_api_gateway | Allow to create api-gateway | `bool` | `false` | no |
 | enable_datastore | Enables the data store module that will provision data storage resources | `bool` | `true` | no |
 | enable_load_balancer | Allow to create load balancer | `bool` | `false` | no |
+| event_bus_config | Map of external event bus names that Lambda functions need access to. Allowed keys are 'org_event_bus_name' and 'domain_event_bus_name'. Values should be the actual event bus names. This configuration creates IAM permissions for PutEvents action and sets corresponding environment variables (ORG_EVENT_BUS and DOMAIN_EVENT_BUS) in Lambda functions. | `map(string)` | `{}` | no |
 | external_entrypoint_config | Map of configurations of external entrypoints. | <pre>map(object({<br/>    name                = string<br/>    description         = optional(string, null)<br/>    event_pattern_json  = optional(map(any), null)<br/>    schedule_expression = optional(string, null)<br/>    event_bus_name      = string<br/>    source_account      = optional(string, null)<br/>  }))</pre> | `{}` | no |
 | iam_resource_path | The path for IAM roles and policies | `string` | `"/"` | no |
 | internal_entrypoint_config | Map of configurations of internal entrypoints. | <pre>map(object({<br/>    name                = string<br/>    description         = optional(string, null)<br/>    event_pattern_json  = optional(any, {})<br/>    schedule_expression = optional(string, "")<br/>  }))</pre> | `{}` | no |

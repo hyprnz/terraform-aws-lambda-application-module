@@ -1,6 +1,7 @@
 locals {
-  has_customer_kms_key   = length(var.ssm_kms_key_arn) > 0 ? true : false
-  enable_msk_integration = length(keys(var.msk_event_source_config)) > 0 ? true : false
+  has_customer_kms_key      = length(var.ssm_kms_key_arn) > 0 ? true : false
+  enable_msk_integration    = length(keys(var.msk_event_source_config)) > 0 ? true : false
+  event_bus_policy_required = length(var.event_bus_config) > 0 ? true : false
 }
 
 data "aws_iam_policy_document" "lambda_application_assume_role_statement" {
@@ -226,6 +227,13 @@ resource "aws_iam_role_policy" "custom_lambda_policy" {
   policy = var.custom_policy_document
 }
 
+resource "aws_iam_role_policy" "event_bus_access_policy" {
+  count  = local.event_bus_policy_required ? 1 : 0
+  name   = "${var.application_name}-LA-EventBus"
+  role   = aws_iam_role.lambda_application_execution_role.id
+  policy = data.aws_iam_policy_document.event_bus_access_policy[0].json
+}
+
 resource "aws_iam_role" "api_gateway_execution_role" {
   count = var.enable_api_gateway ? 1 : 0
 
@@ -267,5 +275,19 @@ data "aws_iam_policy_document" "apigateway_assume_role_policy" {
       type        = "Service"
       identifiers = ["apigateway.amazonaws.com"]
     }
+  }
+}
+
+data "aws_iam_policy_document" "event_bus_access_policy" {
+  count = local.event_bus_policy_required ? 1 : 0
+
+  statement {
+    effect = "Allow"
+
+    actions = ["events:PutEvents"]
+
+    resources = [
+      for bus in data.aws_cloudwatch_event_bus.external : bus.arn
+    ]
   }
 }

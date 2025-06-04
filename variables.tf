@@ -59,6 +59,18 @@ variable "external_entrypoint_config" {
   default     = {}
 }
 
+variable "event_bus_config" {
+  type        = map(string)
+  description = "Map of external event bus names that Lambda functions need access to. Allowed keys are 'org_event_bus_name' and 'domain_event_bus_name'. Values should be the actual event bus names. This configuration creates IAM permissions for PutEvents action and sets corresponding environment variables (ORG_EVENT_BUS and DOMAIN_EVENT_BUS) in Lambda functions."
+  default     = {}
+  validation {
+    condition = alltrue([
+      for k in keys(var.event_bus_config) : contains(["org_event_bus_name", "domain_event_bus_name"], k)
+    ])
+    error_message = "Keys can only be 'org_event_bus_name' or 'domain_event_bus_name'."
+  }
+}
+
 variable "alb_lambda_listener_arn" {
   type        = string
   description = "Listener ARN of ALB"
