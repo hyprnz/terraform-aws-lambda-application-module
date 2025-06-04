@@ -30,7 +30,7 @@ data "aws_iam_policy_document" "event_bridge_internal_entrypoint" {
     ]
 
     resources = [
-      "*"
+      aws_cloudwatch_event_bus.internal.arn
     ]
 
   }
