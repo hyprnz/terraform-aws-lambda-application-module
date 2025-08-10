@@ -15,3 +15,15 @@ variable "service_target_group_path" {
   description = "The target path attached to the service target group"
   default     = ""
 }
+
+variable "alb_lambda_listener_arn" {
+  type        = string
+  description = "Listener ARN of ALB"
+  default     = ""
+}
+
+variable "lambda_alb_config" {
+  type        = map(string)
+  description = "Contains entry point lambda function key"
+  default     = {}
+}

@@ -29,12 +29,6 @@ variable "lambda_functions_config" {
   description = "Map of functions and associated configurations."
 }
 
-variable "lambda_alb_config" {
-  type        = map(string)
-  description = "Contains entry point lambda function key"
-  default     = {}
-}
-
 variable "internal_entrypoint_config" {
   type = map(object({
     name                = string
@@ -69,12 +63,6 @@ variable "event_bus_config" {
     ])
     error_message = "Keys can only be 'org_event_bus_name' or 'domain_event_bus_name'."
   }
-}
-
-variable "alb_lambda_listener_arn" {
-  type        = string
-  description = "Listener ARN of ALB"
-  default     = ""
 }
 
 variable "artifact_bucket" {
