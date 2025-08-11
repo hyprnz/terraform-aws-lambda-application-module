@@ -11,7 +11,8 @@ resource "aws_lambda_permission" "alb_ingress" {
 
   statement_id  = "AllowLambdaExecutionFromAlbIngress"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_alias.lambda_application_alias["${each.key}"].arn
+  function_name = aws_lambda_function.lambda_application["${each.key}"].arn
+  qualifier     = aws_lambda_alias.lambda_application_alias["${each.key}"].name
 
   principal  = "elasticloadbalancing.amazonaws.com"
   source_arn = aws_lb_target_group.alb_ingress["${each.key}"].arn
