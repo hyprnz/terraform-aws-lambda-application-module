@@ -44,7 +44,7 @@ variable "external_entrypoint_config" {
   type = map(object({
     name                = string
     description         = optional(string, null)
-    event_pattern_json  = optional(map(any), null)
+    event_pattern_json  = optional(any, null)
     schedule_expression = optional(string, null)
     event_bus_name      = string
     source_account      = optional(string, null)
