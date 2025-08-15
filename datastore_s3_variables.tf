@@ -16,7 +16,7 @@ variable "s3_enable_versioning" {
   default     = true
 }
 
-variable "send_bucket_notifications_to_eventbridge" {
+variable "s3_send_bucket_notifications_to_eventbridge" {
   type        = bool
   description = "Enable bucket notifications and emit to EventBridge"
   default     = false
