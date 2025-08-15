@@ -15,3 +15,10 @@ variable "s3_enable_versioning" {
   description = "If versioning should be configured on the bucket"
   default     = true
 }
+
+variable "send_bucket_notifications_to_eventbridge" {
+  type        = bool
+  description = "Enable bucket notifications and emit to EventBridge"
+  default     = false
+
+}
