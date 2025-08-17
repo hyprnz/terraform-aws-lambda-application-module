@@ -1,5 +1,5 @@
 module "lambda_datastore" {
-  source = "github.com/hyprnz/terraform-aws-data-storage-module?ref=v4.3.1"
+  source = "github.com/hyprnz/terraform-aws-data-storage-module?ref=v4.4.0"
 
   enable_datastore  = var.enable_datastore
   iam_resource_path = var.iam_resource_path
@@ -48,6 +48,7 @@ module "lambda_datastore" {
   s3_bucket_name                              = var.s3_bucket_name
   s3_enable_versioning                        = var.s3_enable_versioning
   s3_send_bucket_notifications_to_eventbridge = var.s3_send_bucket_notifications_to_eventbridge
+  s3_cors_config                              = var.s3_cors_config
 
   dynamodb_table_name                    = var.dynamodb_table_name
   dynamodb_billing_mode                  = var.dynamodb_billing_mode
