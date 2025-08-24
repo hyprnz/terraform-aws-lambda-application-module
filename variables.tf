@@ -30,26 +30,26 @@ variable "lambda_functions_config" {
 }
 
 variable "internal_entrypoint_config" {
-  type = map(object({
+  type = map(set(object({
     name                = string
     description         = optional(string, null)
-    event_pattern_json  = optional(any, {})
+    event_pattern_json  = optional(string, "")
     schedule_expression = optional(string, "")
-  }))
-  description = "Map of configurations of internal entrypoints."
+  })))
+  description = "Map of > 0 internal entrypoint configuration triggers."
   default     = {}
 }
 
 variable "external_entrypoint_config" {
-  type = map(object({
+  type = map(set(object({
     name                = string
     description         = optional(string, null)
-    event_pattern_json  = optional(any, null)
-    schedule_expression = optional(string, null)
+    event_pattern_json  = optional(string, "")
+    schedule_expression = optional(string, "")
     event_bus_name      = string
     source_account      = optional(string, null)
-  }))
-  description = "Map of configurations of external entrypoints."
+  })))
+  description = "Map of > 0 external entrypoint configuration triggers."
   default     = {}
 }
 

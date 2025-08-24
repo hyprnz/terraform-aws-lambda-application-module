@@ -1,7 +1,13 @@
-resource "aws_cloudwatch_event_bus" "internal" {
-  name = var.application_name
+locals {
+  flatten_internal_entrypoint_config =  flatten([ for function_name, int_entrypoints in var.internal_entrypoint_config :
+  [ for int_entrypoint in int_entrypoints: merge(int_entrypoint,{function_name: function_name})]])
 
-  tags = local.tags
+  internal_entrypoint_configs = {for idx, value in local.flatten_internal_entrypoint_config : join("-",[value.function_name,idx]) => value }
+
+  flatten_external_entrypoint_config =  flatten([ for function_name, ext_entrypoints in var.external_entrypoint_config :
+  [ for ext_entrypoint in ext_entrypoints: merge(ext_entrypoint,{function_name: function_name})]])
+
+  external_entrypoint_configs = {for idx, value in local.flatten_external_entrypoint_config : join("-",[value.function_name,idx]) => value }
 }
 
 # Data sources for external event buses
@@ -10,13 +16,19 @@ data "aws_cloudwatch_event_bus" "external" {
   name     = each.value
 }
 
+resource "aws_cloudwatch_event_bus" "internal" {
+  name = var.application_name
+
+  tags = local.tags
+}
+
 resource "aws_cloudwatch_event_rule" "internal_entrypoint" {
-  for_each = var.internal_entrypoint_config
+  for_each = local.internal_entrypoint_configs
 
   name        = format("%s-%s", var.application_name, each.value.name)
   description = each.value.description
 
-  event_pattern       = length(keys(each.value.event_pattern_json)) > 0 ? jsonencode(each.value.event_pattern_json) : null
+  event_pattern       = length(each.value.event_pattern_json) > 0 ? each.value.event_pattern_json : null
   schedule_expression = length(each.value.schedule_expression) > 0 ? each.value.schedule_expression : null
   event_bus_name      = length(each.value.schedule_expression) > 0 ? null : aws_cloudwatch_event_bus.internal.name
 
@@ -24,10 +36,10 @@ resource "aws_cloudwatch_event_rule" "internal_entrypoint" {
 }
 
 resource "aws_cloudwatch_event_target" "lambda_internal_entrypoint" {
-  for_each  = var.internal_entrypoint_config
+  for_each  = local.internal_entrypoint_configs
   rule      = aws_cloudwatch_event_rule.internal_entrypoint[each.key].name
   target_id = each.value.name
-  arn       = aws_lambda_alias.lambda_application_alias[each.key].arn
+  arn       = aws_lambda_alias.lambda_application_alias[each.value.function_name].arn
 
   event_bus_name = length(each.value.schedule_expression) > 0 ? null : aws_cloudwatch_event_bus.internal.name
   lifecycle {
@@ -38,14 +50,14 @@ resource "aws_cloudwatch_event_target" "lambda_internal_entrypoint" {
 }
 
 resource "aws_lambda_permission" "internal_entrypoints" {
-  for_each = var.internal_entrypoint_config
+  for_each = local.internal_entrypoint_configs
 
   statement_id  = replace(title(each.value.name), "/-| |_/", "")
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.lambda_application[each.key].function_name
+  function_name = aws_lambda_function.lambda_application[each.value.function_name].function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.internal_entrypoint[each.key].arn
-  qualifier     = aws_lambda_alias.lambda_application_alias[each.key].name
+  qualifier     = aws_lambda_alias.lambda_application_alias[each.value.function_name].name
 }
 
 ##################################
@@ -53,23 +65,23 @@ resource "aws_lambda_permission" "internal_entrypoints" {
 ##################################
 
 resource "aws_cloudwatch_event_rule" "external_entrypoint" {
-  for_each = var.external_entrypoint_config
+  for_each = local.external_entrypoint_configs
 
   name        = format("%s-%s", var.application_name, each.value.name)
   description = each.value.description
 
-  event_pattern       = contains(keys(each.value), "event_pattern_json") ? jsonencode(each.value.event_pattern_json) : null
-  schedule_expression = contains(keys(each.value), "schedule_expression") ? each.value.schedule_expression : null
+  event_pattern       = length(each.value.event_pattern_json ) > 0 ? each.value.event_pattern_json : null
+  schedule_expression = length(each.value.schedule_expression) > 0 ? each.value.schedule_expression : null
   event_bus_name      = each.value.event_bus_name
 
   tags = local.tags
 }
 
 resource "aws_cloudwatch_event_target" "lambda_external_entrypoint" {
-  for_each  = var.external_entrypoint_config
+  for_each  = local.external_entrypoint_configs
   rule      = aws_cloudwatch_event_rule.external_entrypoint[each.key].name
   target_id = each.value.name
-  arn       = aws_lambda_alias.lambda_application_alias[each.key].arn
+  arn       = aws_lambda_alias.lambda_application_alias[each.value.function_name].arn
 
   event_bus_name = each.value.event_bus_name
   lifecycle {
@@ -80,12 +92,12 @@ resource "aws_cloudwatch_event_target" "lambda_external_entrypoint" {
 }
 
 resource "aws_lambda_permission" "external_entrypoints" {
-  for_each = var.external_entrypoint_config
+  for_each = local.external_entrypoint_configs
 
   statement_id  = replace(title(each.value.name), "/-| |_/", "")
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.lambda_application[each.key].function_name
+  function_name = aws_lambda_function.lambda_application[each.value.function_name].function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.external_entrypoint[each.key].arn
-  qualifier     = aws_lambda_alias.lambda_application_alias[each.key].name
+  qualifier     = aws_lambda_alias.lambda_application_alias[each.value.function_name].name
 }
