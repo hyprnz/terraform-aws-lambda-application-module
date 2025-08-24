@@ -2,12 +2,12 @@
 resource "aws_lb_target_group" "alb_ingress" {
   for_each = var.alb_ingress_config
 
-  name        = "${each.value.target_group_name}"
+  name        = each.value.target_group_name
   target_type = "lambda"
 }
 
 resource "aws_lambda_permission" "alb_ingress" {
-  for_each    = var.alb_ingress_config
+  for_each = var.alb_ingress_config
 
   statement_id  = "AllowLambdaExecutionFromAlbIngress"
   action        = "lambda:InvokeFunction"

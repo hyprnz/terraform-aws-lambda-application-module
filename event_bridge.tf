@@ -1,13 +1,13 @@
 locals {
-  flatten_internal_entrypoint_config =  flatten([ for function_name, int_entrypoints in var.internal_entrypoint_config :
-  [ for int_entrypoint in int_entrypoints: merge(int_entrypoint,{function_name: function_name})]])
+  flatten_internal_entrypoint_config = flatten([for function_name, int_entrypoints in var.internal_entrypoint_config :
+  [for int_entrypoint in int_entrypoints : merge(int_entrypoint, { function_name : function_name })]])
 
-  internal_entrypoint_configs = {for idx, value in local.flatten_internal_entrypoint_config : join("-",[value.function_name,idx]) => value }
+  internal_entrypoint_configs = { for idx, value in local.flatten_internal_entrypoint_config : join("-", [value.function_name, idx]) => value }
 
-  flatten_external_entrypoint_config =  flatten([ for function_name, ext_entrypoints in var.external_entrypoint_config :
-  [ for ext_entrypoint in ext_entrypoints: merge(ext_entrypoint,{function_name: function_name})]])
+  flatten_external_entrypoint_config = flatten([for function_name, ext_entrypoints in var.external_entrypoint_config :
+  [for ext_entrypoint in ext_entrypoints : merge(ext_entrypoint, { function_name : function_name })]])
 
-  external_entrypoint_configs = {for idx, value in local.flatten_external_entrypoint_config : join("-",[value.function_name,idx]) => value }
+  external_entrypoint_configs = { for idx, value in local.flatten_external_entrypoint_config : join("-", [value.function_name, idx]) => value }
 }
 
 # Data sources for external event buses
@@ -70,7 +70,7 @@ resource "aws_cloudwatch_event_rule" "external_entrypoint" {
   name        = format("%s-%s", var.application_name, each.value.name)
   description = each.value.description
 
-  event_pattern       = length(each.value.event_pattern_json ) > 0 ? each.value.event_pattern_json : null
+  event_pattern       = length(each.value.event_pattern_json) > 0 ? each.value.event_pattern_json : null
   schedule_expression = length(each.value.schedule_expression) > 0 ? each.value.schedule_expression : null
   event_bus_name      = each.value.event_bus_name
 

@@ -23,7 +23,7 @@ variable "s3_send_bucket_notifications_to_eventbridge" {
 }
 
 variable "s3_cors_config" {
-  type        = list(object({
+  type = list(object({
     allowed_headers = optional(list(string), null)
     allowed_methods = optional(list(string), null)
     allowed_origins = optional(list(string), null)
