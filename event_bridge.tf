@@ -1,13 +1,21 @@
 locals {
   flatten_internal_entrypoint_config = flatten([for function_name, int_entrypoints in var.internal_entrypoint_config :
-  [for int_entrypoint in int_entrypoints : merge(int_entrypoint, { function_name : function_name })]])
+    [for int_entrypoint in int_entrypoints : merge(int_entrypoint, {
+      function_name : function_name,
+      function_idx : index(tolist(int_entrypoints), int_entrypoint)})
+    ]
+  ])
 
-  internal_entrypoint_configs = { for idx, value in local.flatten_internal_entrypoint_config : join("-", [value.function_name, idx]) => value }
+  internal_entrypoint_configs = { for value in local.flatten_internal_entrypoint_config : join("-", [value.function_name, value.function_idx]) => value }
 
   flatten_external_entrypoint_config = flatten([for function_name, ext_entrypoints in var.external_entrypoint_config :
-  [for ext_entrypoint in ext_entrypoints : merge(ext_entrypoint, { function_name : function_name })]])
+    [for ext_entrypoint in ext_entrypoints : merge(ext_entrypoint, {
+      function_name : function_name,
+      function_idx : index(tolist(ext_entrypoints), ext_entrypoint)})
+    ]
+  ])
 
-  external_entrypoint_configs = { for idx, value in local.flatten_external_entrypoint_config : join("-", [value.function_name, idx]) => value }
+  external_entrypoint_configs = { for value in local.flatten_external_entrypoint_config : join("-", [value.function_name, value.function_idx]) => value }
 }
 
 # Data sources for external event buses
