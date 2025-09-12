@@ -5,6 +5,9 @@
 *.tfstate.backup
 terraform.tfvars
 
+#ignore lock file in this module
+.terraform.lock.hcl
+
 # Terragrunt Cache
 .terragrunt-cache/
 
