@@ -23,6 +23,7 @@ variable "lambda_functions_config" {
     log_format            = optional(string, "Text")
     application_log_level = optional(string)
     system_log_level      = optional(string)
+    s3_key                = optional(string)
 
     function_concurrency_limit = optional(number)
   }))

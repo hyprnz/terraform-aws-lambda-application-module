@@ -64,7 +64,7 @@ resource "aws_lambda_function" "lambda_application" {
   for_each = var.lambda_functions_config
 
   s3_bucket     = var.artifact_bucket
-  s3_key        = var.artifact_bucket_key
+  s3_key        = coalesce(try(each.value.s3_key, null), var.artifact_bucket_key)
   function_name = format("%s-%s", var.application_name, each.key)
   description   = each.value.description
   role          = aws_iam_role.lambda_application_execution_role.arn

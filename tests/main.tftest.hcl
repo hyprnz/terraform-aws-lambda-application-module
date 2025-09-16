@@ -21,6 +21,7 @@ variables {
       description      = "Background worker function"
       function_memory  = "512"
       function_timeout = 60
+      s3_key           = "worker.zip"
     }
   }
 
@@ -82,7 +83,7 @@ run "lambda_function_configuration" {
   }
 }
 
-run "lambda_function_memory_and_timeout" {
+run "lambda_function_memory_and_timeout_and_s3_key" {
   command = plan
 
   assert {
@@ -103,6 +104,15 @@ run "lambda_function_memory_and_timeout" {
   assert {
     condition     = aws_lambda_function.lambda_application["worker"].timeout == 60
     error_message = "Worker function should use custom timeout"
+  }
+
+assert {
+  condition     = aws_lambda_function.lambda_application["api"].s3_key == "test-app.zip"
+  error_message = "API function should use default S3 key"
+}
+  assert {
+    condition     = aws_lambda_function.lambda_application["worker"].s3_key == "worker.zip"
+    error_message = "Worker function should use custom S3 key"
   }
 }
 
