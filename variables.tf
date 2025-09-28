@@ -24,6 +24,7 @@ variable "lambda_functions_config" {
     application_log_level = optional(string)
     system_log_level      = optional(string)
     s3_key                = optional(string)
+    enable_snap_start     = optional(bool, false)
 
     function_concurrency_limit = optional(number)
   }))

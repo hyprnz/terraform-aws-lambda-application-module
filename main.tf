@@ -101,6 +101,13 @@ resource "aws_lambda_function" "lambda_application" {
     }
   }
 
+  dynamic "snap_start" {
+    for_each = each.value.enable_snap_start ? [true] : []
+    content {
+      apply_on = "PublishedVersions"
+    }
+  }
+
   tags = local.tags
 }
 

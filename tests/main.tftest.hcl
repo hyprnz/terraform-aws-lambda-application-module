@@ -16,12 +16,13 @@ variables {
       description = "API handler function"
     }
     worker = {
-      handler          = "worker/index.handler"
-      enable_vpc       = true
-      description      = "Background worker function"
-      function_memory  = "512"
-      function_timeout = 60
-      s3_key           = "worker.zip"
+      handler           = "worker/index.handler"
+      enable_vpc        = true
+      description       = "Background worker function"
+      function_memory   = "512"
+      function_timeout  = 60
+      s3_key            = "worker.zip"
+      enable_snap_start = true
     }
   }
 
@@ -132,6 +133,21 @@ run "lambda_function_vpc_configuration" {
   assert {
     condition     = length(aws_lambda_function.lambda_application["worker"].vpc_config) > 0
     error_message = "Worker function should have VPC configuration"
+  }
+}
+
+run "lambda_function_snap_start" {
+
+command = plan
+
+  assert {
+    condition     = length(aws_lambda_function.lambda_application["api"].snap_start) == 0
+    error_message = "API function should not have snap start configuration"
+  }
+
+  assert {
+    condition     = length(aws_lambda_function.lambda_application["worker"].snap_start) > 0
+    error_message = "Worker function should have snap start configuration"
   }
 }
 
