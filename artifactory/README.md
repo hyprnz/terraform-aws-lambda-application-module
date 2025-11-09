@@ -1,6 +1,10 @@
-# Terraform AWS Lambda Application Artifactory module
+# Artifactory Module
 
-The Artifactory bucket is where the build process can store build artifacts and the key then provided as configuration variable to the Lambda functions. The current use case has the build artifact contains all functions, of which the handler config is the namespace, filename, method name composite.
+Opinionated S3 bucket for storing Lambda deployment artifacts. Designed to work with the parent Terraform AWS Lambda Application module. Build processes store compiled zip payloads organized by servicename/version.
+
+## Multi-Account First
+
+The bucket should live in a shared services account and grant access to non-production and production accounts where Lambda functions run.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
