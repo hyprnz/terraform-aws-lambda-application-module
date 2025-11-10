@@ -21,9 +21,9 @@ A child/resource module designed to be referenced from the root module. It provi
    # If fmt check fails, stop and fix formatting in a separate commit
    terraform fmt
    git add artifactory/
-   git commit -m "style(artifactory): format terraform code"
+   git commit -m "chore(artifactory): format terraform code"
    git push
-   
+
    # Then proceed with functional changes
    terraform init
    terraform validate
@@ -31,7 +31,7 @@ A child/resource module designed to be referenced from the root module. It provi
    ```
 6. **Update README**
     - Ensure module information is up to date
-  
+
 7. **Commit with conventional commit message**
    - Tags are created automatically by CI using semantic-release
    - Use conventional commit format (see Commit Message Convention below)
