@@ -90,3 +90,49 @@ variable "enable_eventbridge_notifications" {
   description = "Enable S3 event notifications to EventBridge. When enabled, S3 object events will be automatically sent to the default EventBridge event bus."
   default     = false
 }
+
+variable "bucket_lifecycle_rules" {
+  type = list(object({
+    id     = string
+    status = string
+
+    filter = optional(object({
+      prefix                   = optional(string)
+      tags                     = optional(map(string))
+      object_size_greater_than = optional(number)
+      object_size_less_than    = optional(number)
+    }))
+
+    expiration = optional(object({
+      days                         = optional(number)
+      date                         = optional(string)
+      expired_object_delete_marker = optional(bool)
+    }))
+
+    noncurrent_version_expiration = optional(object({
+      days = number
+    }))
+
+    transitions = optional(list(object({
+      days          = number
+      storage_class = string
+    })))
+
+    noncurrent_version_transitions = optional(list(object({
+      days          = number
+      storage_class = string
+    })))
+
+    abort_incomplete_multipart_upload = optional(object({
+      days_after_initiation = number
+    }))
+  }))
+
+  description = <<EOF
+    List of lifecycle rules for the S3 bucket. Each rule must have an 'id' and 'status'.
+    Rules can include expiration, transitions, and noncurrent version handling.
+    Transitions require S3 versioning to be enabled.
+  EOF
+
+  default = []
+}

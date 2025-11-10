@@ -16,6 +16,9 @@ module "example" {
 
   # Enable EventBridge notifications
   enable_eventbridge_notifications = var.enable_eventbridge_notifications
+
+  # Configure lifecycle rules for artifact retention and cost optimization
+  bucket_lifecycle_rules = var.bucket_lifecycle_rules
 }
 
 provider "aws" {
@@ -59,6 +62,45 @@ variable "enable_eventbridge_notifications" {
   default     = false
 }
 
+variable "bucket_lifecycle_rules" {
+  type = list(object({
+    id     = string
+    status = string
+
+    filter = optional(object({
+      prefix = optional(string, null)
+      tags   = optional(map(string), null)
+    }), null)
+
+    expiration = optional(object({
+      days                         = optional(number)
+      date                         = optional(string)
+      expired_object_delete_marker = optional(bool)
+    }))
+
+    noncurrent_version_expiration = optional(object({
+      days = number
+    }))
+
+    transitions = optional(list(object({
+      days          = number
+      storage_class = string
+    })))
+
+    noncurrent_version_transitions = optional(list(object({
+      days          = number
+      storage_class = string
+    })))
+
+    abort_incomplete_multipart_upload = optional(object({
+      days_after_initiation = number
+    }))
+  }))
+
+  description = "Lifecycle rules for the S3 bucket"
+  default     = []
+}
+
 output "bucket_name" {
   value = module.example.bucket_name
 }
@@ -69,4 +111,8 @@ output "bucket_arn" {
 
 output "eventbridge_notifications_enabled" {
   value = module.example.eventbridge_notifications_enabled
+}
+
+output "lifecycle_configuration_enabled" {
+  value = module.example.lifecycle_configuration_enabled
 }

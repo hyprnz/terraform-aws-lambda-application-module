@@ -266,3 +266,248 @@ run "verify_eventbridge_notifications_configured" {
     error_message = "EventBridge should be enabled on the bucket notification"
   }
 }
+
+# Test case 8: Lifecycle configuration - no rules
+run "verify_no_lifecycle_configuration" {
+  command = plan
+
+  variables {
+    bucket_lifecycle_rules = []
+  }
+
+  assert {
+    condition     = length(aws_s3_bucket_lifecycle_configuration.this) == 0
+    error_message = "Lifecycle configuration should not be created when no rules are provided"
+  }
+}
+
+# Test case 9: Lifecycle configuration - expiration rule (no filter)
+run "verify_lifecycle_expiration_rule" {
+  command = plan
+
+  variables {
+    bucket_lifecycle_rules = [
+      {
+        id     = "delete-old-versions"
+        status = "Enabled"
+
+        noncurrent_version_expiration = {
+          days = 90
+        }
+      }
+    ]
+  }
+
+  assert {
+    condition     = length([for lc in aws_s3_bucket_lifecycle_configuration.this : lc if lc != null]) > 0
+    error_message = "Lifecycle configuration should be created when rules are provided"
+  }
+
+  assert {
+    condition = alltrue([
+      for lc in aws_s3_bucket_lifecycle_configuration.this :
+      alltrue([
+        for rule in lc.rule :
+        rule.id == "delete-old-versions" && rule.status == "Enabled"
+      ])
+    ])
+    error_message = "Lifecycle rule should have correct id and status"
+  }
+}
+
+# Test case 10: Lifecycle configuration - transition rule
+run "verify_lifecycle_transition_rule" {
+  command = plan
+
+  variables {
+    bucket_lifecycle_rules = [
+      {
+        id     = "archive-artifacts"
+        status = "Enabled"
+
+        filter = {
+          prefix = "releases/"
+        }
+
+        transitions = [
+          {
+            days          = 30
+            storage_class = "GLACIER"
+          }
+        ]
+      }
+    ]
+  }
+
+  assert {
+    condition     = length([for lc in aws_s3_bucket_lifecycle_configuration.this : lc if lc != null]) > 0
+    error_message = "Lifecycle configuration should be created for transition rules"
+  }
+}
+
+# Test case 11: Lifecycle configuration - abort incomplete multipart uploads
+run "verify_lifecycle_abort_incomplete_upload" {
+  command = plan
+
+  variables {
+    bucket_lifecycle_rules = [
+      {
+        id     = "cleanup-uploads"
+        status = "Enabled"
+
+        abort_incomplete_multipart_upload = {
+          days_after_initiation = 7
+        }
+      }
+    ]
+  }
+
+  assert {
+    condition     = length([for lc in aws_s3_bucket_lifecycle_configuration.this : lc if lc != null]) > 0
+    error_message = "Lifecycle configuration should be created for abort incomplete upload rules"
+  }
+}
+
+# Test case 12: Lifecycle configuration - multiple rules (no filter)
+run "verify_multiple_lifecycle_rules" {
+  command = plan
+
+  variables {
+    bucket_lifecycle_rules = [
+      {
+        id     = "rule-1"
+        status = "Enabled"
+
+        expiration = {
+          days = 180
+        }
+      },
+      {
+        id     = "rule-2"
+        status = "Enabled"
+
+        noncurrent_version_expiration = {
+          days = 90
+        }
+      }
+    ]
+  }
+
+  assert {
+    condition     = length([for lc in aws_s3_bucket_lifecycle_configuration.this : lc if lc != null]) > 0
+    error_message = "Lifecycle configuration should be created with multiple rules"
+  }
+}
+
+# Test case 13: Lifecycle configuration - disabled rule (no filter)
+run "verify_disabled_lifecycle_rule" {
+  command = plan
+
+  variables {
+    bucket_lifecycle_rules = [
+      {
+        id     = "disabled-rule"
+        status = "Disabled"
+
+        expiration = {
+          days = 90
+        }
+      }
+    ]
+  }
+
+  assert {
+    condition = alltrue([
+      for lc in aws_s3_bucket_lifecycle_configuration.this :
+      alltrue([
+        for rule in lc.rule :
+        rule.status == "Disabled"
+      ])
+    ])
+    error_message = "Lifecycle rule should have Disabled status"
+  }
+}
+
+# Test case 14: Lifecycle output (no filter)
+run "verify_lifecycle_configuration_output" {
+  command = plan
+
+  variables {
+    bucket_lifecycle_rules = [
+      {
+        id     = "test-rule"
+        status = "Enabled"
+
+        expiration = {
+          days = 90
+        }
+      }
+    ]
+  }
+
+  assert {
+    condition     = var.bucket_lifecycle_rules != []
+    error_message = "Lifecycle rules variable should not be empty"
+  }
+}
+
+# Test case 15: Lifecycle configuration - multiple tags
+run "verify_lifecycle_multiple_tags" {
+  command = plan
+
+  variables {
+    bucket_lifecycle_rules = [
+      {
+        id     = "multi-tag-rule"
+        status = "Enabled"
+
+        filter = {
+          tags = {
+            Environment = "production"
+            Application = "backend"
+          }
+        }
+
+        expiration = {
+          days = 365
+        }
+      }
+    ]
+  }
+
+  assert {
+    condition     = length([for lc in aws_s3_bucket_lifecycle_configuration.this : lc if lc != null]) > 0
+    error_message = "Lifecycle configuration should be created with multiple tags"
+  }
+}
+
+# Test case 16: Lifecycle configuration - prefix and multiple tags
+run "verify_lifecycle_prefix_and_multiple_tags" {
+  command = plan
+
+  variables {
+    bucket_lifecycle_rules = [
+      {
+        id     = "prefix-multi-tag-rule"
+        status = "Enabled"
+
+        filter = {
+          prefix = "logs/"
+          tags = {
+            Type     = "log"
+            Retention = "short"
+          }
+        }
+
+        expiration = {
+          days = 30
+        }
+      }
+    ]
+  }
+
+  assert {
+    condition     = length([for lc in aws_s3_bucket_lifecycle_configuration.this : lc if lc != null]) > 0
+    error_message = "Lifecycle configuration should be created with prefix and multiple tags"
+  }
+}

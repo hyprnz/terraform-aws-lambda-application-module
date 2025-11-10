@@ -12,3 +12,8 @@ output "eventbridge_notifications_enabled" {
   description = "Whether EventBridge notifications are enabled for the bucket"
   value       = var.enable_eventbridge_notifications
 }
+
+output "lifecycle_configuration_enabled" {
+  description = "Whether lifecycle configuration rules are enabled for the bucket"
+  value       = length(var.bucket_lifecycle_rules) > 0
+}

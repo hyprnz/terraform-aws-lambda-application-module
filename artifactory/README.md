@@ -20,7 +20,7 @@ The bucket is designed to live in a shared services account and grant access to 
 
 ```hcl
 module "artifactory" {
-  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.9.0"
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.0"
 
   application_name          = "my-app"
   artifactory_bucket_name   = "my-app-artifacts"
@@ -40,7 +40,7 @@ When `enable_eventbridge_notifications` is set to `true`, the module will enable
 
 ```hcl
 module "artifactory" {
-  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=<some-tag>"
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.0"
 
   application_name                 = "my-app"
   artifactory_bucket_name          = "my-app-artifacts"
@@ -78,6 +78,158 @@ resource "aws_cloudwatch_event_target" "my_lambda" {
   rule     = aws_cloudwatch_event_rule.artifact_uploaded.name
   arn      = aws_lambda_function.my_function.arn
   role_arn = aws_iam_role.eventbridge_invoke_lambda.arn
+}
+```
+
+### With Lifecycle Configuration
+
+Use lifecycle rules to manage artifact retention, optimize storage costs, and clean up incomplete uploads.
+
+#### Example: Delete old artifact versions
+
+```hcl
+module "artifactory" {
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.0"
+
+  application_name        = "my-app"
+  artifactory_bucket_name = "my-app-artifacts"
+  cross_account_numbers   = ["123456789012"]
+  enable_versioning       = true
+
+  bucket_lifecycle_rules = [
+    {
+      id     = "delete-old-versions"
+      status = "Enabled"
+
+      noncurrent_version_expiration = {
+        days = 90
+      }
+    }
+  ]
+}
+```
+
+#### Example: Transition to Glacier for cost savings
+
+```hcl
+module "artifactory" {
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.0"
+
+  application_name        = "my-app"
+  artifactory_bucket_name = "my-app-artifacts"
+  cross_account_numbers   = ["123456789012"]
+  enable_versioning       = true
+
+  bucket_lifecycle_rules = [
+    {
+      id     = "archive-old-artifacts"
+      status = "Enabled"
+
+      filter = {
+        prefix = "releases/"
+      }
+
+      transitions = [
+        {
+          days          = 30
+          storage_class = "GLACIER"
+        }
+      ]
+
+      noncurrent_version_transitions = [
+        {
+          days          = 7
+          storage_class = "DEEP_ARCHIVE"
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### Example: Clean up incomplete multipart uploads
+
+```hcl
+module "artifactory" {
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.0"
+
+  application_name        = "my-app"
+  artifactory_bucket_name = "my-app-artifacts"
+  cross_account_numbers   = ["123456789012"]
+
+  bucket_lifecycle_rules = [
+    {
+      id     = "cleanup-incomplete-uploads"
+      status = "Enabled"
+
+      abort_incomplete_multipart_upload = {
+        days_after_initiation = 7
+      }
+    }
+  ]
+}
+```
+
+#### Example: Filter rules by object size
+
+```hcl
+module "artifactory" {
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.0"
+
+  application_name        = "my-app"
+  artifactory_bucket_name = "my-app-artifacts"
+  cross_account_numbers   = ["123456789012"]
+  enable_versioning       = true
+
+  bucket_lifecycle_rules = [
+    {
+      id     = "archive-large-files"
+      status = "Enabled"
+
+      filter = {
+        object_size_greater_than = 1073741824  # 1 GB
+      }
+
+      transitions = [
+        {
+          days          = 7
+          storage_class = "GLACIER"
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### Example: Filter by multiple conditions (prefix and tags)
+
+```hcl
+module "artifactory" {
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.0"
+
+  application_name        = "my-app"
+  artifactory_bucket_name = "my-app-artifacts"
+  cross_account_numbers   = ["123456789012"]
+  enable_versioning       = true
+
+  bucket_lifecycle_rules = [
+    {
+      id     = "expire-tagged-logs"
+      status = "Enabled"
+
+      filter = {
+        prefix = "logs/"
+        tags = {
+          Type      = "log"
+          Retention = "short"
+        }
+      }
+
+      expiration = {
+        days = 30
+      }
+    }
+  ]
 }
 ```
 
@@ -128,6 +280,7 @@ No modules.
 | kms_key_arn | AWS KMS key ARN used for SSE-KMS encryption of the bucket. Will override `create_kms_key` if value is not null. | `string` | `null` | no |
 | kms_key_deletion_window_in_days | Duration in days after which the key is deleted after destruction of the resource. Must be between 7 and 30 days. | `number` | `30` | no |
 | kms_key_key_spec | Specifies whether the key contains a symmetric key or an asymmetric key pair and the encryption algorithms that the key supports. | `string` | `"SYMMETRIC_DEFAULT"` | no |
+| bucket_lifecycle_rules | List of lifecycle rules for the S3 bucket. Each rule must have an 'id' and 'status'. Rules can include expiration, transitions, and noncurrent version handling. Transitions require S3 versioning to be enabled. | `list(object({...}))` | `[]` | no |
 | tags | A map of additional tags to add to the artifactory resource. | `map(any)` | `{}` | no |
 
 ## Outputs
@@ -137,6 +290,7 @@ No modules.
 | bucket_name | The name of the S3 artifactory bucket. |
 | bucket_arn | The ARN of the artifactory bucket. |
 | eventbridge_notifications_enabled | Whether EventBridge notifications are enabled for the bucket. |
+| lifecycle_configuration_enabled | Whether lifecycle configuration rules are enabled for the bucket. |
 
 ## License
 
