@@ -1,23 +1,23 @@
 data "aws_iam_policy_document" "sse_kms_key" {
   statement {
-    sid = "Cross account Lambda access"
+    sid    = "Cross account Lambda access"
     effect = "Allow"
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = local.cross_account_identifiers
     }
     actions = [
       "kms:GenerateDataKey",
       "kms:Decrypt"
     ]
-    resources = [ "*" ]
+    resources = ["*"]
   }
 
   statement {
-    sid = "Administrator Access"
+    sid    = "Administrator Access"
     effect = "Allow"
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = var.kms_key_administrators
     }
     actions = [
@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "sse_kms_key" {
       "kms:CancelKeyDeletion",
       "kms:GenerateDataKey*"
     ]
-    resources = [ "*" ]
+    resources = ["*"]
   }
 }
 
