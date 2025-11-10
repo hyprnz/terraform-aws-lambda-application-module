@@ -13,6 +13,9 @@ module "example" {
   create_kms_key                  = true
   kms_key_administrators          = var.kms_key_administrators
   kms_key_deletion_window_in_days = var.kms_key_deletion_window_in_days
+
+  # Enable EventBridge notifications
+  enable_eventbridge_notifications = var.enable_eventbridge_notifications
 }
 
 provider "aws" {
@@ -50,6 +53,20 @@ variable "kms_key_deletion_window_in_days" {
   default     = 7
 }
 
+variable "enable_eventbridge_notifications" {
+  type        = bool
+  description = "Enable EventBridge notifications for the bucket"
+  default     = false
+}
+
 output "bucket_name" {
   value = module.example.bucket_name
+}
+
+output "bucket_arn" {
+  value = module.example.bucket_arn
+}
+
+output "eventbridge_notifications_enabled" {
+  value = module.example.eventbridge_notifications_enabled
 }

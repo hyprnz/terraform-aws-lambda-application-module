@@ -10,24 +10,74 @@ This module provides a secure, multi-account compatible S3 bucket for Lambda dep
 - Customer-managed or existing KMS encryption
 - Versioning control
 - Public access blocking and ownership controls
+- EventBridge notifications for S3 object events
 
 The bucket is designed to live in a shared services account and grant access to accounts where Lambda functions run.
 
 ## Usage
 
+### Basic Configuration
+
 ```hcl
 module "artifactory" {
-  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=<some-tag>"
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.9.0"
 
   application_name          = "my-app"
   artifactory_bucket_name   = "my-app-artifacts"
   cross_account_numbers     = ["123456789012"]
   enable_versioning         = true
-  
+
   # Optional: Create a customer-managed KMS key
   create_kms_key            = true
   kms_key_administrators    = ["arn:aws:iam::123456789012:role/admin"]
   kms_key_deletion_window_in_days = 7
+}
+```
+
+### With EventBridge Notifications
+
+When `enable_eventbridge_notifications` is set to `true`, the module will enable S3 event notifications to be sent to EventBridge. This allows you to create EventBridge rules in your application module to trigger Lambda functions or other actions based on S3 object events.
+
+```hcl
+module "artifactory" {
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=<some-tag>"
+
+  application_name                 = "my-app"
+  artifactory_bucket_name          = "my-app-artifacts"
+  cross_account_numbers            = ["123456789012"]
+  enable_versioning                = true
+  enable_eventbridge_notifications = true
+}
+```
+
+Once enabled, you can create EventBridge rules to filter and route S3 object events. For example:
+
+```hcl
+resource "aws_cloudwatch_event_rule" "artifact_uploaded" {
+  name        = "artifact-uploaded"
+  description = "Triggers when artifacts are uploaded to S3"
+  event_bus_name = "default"
+
+  event_pattern = jsonencode({
+    source      = ["aws.s3"]
+    detail-type = ["Object Created"]
+    detail = {
+      bucket = {
+        name = [module.artifactory.bucket_name]
+      }
+      object = {
+        key = [{
+          prefix = "artifacts/"
+        }]
+      }
+    }
+  })
+}
+
+resource "aws_cloudwatch_event_target" "my_lambda" {
+  rule     = aws_cloudwatch_event_rule.artifact_uploaded.name
+  arn      = aws_lambda_function.my_function.arn
+  role_arn = aws_iam_role.eventbridge_invoke_lambda.arn
 }
 ```
 
@@ -59,6 +109,7 @@ No modules.
 | [aws_s3_bucket_public_access_block.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
 | [aws_s3_bucket_versioning.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_versioning) | resource |
+| [aws_s3_bucket_notification.eventbridge](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_notification) | resource |
 | [aws_kms_key.s3_sse](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
 | [aws_kms_alias.s3_sse](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_alias) | resource |
 
@@ -70,6 +121,7 @@ No modules.
 | artifactory_bucket_name | The name of the S3 bucket used to store deployment artifacts for the Lambda Application. | `string` | n/a | yes |
 | cross_account_numbers | Additional AWS accounts to provide access from. If no account IDs are supplied, no policy is created for the bucket. | `list(string)` | `[]` | no |
 | create_kms_key | Controls if a customer-managed KMS key should be provisioned and used for SSE for the bucket. `kms_key_arn` will take precedence if provided. | `bool` | `false` | no |
+| enable_eventbridge_notifications | Enable S3 event notifications to EventBridge. When enabled, S3 object events will be automatically sent to the default EventBridge event bus. | `bool` | `false` | no |
 | enable_versioning | Enable versioning for the bucket. | `bool` | `true` | no |
 | force_destroy | Controls if all objects in a bucket should be deleted when destroying the bucket resource. If set to `false`, the bucket resource cannot be destroyed until all objects are deleted. | `bool` | `false` | no |
 | kms_key_administrators | A list of administrator role ARNs that manage the SSE key. Required if `create_kms_key` is `true`. | `list(string)` | `[]` | no |
@@ -83,6 +135,8 @@ No modules.
 | Name | Description |
 |------|-------------|
 | bucket_name | The name of the S3 artifactory bucket. |
+| bucket_arn | The ARN of the artifactory bucket. |
+| eventbridge_notifications_enabled | Whether EventBridge notifications are enabled for the bucket. |
 
 ## License
 

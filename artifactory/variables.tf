@@ -84,3 +84,9 @@ variable "kms_key_administrators" {
   EOF
   default     = []
 }
+
+variable "enable_eventbridge_notifications" {
+  type        = bool
+  description = "Enable S3 event notifications to EventBridge. When enabled, S3 object events will be automatically sent to the default EventBridge event bus."
+  default     = false
+}

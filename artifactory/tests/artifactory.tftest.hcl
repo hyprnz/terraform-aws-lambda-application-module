@@ -224,3 +224,45 @@ run "verify_bucket_encryption_with_existing_key_and_create_kms_key_is_true" {
     error_message = "Server-side encryption should use the provided KMS key with aws:kms algorithm"
   }
 }
+
+# Test case 7: EventBridge notifications
+run "verify_eventbridge_notifications_disabled" {
+  command = plan
+
+  variables {
+    enable_eventbridge_notifications = false
+  }
+
+  assert {
+    condition     = length(aws_s3_bucket_notification.this) == 0
+    error_message = "S3 bucket notification should not be created when enable_eventbridge_notifications is false"
+  }
+}
+
+run "verify_eventbridge_notifications_enabled" {
+  command = plan
+
+  variables {
+    enable_eventbridge_notifications = true
+  }
+
+  assert {
+    condition     = length([for notif in aws_s3_bucket_notification.this : notif if notif != null]) > 0
+    error_message = "S3 bucket notification should be created when enable_eventbridge_notifications is true"
+  }
+}
+
+run "verify_eventbridge_notifications_configured" {
+  command = plan
+
+  variables {
+    enable_eventbridge_notifications = true
+  }
+
+  assert {
+    condition = alltrue([
+      for notif in aws_s3_bucket_notification.this : notif.eventbridge == true
+    ])
+    error_message = "EventBridge should be enabled on the bucket notification"
+  }
+}
