@@ -16,9 +16,17 @@ A child/resource module designed to be referenced from the root module. It provi
 5. **Test and validate**
    ```bash
    cd artifactory
+   # Check formatting first (commit separately from functional changes)
+   terraform fmt -check
+   # If fmt check fails, stop and fix formatting in a separate commit
+   terraform fmt
+   git add artifactory/
+   git commit -m "style(artifactory): format terraform code"
+   git push
+   
+   # Then proceed with functional changes
    terraform init
    terraform validate
-   terraform fmt
    terraform test
    ```
 6. **Update README**
