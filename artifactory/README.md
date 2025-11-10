@@ -20,7 +20,7 @@ The bucket is designed to live in a shared services account and grant access to 
 
 ```hcl
 module "artifactory" {
-  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.0"
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.1"
 
   application_name          = "my-app"
   artifactory_bucket_name   = "my-app-artifacts"
@@ -40,7 +40,7 @@ When `enable_eventbridge_notifications` is set to `true`, the module will enable
 
 ```hcl
 module "artifactory" {
-  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.0"
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.1"
 
   application_name                 = "my-app"
   artifactory_bucket_name          = "my-app-artifacts"
@@ -89,7 +89,7 @@ Use lifecycle rules to manage artifact retention, optimize storage costs, and cl
 
 ```hcl
 module "artifactory" {
-  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.0"
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.1"
 
   application_name        = "my-app"
   artifactory_bucket_name = "my-app-artifacts"
@@ -113,7 +113,7 @@ module "artifactory" {
 
 ```hcl
 module "artifactory" {
-  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.0"
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.1"
 
   application_name        = "my-app"
   artifactory_bucket_name = "my-app-artifacts"
@@ -151,7 +151,7 @@ module "artifactory" {
 
 ```hcl
 module "artifactory" {
-  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.0"
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.1"
 
   application_name        = "my-app"
   artifactory_bucket_name = "my-app-artifacts"
@@ -174,7 +174,7 @@ module "artifactory" {
 
 ```hcl
 module "artifactory" {
-  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.0"
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.1"
 
   application_name        = "my-app"
   artifactory_bucket_name = "my-app-artifacts"
@@ -205,7 +205,7 @@ module "artifactory" {
 
 ```hcl
 module "artifactory" {
-  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.0"
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.1"
 
   application_name        = "my-app"
   artifactory_bucket_name = "my-app-artifacts"
