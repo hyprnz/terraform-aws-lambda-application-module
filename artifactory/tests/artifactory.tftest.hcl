@@ -5,9 +5,9 @@ provider "aws" {
 # Common variables for all tests
 variables {
   artifactory_bucket_name = "test-artifactory-bucket"
-  application_name       = "test-lambda-app"
-  cross_account_numbers = ["987654321012", "123456789012"]
-  kms_key_administrators = ["arn:aws:iam::123456789012:role/admin-role"]
+  application_name        = "test-lambda-app"
+  cross_account_numbers   = ["987654321012", "123456789012"]
+  kms_key_administrators  = ["arn:aws:iam::123456789012:role/admin-role"]
   tags = {
     Environment = "test"
     Project     = "lambda-app"
@@ -28,7 +28,7 @@ run "verify_bucket_tags" {
   command = plan
 
   assert {
-    condition     = alltrue([
+    condition = alltrue([
       for key, value in var.tags : aws_s3_bucket.artifactory.tags[key] == value
     ])
     error_message = "Bucket tags do not match expected values"
@@ -71,7 +71,7 @@ run "verify_new_kms_key" {
   command = plan
 
   variables {
-    create_kms_key = true
+    create_kms_key                  = true
     kms_key_deletion_window_in_days = 7
   }
 
@@ -113,7 +113,7 @@ run "verify_cross_account_identifiers" {
 
   assert {
     condition = alltrue([
-      for account in var.cross_account_numbers : 
+      for account in var.cross_account_numbers :
       contains(local.cross_account_identifiers, format("arn:aws:iam::%s:root", account))
     ])
     error_message = "Cross-account identifiers should be properly formatted"
@@ -180,7 +180,7 @@ run "verify_existing_kms_key_usage" {
 
 run "verify_bucket_encryption_with_existing_key" {
   command = plan
-  
+
   variables {
     kms_key_arn = "arn:aws:kms:us-west-2:123456789012:key/mock-existing-key"
   }
@@ -198,9 +198,9 @@ run "verify_bucket_encryption_with_existing_key" {
 
 run "verify_bucket_encryption_with_existing_key_and_create_kms_key_is_true" {
   command = plan
-  
+
   variables {
-    kms_key_arn = "arn:aws:kms:us-west-2:123456789012:key/mock-existing-key"
+    kms_key_arn    = "arn:aws:kms:us-west-2:123456789012:key/mock-existing-key"
     create_kms_key = true
   }
 
