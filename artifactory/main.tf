@@ -1,6 +1,4 @@
 locals {
-  cross_account_identifiers = [for account in var.cross_account_numbers : format("arn:aws:iam::%s:root", account)]
-
   kms_key_id = var.kms_key_arn != null ? var.kms_key_arn : try(aws_kms_key.s3_sse[0].arn, null)
 
   kms_key_count = var.kms_key_arn == null && var.create_kms_key ? 1 : 0
@@ -37,13 +35,13 @@ data "aws_iam_policy_document" "cross_account_access_document" {
 
     principals {
       type        = "AWS"
-      identifiers = local.cross_account_identifiers
+      identifiers = var.cross_account_arns
     }
   }
 }
 
 resource "aws_s3_bucket_policy" "cross_account_policy" {
-  count = length(var.cross_account_numbers) > 0 ? 1 : 0
+  count = length(var.cross_account_arns) > 0 ? 1 : 0
 
   bucket = aws_s3_bucket.artifactory.id
   policy = data.aws_iam_policy_document.cross_account_access_document.json

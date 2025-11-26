@@ -5,13 +5,14 @@ module "example" {
     aws = aws
   }
 
-  artifactory_bucket_name = "hypr-exm-stage-artifactory"
+  artifactory_bucket_name = "tfm-exm-stage-artifactory"
   application_name        = "lambda-app"
-  cross_account_numbers   = var.cross_account_numbers
+  cross_account_arns      = var.cross_account_arns
   force_destroy           = true
 
   create_kms_key                  = true
   kms_key_administrators          = var.kms_key_administrators
+  kms_key_users                   = var.kms_key_users
   kms_key_deletion_window_in_days = var.kms_key_deletion_window_in_days
 
   # Enable EventBridge notifications
@@ -29,7 +30,7 @@ variable "aws_region" {
   default = "us-west-2"
 }
 
-variable "cross_account_numbers" {
+variable "cross_account_arns" {
   type        = list(string)
   description = <<EOF
     Additional AWS accounts to provide access from. If no account ID's are supplied
@@ -44,6 +45,12 @@ variable "kms_key_administrators" {
     A List of administrator role arns that manage the SSE key.
     Required if `create_kms_key` is `true`
   EOF
+  default     = []
+}
+
+variable "kms_key_users" {
+  type        = list(string)
+  description = "A list of use role arns that require the ability to decrypt the SSE key."
   default     = []
 }
 

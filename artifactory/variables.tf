@@ -7,11 +7,11 @@ variable "application_name" {
   description = "The name of the Lambda Application. Used to tag artifactory bucket"
 }
 
-variable "cross_account_numbers" {
+variable "cross_account_arns" {
   type        = list(string)
   description = <<EOF
-    Additional AWS accounts to provide access from. If no account ID's are supplied
-    no policy is created for the bucket."
+    Additional AWS account arns to provide access from.Should take the form of `arn:aws:iam::123456789012:root`.
+    If no arns are supplied, no policy is created for the bucket."
   EOF
   default     = []
 }
@@ -79,9 +79,15 @@ variable "kms_key_deletion_window_in_days" {
 variable "kms_key_administrators" {
   type        = list(string)
   description = <<EOF
-    A List of administrator role arns that manage the SSE key.
+    A List of administrator role arns that manage the KMS key.
     Required if `create_kms_key` is `true`
   EOF
+  default     = []
+}
+
+variable "kms_key_users" {
+  type        = list(string)
+  description = "A list of use role arns that require the ability to decrypt the KMS key."
   default     = []
 }
 

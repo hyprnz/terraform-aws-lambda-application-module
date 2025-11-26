@@ -1,10 +1,10 @@
 data "aws_iam_policy_document" "sse_kms_key" {
   statement {
-    sid    = "Cross account Lambda access"
+    sid    = "Cross account Lambda access & decrypt users"
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = local.cross_account_identifiers
+      identifiers = concat(var.cross_account_arns, var.kms_key_users)
     }
     actions = [
       "kms:GenerateDataKey",

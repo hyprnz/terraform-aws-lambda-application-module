@@ -6,8 +6,9 @@ provider "aws" {
 variables {
   artifactory_bucket_name = "test-artifactory-bucket"
   application_name        = "test-lambda-app"
-  cross_account_numbers   = ["987654321012", "123456789012"]
+  cross_account_arns      = ["arn:aws:iam::987654321012:root", "arn:aws:iam::123456789012:root"]
   kms_key_administrators  = ["arn:aws:iam::123456789012:role/admin-role"]
+  kms_key_users           = ["arn:aws:iam::123456789012:role/user-role"]
   tags = {
     Environment = "test"
     Project     = "lambda-app"
@@ -104,19 +105,47 @@ run "verify_cross_account_policy" {
 
   assert {
     condition     = length([for policy in aws_s3_bucket_policy.cross_account_policy : policy if policy != null]) > 0
-    error_message = "Bucket policy should be created when cross_account_numbers is provided"
+    error_message = "Bucket policy should be created when cross_account_arns are provided"
   }
 }
 
-run "verify_cross_account_identifiers" {
+run "verify_kms_administrators_on_kms_key_policy" {
   command = plan
+
+  variables {
+    create_kms_key = true
+  }
 
   assert {
     condition = alltrue([
-      for account in var.cross_account_numbers :
-      contains(local.cross_account_identifiers, format("arn:aws:iam::%s:root", account))
+      for admin_arn in var.kms_key_administrators : contains(
+        flatten([[for stmt in jsondecode(aws_kms_key.s3_sse[0].policy).Statement : stmt.Principal.AWS if stmt.Sid == "Administrator Access"][0]]),
+        admin_arn
+      )
     ])
-    error_message = "Cross-account identifiers should be properly formatted"
+    error_message = "KMS key policy should include all specified administrators"
+  }
+}
+
+run "verify_kms_users_and_cross_account_access_on_kms_key_policy" {
+  command = plan
+
+  variables {
+    create_kms_key = true
+  }
+
+  assert {
+    condition = alltrue(concat(
+      [for user_arn in var.kms_key_users : contains(
+        flatten([[for stmt in jsondecode(aws_kms_key.s3_sse[0].policy).Statement : stmt.Principal.AWS if stmt.Sid == "Cross account Lambda access & decrypt users"][0]]),
+        user_arn
+      )],
+      [for account_arn in var.cross_account_arns : contains(
+        flatten([[for stmt in jsondecode(aws_kms_key.s3_sse[0].policy).Statement : stmt.Principal.AWS if stmt.Sid == "Cross account Lambda access & decrypt users"][0]]),
+        account_arn
+      )]
+    ))
+    error_message = "KMS key policy should include all specified KMS users and cross-account ARNs in the cross-account access statement"
   }
 }
 

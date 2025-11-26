@@ -20,16 +20,17 @@ The bucket is designed to live in a shared services account and grant access to 
 
 ```hcl
 module "artifactory" {
-  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.1"
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.2"
 
   application_name          = "my-app"
   artifactory_bucket_name   = "my-app-artifacts"
-  cross_account_numbers     = ["123456789012"]
+  cross_account_arns        = ["arn:aws:iam::123456789012:root"]
   enable_versioning         = true
 
   # Optional: Create a customer-managed KMS key
   create_kms_key            = true
   kms_key_administrators    = ["arn:aws:iam::123456789012:role/admin"]
+  kms_key_users             = ["arn:aws:iam::123456789012:role/Backup-Role"]
   kms_key_deletion_window_in_days = 7
 }
 ```
@@ -40,11 +41,11 @@ When `enable_eventbridge_notifications` is set to `true`, the module will enable
 
 ```hcl
 module "artifactory" {
-  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.1"
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.2"
 
   application_name                 = "my-app"
   artifactory_bucket_name          = "my-app-artifacts"
-  cross_account_numbers            = ["123456789012"]
+  cross_account_arns               = ["arn:aws:iam::123456789012:root"]
   enable_versioning                = true
   enable_eventbridge_notifications = true
 }
@@ -89,11 +90,11 @@ Use lifecycle rules to manage artifact retention, optimize storage costs, and cl
 
 ```hcl
 module "artifactory" {
-  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.1"
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.2"
 
   application_name        = "my-app"
   artifactory_bucket_name = "my-app-artifacts"
-  cross_account_numbers   = ["123456789012"]
+  cross_account_arns      = ["arn:aws:iam::123456789012:root"]
   enable_versioning       = true
 
   bucket_lifecycle_rules = [
@@ -113,11 +114,11 @@ module "artifactory" {
 
 ```hcl
 module "artifactory" {
-  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.1"
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.2"
 
   application_name        = "my-app"
   artifactory_bucket_name = "my-app-artifacts"
-  cross_account_numbers   = ["123456789012"]
+  cross_account_arns      = ["arn:aws:iam::123456789012:root"]
   enable_versioning       = true
 
   bucket_lifecycle_rules = [
@@ -151,11 +152,11 @@ module "artifactory" {
 
 ```hcl
 module "artifactory" {
-  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.1"
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.2"
 
   application_name        = "my-app"
   artifactory_bucket_name = "my-app-artifacts"
-  cross_account_numbers   = ["123456789012"]
+  cross_account_arns      = ["arn:aws:iam::123456789012:root"]
 
   bucket_lifecycle_rules = [
     {
@@ -174,11 +175,11 @@ module "artifactory" {
 
 ```hcl
 module "artifactory" {
-  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.1"
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.2"
 
   application_name        = "my-app"
   artifactory_bucket_name = "my-app-artifacts"
-  cross_account_numbers   = ["123456789012"]
+  cross_account_arns      = ["arn:aws:iam::123456789012:root"]
   enable_versioning       = true
 
   bucket_lifecycle_rules = [
@@ -205,11 +206,11 @@ module "artifactory" {
 
 ```hcl
 module "artifactory" {
-  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.1"
+  source = "git::https://github.com/hyprnz/terraform-aws-lambda-application-module//artifactory?ref=v4.10.2"
 
   application_name        = "my-app"
   artifactory_bucket_name = "my-app-artifacts"
-  cross_account_numbers   = ["123456789012"]
+  cross_account_arns      = ["arn:aws:iam::123456789012:root"]
   enable_versioning       = true
 
   bucket_lifecycle_rules = [
@@ -271,7 +272,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | application_name | The name of the Lambda Application. Used to tag artifactory bucket. | `string` | n/a | yes |
 | artifactory_bucket_name | The name of the S3 bucket used to store deployment artifacts for the Lambda Application. | `string` | n/a | yes |
-| cross_account_numbers | Additional AWS accounts to provide access from. If no account IDs are supplied, no policy is created for the bucket. | `list(string)` | `[]` | no |
+| cross_account_arns | Additional AWS account ARNs to provide access from. If no ARNs are supplied, no policy is created for the bucket. | `list(string)` | `[]` | no |
 | create_kms_key | Controls if a customer-managed KMS key should be provisioned and used for SSE for the bucket. `kms_key_arn` will take precedence if provided. | `bool` | `false` | no |
 | enable_eventbridge_notifications | Enable S3 event notifications to EventBridge. When enabled, S3 object events will be automatically sent to the default EventBridge event bus. | `bool` | `false` | no |
 | enable_versioning | Enable versioning for the bucket. | `bool` | `true` | no |
@@ -280,6 +281,7 @@ No modules.
 | kms_key_arn | AWS KMS key ARN used for SSE-KMS encryption of the bucket. Will override `create_kms_key` if value is not null. | `string` | `null` | no |
 | kms_key_deletion_window_in_days | Duration in days after which the key is deleted after destruction of the resource. Must be between 7 and 30 days. | `number` | `30` | no |
 | kms_key_key_spec | Specifies whether the key contains a symmetric key or an asymmetric key pair and the encryption algorithms that the key supports. | `string` | `"SYMMETRIC_DEFAULT"` | no |
+| kms_key_users | A list of IAM role ARNs that can use (decrypt with) the KMS key. | `list(string)` | `[]` | no |
 | bucket_lifecycle_rules | List of lifecycle rules for the S3 bucket. Each rule must have an 'id' and 'status'. Rules can include expiration, transitions, and noncurrent version handling. Transitions require S3 versioning to be enabled. | `list(object({...}))` | `[]` | no |
 | tags | A map of additional tags to add to the artifactory resource. | `map(any)` | `{}` | no |
 
