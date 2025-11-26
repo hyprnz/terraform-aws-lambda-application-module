@@ -523,7 +523,7 @@ run "verify_lifecycle_prefix_and_multiple_tags" {
         filter = {
           prefix = "logs/"
           tags = {
-            Type     = "log"
+            Type      = "log"
             Retention = "short"
           }
         }
