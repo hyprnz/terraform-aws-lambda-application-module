@@ -20,7 +20,7 @@ variable "lambda_functions_config" {
     enable_vpc            = bool
     function_memory       = optional(string)
     function_timeout      = optional(number)
-    log_format            = optional(string, "Text")
+    log_format            = optional(string, "JSON")
     application_log_level = optional(string)
     system_log_level      = optional(string)
     s3_key                = optional(string)
