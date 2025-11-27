@@ -1,6 +1,6 @@
 locals {
-  isZipPackage = var.application_package_type == "Zip" ? true : false
-  isImagePackage = var.application_package_type == "Image" ? true : false
+  isZipPackage              = var.application_package_type == "Zip" ? true : false
+  isImagePackage            = var.application_package_type == "Image" ? true : false
   domain_name               = try(coalesce(var.api_gateway_custom_domain_name), null) // treat both "" and null as absent
   enable_custom_domain_name = local.domain_name == null ? false : true
   rds_env_vars = {
@@ -64,7 +64,7 @@ resource "aws_servicecatalogappregistry_application" "this" {
 
 resource "aws_lambda_function" "lambda_application" {
   package_type = var.application_package_type
-  for_each = var.lambda_functions_config
+  for_each     = var.lambda_functions_config
 
   s3_bucket     = local.isZipPackage ? var.artifact_bucket : null
   s3_key        = local.isZipPackage ? coalesce(try(each.value.s3_key, null), var.artifact_bucket_key) : null

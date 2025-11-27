@@ -2,7 +2,7 @@ locals {
   flatten_internal_entrypoint_config = flatten([for function_name, int_entrypoints in var.internal_entrypoint_config :
     [for int_entrypoint in int_entrypoints : merge(int_entrypoint, {
       function_name : function_name,
-      function_idx : index(tolist(int_entrypoints), int_entrypoint)})
+      function_idx : index(tolist(int_entrypoints), int_entrypoint) })
     ]
   ])
 
@@ -11,7 +11,7 @@ locals {
   flatten_external_entrypoint_config = flatten([for function_name, ext_entrypoints in var.external_entrypoint_config :
     [for ext_entrypoint in ext_entrypoints : merge(ext_entrypoint, {
       function_name : function_name,
-      function_idx : index(tolist(ext_entrypoints), ext_entrypoint)})
+      function_idx : index(tolist(ext_entrypoints), ext_entrypoint) })
     ]
   ])
 

@@ -15,7 +15,7 @@ variable "application_version" {
 }
 
 variable "application_package_type" {
-  type = string
+  type        = string
   description = "The package Type of the Lambda Application, either `Zip` or `Image`. Defaults to `Zip`"
   default     = "Zip"
   validation {
