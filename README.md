@@ -41,7 +41,7 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 
 | Name | Source | Version |
 |------|--------|---------|
-| lambda_datastore | github.com/hyprnz/terraform-aws-data-storage-module | v4.2.1 |
+| lambda_datastore | github.com/hyprnz/terraform-aws-data-storage-module | v4.4.1 |
 
 ## Inputs
 
@@ -56,7 +56,8 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | container_image_uri | ECR image URI if using container based deployment. | `string` | `""` | no |
 | lambda_functions_config | Map of functions and associated configurations. | <pre>map(object({<br/>    description           = optional(string)<br/>    handler               = string<br/>    enable_vpc            = bool<br/>    function_memory       = optional(string)<br/>    function_timeout      = optional(number)<br/>    log_format            = optional(string, "JSON")<br/>    application_log_level = optional(string)<br/>    system_log_level      = optional(string)<br/>    s3_key                = optional(string)<br/>    enable_snap_start     = optional(bool, false)<br/><br/>    function_concurrency_limit = optional(number)<br/>  }))</pre> | n/a | yes |
 | additional_layers | A list of layer ARN's (with or without aliases) to add to all functions within the Lambda application. Provides the ability to add dependencies for additional functionality such as monitoring and observability. | `list(string)` | `[]` | no |
-| alb_lambda_listener_arn | Listener ARN of ALB | `string` | `""` | no |
+| alb_ingress_listener_arn | Listener ARN of ALB | `string` | `""` | no |
+| alb_ingress_config | Map of configuration options for lambda functions that can be triggered by an Application Load Balancer (ALB) external entrypoint. | <pre>map(object({<br/>    target_group_name = string<br/>    target_group_path = string<br/>  }))</pre> | `{}` | no |
 | alias_description | Name of the alias being created | `string` | `"Default alias"` | no |
 | alias_name | Name of the alias being created | `string` | `"live"` | no |
 | api_gateway_cors_configuration | Cross-origin resource sharing (CORS) configuration. | <pre>object({<br/>    allow_credentials = optional(bool, null)<br/>    allow_headers     = optional(set(string), null)<br/>    allow_methods     = optional(set(string), null)<br/>    allow_origins     = optional(set(string), null)<br/>    expose_headers    = optional(set(string), null)<br/>    max_age           = optional(number, null)<br/>  })</pre> | `{}` | no |
@@ -141,6 +142,8 @@ A stand alone alb module has been provided as a stand alone module to cater for 
 | rds_username | RDS database user name | `string` | `""` | no |
 | s3_bucket_name | The name of the bucket. It is recommended to add a namespace/suffix to the name to avoid naming collisions | `string` | `""` | no |
 | s3_enable_versioning | If versioning should be configured on the bucket | `bool` | `true` | no |
+| s3_send_bucket_notifications_to_eventbridge | Enable bucket notifications and emit to EventBridge | `bool` | `false` | no |
+| s3_cors_config | CORS configuration for the bucket | <pre>list(object({<br/>    allowed_headers = optional(list(string), null)<br/>    allowed_methods = optional(list(string), null)<br/>    allowed_origins = optional(list(string), null)<br/>    expose_headers  = optional(list(string), null)<br/>    max_age_seconds = optional(number, null)<br/>  }))</pre> | `[]` | no |
 | service_target_group_name | The service target group attached to application load balancer listener | `string` | `""` | no |
 | service_target_group_path | The target path attached to the service target group | `string` | `""` | no |
 | ssm_kms_key_arn | Either he customer managed KMS or AWS manages key arn used for encrypting `SecureSting` parameters | `string` | `""` | no |
