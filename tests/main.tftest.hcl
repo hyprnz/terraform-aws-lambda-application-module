@@ -84,6 +84,76 @@ run "lambda_function_configuration" {
   }
 }
 
+run "lambda_function_default_package_type" {
+  command = plan
+
+  assert {
+    condition     = aws_lambda_function.lambda_application["api"].package_type == "Zip"
+    error_message = "API function should use Zip package type"
+  }
+
+  assert {
+    condition     = aws_lambda_function.lambda_application["worker"].package_type == "Zip"
+    error_message = "Worker function should use Zip package type"
+  }
+}
+
+run "lambda_function_container_image_package_type" {
+  variables {
+    application_package_type = "Image"
+    application_version      = "1.0.0"
+    container_image_uri      = "123456789012.dkr.ecr.us-west-2.amazonaws.com/my-lambda-image"
+
+
+    lambda_functions_config = {
+      api = {
+        handler     = "api/index.handler"
+        enable_vpc  = false
+        description = "API handler function"
+      }
+      worker = {
+        handler           = "worker/index.handler"
+        enable_vpc        = true
+        description       = "Background worker function"
+        function_memory   = "512"
+        function_timeout  = 60
+      }
+    }
+  }
+
+  command = plan
+
+  assert {
+    condition     = aws_lambda_function.lambda_application["api"].package_type == "Image"
+    error_message = "API function should use Image package type"
+  }
+
+  assert {
+    condition     = aws_lambda_function.lambda_application["worker"].package_type == "Image"
+    error_message = "Worker function should use Image package type"
+  }
+
+  assert {
+    condition = aws_lambda_function.lambda_application["api"].image_uri == "123456789012.dkr.ecr.us-west-2.amazonaws.com/my-lambda-image:1.0.0"
+    error_message = "API function should have correct image URI with tag set by application_version"
+  }
+
+  assert {
+    condition = aws_lambda_function.lambda_application["worker"].image_uri == "123456789012.dkr.ecr.us-west-2.amazonaws.com/my-lambda-image:1.0.0"
+    error_message = "Worker function should have correct image URI with tag set by application_version"
+  }
+
+  assert {
+    condition = aws_lambda_function.lambda_application["api"].image_config[0].command[0] == "api/index.handler"
+    error_message = "API function should have correct image command from handler"
+  }
+
+  assert {
+    condition = aws_lambda_function.lambda_application["worker"].image_config[0].command[0] == "worker/index.handler"
+    error_message = "Worker function should have correct image command from handler"
+  }
+}
+
 run "lambda_function_memory_and_timeout_and_s3_key" {
   command = plan
 

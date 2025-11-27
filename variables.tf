@@ -5,12 +5,23 @@ variable "application_name" {
 
 variable "application_runtime" {
   type        = string
-  description = "Lambda runtime for the application."
+  description = "Lambda runtime for the application, only required for Zip package type."
+  default     = ""
 }
 
 variable "application_version" {
   type        = string
-  description = "Version of the function(s) deployed for the application."
+  description = "The version of the zip package or container image tag to be deployed."
+}
+
+variable "application_package_type" {
+  type = string
+  description = "The package Type of the Lambda Application, either `Zip` or `Image`. Defaults to `Zip`"
+  default     = "Zip"
+  validation {
+    condition     = contains(["Zip", "Image"], var.application_package_type)
+    error_message = "The application_package_type must be either `Zip` or `Image`"
+  }
 }
 
 variable "lambda_functions_config" {
@@ -69,12 +80,20 @@ variable "event_bus_config" {
 
 variable "artifact_bucket" {
   type        = string
-  description = "Bucket that stores function artifacts. Includes layer dependencies."
+  description = "Bucket that stores function artifacts and layer dependencies if using zip based deployment."
+  default     = ""
 }
 
 variable "artifact_bucket_key" {
   type        = string
-  description = "File name key of the artifact to load."
+  description = "File name key of the artifact to load if using zip based deployment."
+  default     = ""
+}
+
+variable "container_image_uri" {
+  type        = string
+  description = "ECR image URI if using container based deployment."
+  default     = ""
 }
 
 variable "application_env_vars" {
@@ -109,7 +128,7 @@ variable "vpc_security_group_ids" {
 
 variable "layer_artifact_key" {
   type        = string
-  description = "File name key of the layer artifact to load."
+  description = "File name key of the layer artifact to load if using zip based deployment for the Lambda layer."
   default     = ""
 }
 

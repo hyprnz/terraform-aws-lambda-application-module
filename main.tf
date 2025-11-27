@@ -1,4 +1,6 @@
 locals {
+  isZipPackage = var.application_package_type == "Zip" ? true : false
+  isImagePackage = var.application_package_type == "Image" ? true : false
   domain_name               = try(coalesce(var.api_gateway_custom_domain_name), null) // treat both "" and null as absent
   enable_custom_domain_name = local.domain_name == null ? false : true
   rds_env_vars = {
@@ -61,23 +63,26 @@ resource "aws_servicecatalogappregistry_application" "this" {
 }
 
 resource "aws_lambda_function" "lambda_application" {
+  package_type = var.application_package_type
   for_each = var.lambda_functions_config
 
-  s3_bucket     = var.artifact_bucket
-  s3_key        = coalesce(try(each.value.s3_key, null), var.artifact_bucket_key)
+  s3_bucket     = local.isZipPackage ? var.artifact_bucket : null
+  s3_key        = local.isZipPackage ? coalesce(try(each.value.s3_key, null), var.artifact_bucket_key) : null
   function_name = format("%s-%s", var.application_name, each.key)
   description   = each.value.description
   role          = aws_iam_role.lambda_application_execution_role.arn
-  handler       = each.value.handler
+  handler       = local.isZipPackage ? each.value.handler : null
+
+  image_uri = local.isImagePackage ? "${var.container_image_uri}:${var.application_version}" : null
 
   publish     = true
-  runtime     = var.application_runtime
+  runtime     = local.isZipPackage ? var.application_runtime : null
   memory_size = try(each.value.function_memory, var.application_memory)
   timeout     = try(each.value.function_timeout, var.application_timeout)
 
   reserved_concurrent_executions = try(each.value.function_concurrency_limit, -1)
 
-  layers = local.layers
+  layers = local.isZipPackage ? local.layers : null
   tracing_config {
     mode = var.tracking_config
   }
@@ -91,6 +96,13 @@ resource "aws_lambda_function" "lambda_application" {
 
   environment {
     variables = local.function_env_vars
+  }
+
+  dynamic "image_config" {
+    for_each = local.isImagePackage ? [true] : []
+    content {
+      command = [each.value.handler]
+    }
   }
 
   dynamic "vpc_config" {
