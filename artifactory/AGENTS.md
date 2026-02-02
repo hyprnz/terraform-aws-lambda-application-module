@@ -30,18 +30,7 @@ A child/resource module designed to be referenced from the root module. It provi
    terraform test
    ```
 6. **Update README**
-    - Ensure module information is up to date
-
-7. **Commit with conventional commit message**
-   - Tags are created automatically by CI using semantic-release
-   - Use conventional commit format (see Commit Message Convention below)
-   - Example:
-     ```bash
-     git add artifactory/
-     git commit -m "feat(artifactory): add option to configure sending bucket events to EventBridge"
-     git push
-     ```
-   - CI will automatically create and push version tags based on commit types
+    - Ensure module information is up to date. Read the ./docs/AGENTS_TERRAFORM_DOCS.md from the repo root for context about the desired content and structure.
 
 ## Module Consumption
 

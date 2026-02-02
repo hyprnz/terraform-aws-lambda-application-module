@@ -27,3 +27,20 @@ output "zone_id" {
   description = "The canonical hosted zone ID of the load balancer (to be used in a Route 53 Alias record)."
   value       = aws_alb.alb_lambda.zone_id
 }
+
+output "ip_address_type" {
+  description = "The IP address type of the load balancer"
+  value       = aws_alb.alb_lambda.ip_address_type
+}
+
+output "vpc_id" {
+  description = "The VPC ID of the load balancer"
+  value       = aws_alb.alb_lambda.vpc_id
+}
+
+output "security_groups" {
+  description = "The security groups assigned to the load balancer"
+  value = {
+    for sg in aws_alb.alb_lambda.security_groups : sg => sg
+  }
+}

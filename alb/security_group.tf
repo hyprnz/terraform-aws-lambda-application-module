@@ -2,24 +2,40 @@ resource "aws_security_group" "alb_lambda_access" {
   name        = "${var.application_loadbalancer_name}-alb_lambda_access"
   description = "Access for ALB"
   vpc_id      = var.vpc_id
-
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-  tags = merge({ Name = var.application_loadbalancer_name }, var.tags)
 }
 
-resource "aws_security_group_rule" "alb_lambda_access_https" {
-  description       = "Allow HTTPS inbound traffic"
-  from_port         = 443
-  protocol          = "tcp"
+resource "aws_vpc_security_group_egress_rule" "egress_default_ipv4" {
   security_group_id = aws_security_group.alb_lambda_access.id
-  cidr_blocks       = ["0.0.0.0/0"]
-  ipv6_cidr_blocks  = ["::/0"]
+  description       = "Allow IPV4 HTTPS to Lambda Targets"
+  ip_protocol       = "tcp"
+  from_port         = 443
   to_port           = 443
-  type              = "ingress"
+  cidr_ipv4         = "0.0.0.0/0"
+}
+
+resource "aws_vpc_security_group_egress_rule" "egress_default_ipv6" {
+  security_group_id = aws_security_group.alb_lambda_access.id
+  description       = "Allow IPV6 HTTPS to Lambda Targets"
+  ip_protocol       = "tcp"
+  from_port         = 443
+  to_port           = 443
+  cidr_ipv6         = "::/0"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ingress_default_ipv4" {
+  security_group_id = aws_security_group.alb_lambda_access.id
+  description       = "Allow IPV4 HTTPS from public"
+  ip_protocol       = "tcp"
+  from_port         = 443
+  to_port           = 443
+  cidr_ipv4         = "0.0.0.0/0"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ingress_default_ipv6" {
+  security_group_id = aws_security_group.alb_lambda_access.id
+  description       = "Allow IPV6 HTTPS from public"
+  ip_protocol       = "tcp"
+  from_port         = 443
+  to_port           = 443
+  cidr_ipv6         = "::/0"
 }

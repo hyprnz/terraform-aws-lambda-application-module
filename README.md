@@ -18,9 +18,19 @@ This is an opinionated module and as such requires a context for it to be an eff
 
 A stand alone artifactory module has been provided as a stand alone module to cater for the creation of an artifactory bucket in a different AWS account. The [README](artifactory/README.md) contains more info.
 
-## Alb Module
+## ALB Module
 
-A stand alone alb module has been provided as a stand alone module to cater for the creation of an Application load balancer that supports Lambda target type. The [README](alb/README.md) contains more info.
+A standalone ALB module has been provided for creating an Application Load Balancer with HTTPS ingress support for Lambda target types. The module enables HTTPS API requests with path-based routing to direct traffic to the correct Lambda Application service/function.
+
+The module includes:
+- HTTPS listener configuration with customizable SSL policies
+- CORS support for preflight requests
+- Path-based routing for Lambda targets
+- Comprehensive logging (access, connection, and health check logs)
+- Security configurations (security headers, WAF integration, mTLS support)
+- 18 comprehensive plan-based tests for validation
+
+See the [README](alb/README.md) and [AGENTS.md](alb/AGENTS.md) for more information.
 
 ---
 <!-- BEGIN_TF_DOCS -->

@@ -1,3 +1,9 @@
+locals {
+  create_AAAA_record = startswith(var.ip_address_type, "dualstack") && var.create_ipv6_dns_record ? true : false
+  AAAA_record_count  = local.create_AAAA_record ? 1 : 0
+}
+
+
 resource "aws_lb_listener_certificate" "alb_listener_cert" {
   listener_arn    = aws_lb_listener.alb_lambda_listener.arn
   certificate_arn = aws_acm_certificate.alb_cert.arn
@@ -7,7 +13,6 @@ resource "aws_acm_certificate" "alb_cert" {
   domain_name       = var.domain_name
   validation_method = "DNS"
 
-  tags = var.tags
   lifecycle {
     create_before_destroy = true
   }
@@ -40,6 +45,19 @@ resource "aws_route53_record" "alb_route53_A_record" {
   zone_id = var.zone_id
   name    = var.domain_name
   type    = "A"
+
+  alias {
+    name                   = aws_alb.alb_lambda.dns_name
+    zone_id                = aws_alb.alb_lambda.zone_id
+    evaluate_target_health = true
+  }
+}
+
+resource "aws_route53_record" "alb_route53_AAAA_record" {
+  count = local.AAAA_record_count
+  zone_id = var.zone_id
+  name    = var.domain_name
+  type    = "AAAA"
 
   alias {
     name                   = aws_alb.alb_lambda.dns_name
